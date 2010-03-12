@@ -1,0 +1,12 @@
+pidgin-libnotify+
+
+About
+=====
+Pidgin-libnotify+ - Provide libnotify interface to Pidgin
+
+INSTALL
+=======
+./configure
+make
+make install
+

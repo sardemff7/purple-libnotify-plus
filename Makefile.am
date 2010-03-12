@@ -1,0 +1,7 @@
+EXTRA_DIST = \
+		VERSION \
+		NEWS \
+		COPYING
+
+SUBDIRS = po src
+
