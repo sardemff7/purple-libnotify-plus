@@ -3,5 +3,5 @@ EXTRA_DIST = \
 		NEWS \
 		COPYING
 
-SUBDIRS = po src
+SUBDIRS = src
 

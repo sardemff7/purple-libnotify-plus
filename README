@@ -3,6 +3,7 @@ pidgin-libnotify+
 About
 =====
 Pidgin-libnotify+ - Provide libnotify interface to Pidgin
+Inspired by Pidgin-libnotify and Guifications
 
 INSTALL
 =======

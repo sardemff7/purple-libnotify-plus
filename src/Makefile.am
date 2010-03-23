@@ -1,22 +1,24 @@
-gddir = $(LIBPURPLE_LIBDIR)/purple-2
+gddir = $(PIDGIN_LIBDIR)/pidgin
 
-pidgin_libnotify_la_LDFLAGS = -module -avoid-version
+pidgin_libnotify__la_LDFLAGS = -module -avoid-version
 
-if PLUGINS
+#if PLUGINS
 
 gd_LTLIBRARIES = pidgin-libnotify+.la
 
-pidgin_libnotify_la_SOURCES = \
+pidgin_libnotify__la_SOURCES = \
 	pidgin-libnotify+.c 
 
-pidgin_libnotify_la_LIBADD = $(LIBNOTIFY_LIBS) $(DBUS_LIBS) $(GTK_LIBS)
+pidgin_libnotify__la_LIBADD = $(LIBNOTIFY_LIBS) $(DBUS_LIBS) $(GTK_LIBS)
 
-endif
+#endif
+
+ACLOCAL_AMFLAGS = -I m4
 
 AM_CPPFLAGS = \
-	-DLIBDIR=\"$(LIBPURPLE_LIBDIR)/purple-2/\" \
-	-DDATADIR=\"$(LIBPURPLE_DATADIR)\" \
-	-DLOCALEDIR=\"$(LIBPURPLE_DATADIR)/locale\" \
+	-DVERSION=\"$(VERSION)\" \
+	-DDATADIR=\"$(PIDGIN_DATADIR)\" \
+	-DLOCALEDIR=\"$(PIDGIN_DATADIR)/locale\" \
 	$(DEBUG_CFLAGS) \
 	$(GTK_CFLAGS) \
 	$(GLIB_CFLAGS) \
