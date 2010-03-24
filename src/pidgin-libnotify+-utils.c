@@ -1,21 +1,21 @@
 /*
- * Pidgin-libnotify+ - Provide libnotify interface to Pidgin
+ * Pidgin-Libnotify+ - Provide libnotify interface to Pidgin
  * Copyright (C) 2010 Sardem FF7
  * 
- * This file is part of Pidgin-libnotify+.
+ * This file is part of Pidgin-Libnotify+.
  * 
- * Pidgin-libnotify+ is free software: you can redistribute it and/or modify
+ * Pidgin-Libnotify+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Pidgin-libnotify+ is distributed in the hope that it will be useful,
+ * Pidgin-Libnotify+ is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Pidgin-libnotify+.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 static gchar *
@@ -48,7 +48,7 @@ get_best_buddy_name(
 	PurpleBuddy *buddy
 	)
 {
-	gchar *name;
+	const char *name;
 	if ( purple_buddy_get_contact_alias(buddy) )
 		name = purple_buddy_get_contact_alias(buddy);
 	else if ( purple_buddy_get_alias(buddy) )
@@ -93,11 +93,11 @@ is_buddy_notify(PurpleBuddy *buddy)
 		) )
 		return FALSE;
 	
-	PurpleBlistNode *contact = purple_buddy_get_contact(buddy);
+	PurpleBlistNode *contact = &(purple_buddy_get_contact(buddy)->node);
 	if ( purple_blist_node_get_int(contact, "no-notify") == 1 )
 		return FALSE;
 	
-	PurpleBlistNode *group = purple_buddy_get_group(buddy);
+	PurpleBlistNode *group = &(purple_buddy_get_group(buddy)->node);
 	if ( ( purple_blist_node_get_int(group, "no-notify") == 1 ) && ( purple_blist_node_get_int(contact, "no-notify") == 0 ) )
 		return FALSE;
 	
@@ -107,19 +107,15 @@ is_buddy_notify(PurpleBuddy *buddy)
 static GdkPixbuf *
 pixbuf_from_buddy_icon(PurpleBuddyIcon *buddy_icon)
 {
-	GdkPixbuf *icon;
-	const guchar *data;
 	size_t len;
-	GdkPixbufLoader *loader;
+	const guchar *data = purple_buddy_icon_get_data(buddy_icon, &len);
 	
-	data = purple_buddy_icon_get_data(buddy_icon, &len);
-	
-	loader = gdk_pixbuf_loader_new();
+	GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
 	gdk_pixbuf_loader_set_size(loader, 48, 48);
 	gdk_pixbuf_loader_write(loader, data, len, NULL);
 	gdk_pixbuf_loader_close(loader, NULL);
 	
-	icon = gdk_pixbuf_loader_get_pixbuf(loader);
+	GdkPixbuf *icon = gdk_pixbuf_loader_get_pixbuf(loader);
 	
 	if ( icon )
 		g_object_ref(icon);
@@ -187,7 +183,7 @@ send_notification(
 	if ( buddy_icon )
 		icon = pixbuf_from_buddy_icon(buddy_icon);
 	else
-		icon = pidgin_create_prpl_icon(purple_buddy_get_account(buddy), 1);
+		icon = pidgin_create_prpl_icon(purple_buddy_get_account(buddy), PIDGIN_PRPL_ICON_LARGE);
 	
 	if ( icon )
 	{

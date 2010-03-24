@@ -1,21 +1,21 @@
 /*
- * Pidgin-libnotify+ - Provide libnotify interface to Pidgin
+ * Pidgin-Libnotify+ - Provide libnotify interface to Pidgin
  * Copyright (C) 2010 Sardem FF7
  * 
- * This file is part of Pidgin-libnotify+.
+ * This file is part of Pidgin-Libnotify+.
  * 
- * Pidgin-libnotify+ is free software: you can redistribute it and/or modify
+ * Pidgin-Libnotify+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Pidgin-libnotify+ is distributed in the hope that it will be useful,
+ * Pidgin-Libnotify+ is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Pidgin-libnotify+.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 static PurplePluginPrefFrame *
@@ -86,11 +86,14 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 	return frame;
 }
 
+#define NOTIFY_PLUS_GET_CONTACT(node) \
+	if ( PURPLE_BLIST_NODE_IS_BUDDY(node) )\
+		node = PURPLE_BLIST_NODE(purple_buddy_get_contact(PURPLE_BUDDY(node)));
+
 static void
 reset_no_notify(PurpleBlistNode *node, gpointer data)
 {
-	if ( PURPLE_BLIST_NODE_IS_BUDDY(node) )
-		node = purple_buddy_get_contact((PurpleBuddy *)node);
+	NOTIFY_PLUS_GET_CONTACT(node);
 	
 	purple_blist_node_remove_setting(node, "no-notify");
 	
@@ -100,8 +103,7 @@ reset_no_notify(PurpleBlistNode *node, gpointer data)
 		PurpleBlistNode *contact = purple_blist_node_get_first_child(node);
 		do
 		{
-			if ( PURPLE_BLIST_NODE_IS_BUDDY(contact) )
-				contact = purple_buddy_get_contact((PurpleBuddy *)contact);
+			NOTIFY_PLUS_GET_CONTACT(contact);
 			
 			if ( ! g_list_find(already_done, contact) )
 			{
@@ -128,8 +130,7 @@ reset_no_notify(PurpleBlistNode *node, gpointer data)
 static void
 set_no_notify(PurpleBlistNode *node, gpointer data)
 {
-	if ( PURPLE_BLIST_NODE_IS_BUDDY(node) )
-		node = purple_buddy_get_contact((PurpleBuddy *)node);
+	NOTIFY_PLUS_GET_CONTACT(node);
 	
 	purple_blist_node_set_int(node, "no-notify", 1);
 	
@@ -139,8 +140,7 @@ set_no_notify(PurpleBlistNode *node, gpointer data)
 		PurpleBlistNode *contact = purple_blist_node_get_first_child(node);
 		do
 		{
-			if ( PURPLE_BLIST_NODE_IS_BUDDY(contact) )
-				contact = purple_buddy_get_contact((PurpleBuddy *)contact);
+			NOTIFY_PLUS_GET_CONTACT(contact);
 			
 			if ( ! g_list_find(already_done, contact) )
 			{
@@ -167,8 +167,7 @@ set_no_notify(PurpleBlistNode *node, gpointer data)
 static void
 force_notify(PurpleBlistNode *node, gpointer data)
 {
-	if ( PURPLE_BLIST_NODE_IS_BUDDY(node) )
-		node = purple_buddy_get_contact((PurpleBuddy *)node);
+	NOTIFY_PLUS_GET_CONTACT(node);
 	
 	purple_blist_node_set_int(node, "no-notify", -1);
 }
@@ -176,8 +175,7 @@ force_notify(PurpleBlistNode *node, gpointer data)
 static void
 reset_contact(PurpleBlistNode *node, gpointer data)
 {
-	if ( PURPLE_BLIST_NODE_IS_BUDDY(node) )
-		node = purple_buddy_get_contact((PurpleBuddy *)node);
+	NOTIFY_PLUS_GET_CONTACT(node);
 	
 	purple_blist_node_remove_setting(node, "no-notify");
 	purple_blist_node_remove_setting(node, "save_no-notify");
@@ -190,8 +188,7 @@ reset_all_contacts_in_group(PurpleBlistNode *node, gpointer data)
 	PurpleBlistNode *contact = purple_blist_node_get_first_child(node);
 	do
 	{
-		if ( PURPLE_BLIST_NODE_IS_BUDDY(contact) )
-			contact = purple_buddy_get_contact((PurpleBuddy *)contact);
+		NOTIFY_PLUS_GET_CONTACT(contact);
 		
 		if ( ! g_list_find(already_done, contact) )
 		{
@@ -205,8 +202,7 @@ reset_all_contacts_in_group(PurpleBlistNode *node, gpointer data)
 static void
 menu_add_notify_plus(PurpleBlistNode *node, GList **menu)
 {
-	if ( PURPLE_BLIST_NODE_IS_BUDDY(node) )
-		node = purple_buddy_get_contact((PurpleBuddy *)node);
+	NOTIFY_PLUS_GET_CONTACT(node);
 	
 	if ( ( purple_blist_node_get_flags(node) & PURPLE_BLIST_NODE_FLAG_NO_SAVE ) || ( PURPLE_BLIST_NODE_IS_CHAT(node) ) )
 		return;
@@ -215,7 +211,7 @@ menu_add_notify_plus(PurpleBlistNode *node, GList **menu)
 	
 	PurpleBlistNode *group = NULL;
 	if ( PURPLE_BLIST_NODE_IS_CONTACT(node) )
-		group = purple_buddy_get_group(purple_contact_get_priority_buddy((PurpleContact *)node));
+		group = PURPLE_BLIST_NODE(purple_buddy_get_group(purple_contact_get_priority_buddy(PURPLE_CONTACT(node))));
 	
 	PurpleMenuAction *action;
 	if ( purple_blist_node_get_int(node, "no-notify") == 1 )
@@ -225,12 +221,15 @@ menu_add_notify_plus(PurpleBlistNode *node, GList **menu)
 	else
 		action = purple_menu_action_new(_("Disactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
 	
-	(*menu) = g_list_append(*menu, action);
+	if ( action )
+		(*menu) = g_list_append(*menu, action);
 	
-	PurpleMenuAction *action_reset;
+	PurpleMenuAction *action_reset = NULL;
 	if ( PURPLE_BLIST_NODE_IS_GROUP(node) )
 		action_reset = purple_menu_action_new(_("Reset all"), PURPLE_CALLBACK(reset_all_contacts_in_group), NULL, NULL);
-	else if ( PURPLE_BLIST_NODE_IS_CONTACT(node) )
+	else if ( ( PURPLE_BLIST_NODE_IS_CONTACT(node) ) &&
+		( ( purple_blist_node_get_int(node, "no-notify") != 0 ) || ( purple_blist_node_get_int(node, "save_no-notify") != 0 ) ) )
 		action_reset = purple_menu_action_new(_("Reset"), PURPLE_CALLBACK(reset_contact), NULL, NULL);
-	(*menu) = g_list_append(*menu, action_reset);
+	if ( action_reset )
+		(*menu) = g_list_append(*menu, action_reset);
 }

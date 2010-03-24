@@ -1,21 +1,21 @@
 /*
- * Pidgin-libnotify+ - Provide libnotify interface to Pidgin
+ * Pidgin-Libnotify+ - Provide libnotify interface to Pidgin
  * Copyright (C) 2010 Sardem FF7
  * 
- * This file is part of Pidgin-libnotify+.
+ * This file is part of Pidgin-Libnotify+.
  * 
- * Pidgin-libnotify+ is free software: you can redistribute it and/or modify
+ * Pidgin-Libnotify+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Pidgin-libnotify+ is distributed in the hope that it will be useful,
+ * Pidgin-Libnotify+ is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Pidgin-libnotify+.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "pidgin-libnotify+.h"
@@ -31,36 +31,70 @@ static GList *just_signed_on_accounts = NULL;
 static void
 notify_plus_buddy_signed_on_cb(
 	PurpleBuddy *buddy,
-	gpointer data
-	)
+	gpointer data)
 {
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-on") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 	
-	gchar *name;
-	
-	name = get_best_buddy_name(buddy);
-	
-	send_notification(name, _("signed on"), buddy);
-	
+	gchar *name = get_best_buddy_name(buddy);
+	send_notification(name, _("sign on"), buddy);
 	g_free(name);
 }
 
 static void
 notify_plus_buddy_signed_off_cb(
 	PurpleBuddy *buddy,
-	gpointer data
-	)
+	gpointer data)
 {
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-off") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 	
-	gchar *name;
+	gchar *name = get_best_buddy_name(buddy);
+	send_notification(name, _("sign off"), buddy);
+	g_free(name);
+}
+
+static void
+notify_plus_buddy_status_changed_cb(
+	PurpleBuddy *buddy,
+	PurpleStatus *oldstatus,
+	PurpleStatus *newstatus,
+	gpointer data)
+{
+	const char *action;
+	if ( ( purple_status_is_available(oldstatus) ) && ( ! purple_status_is_available(newstatus) ) )
+	{
+		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
+			return;
+		action = _("go away");
+	}
+	else if ( ( ! purple_status_is_available(oldstatus) ) && ( purple_status_is_available(newstatus) ) )
+	{
+		action = _("come back");
+	}
+	else
+		return;
 	
-	name = get_best_buddy_name(buddy);
+	if ( ! is_buddy_notify(buddy) )
+		return;
 	
-	send_notification(name, _("signed off"), buddy);
+	gchar *name = get_best_buddy_name(buddy);
+	send_notification(name, action, buddy);
+	g_free(name);
+}
+
+static void
+notify_plus_buddy_idle_changed_cb(
+	PurpleBuddy *buddy,
+	gboolean oldidle,
+	gboolean newidle,
+	gpointer data)
+{
+	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/idle") ) || ( ! is_buddy_notify(buddy) ) )
+		return;
 	
+	gchar *name = get_best_buddy_name(buddy);
+	send_notification(name, ( newidle ) ? ( _("go idle") ) : ( _("come back idle") ), buddy);
 	g_free(name);
 }
 
@@ -70,15 +104,14 @@ notify_plus_new_im_msg_cb(
 	const gchar *sender,
 	const gchar *message,
 	int flags,
-	gpointer data
-	)
+	gpointer data)
 {
 	PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 	
 	gchar *name = get_best_buddy_name(buddy);
-	gchar *title = g_strdup_printf("%s said", name);
+	gchar *title = g_strdup_printf(_("%s says"), name);
 	g_free(name);
 	
 	gchar *body = purple_markup_strip_html(message);
@@ -95,15 +128,14 @@ notify_plus_new_chat_msg_cb(
 	const gchar *sender,
 	const gchar *message,
 	PurpleConversation *conv,
-	gpointer data
-	)
+	gpointer data)
 {
 	PurpleBuddy *buddy = purple_find_buddy (account, sender);
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 	
 	gchar *name = get_best_buddy_name(buddy);
-	gchar *title = g_strdup_printf("%s said", name);
+	gchar *title = g_strdup_printf(_("%s says"), name);
 	g_free(name);
 	
 	gchar *body = purple_markup_strip_html(message);
@@ -179,18 +211,13 @@ plugin_load(PurplePlugin *plugin)
 		);
 	
 	purple_signal_connect(
-		blist_handle, "buddy-away", plugin,
-		PURPLE_CALLBACK(notify_plus_buddy_signed_off_cb), NULL
+		blist_handle, "buddy-status-changed", plugin,
+		PURPLE_CALLBACK(notify_plus_buddy_status_changed_cb), NULL
 		);
 	
 	purple_signal_connect(
-		blist_handle, "buddy-back", plugin,
-		PURPLE_CALLBACK(notify_plus_buddy_signed_on_cb), NULL
-		);
-	
-	purple_signal_connect(
-		blist_handle, "buddy-idle", plugin,
-		PURPLE_CALLBACK(notify_plus_buddy_signed_off_cb), NULL
+		blist_handle, "buddy-idle-changed", plugin,
+		PURPLE_CALLBACK(notify_plus_buddy_idle_changed_cb), NULL
 		);
 	
 	purple_signal_connect(
@@ -240,6 +267,16 @@ plugin_unload(PurplePlugin *plugin)
 	purple_signal_disconnect(
 		blist_handle, "buddy-signed-off", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_signed_off_cb)
+		);
+	
+	purple_signal_disconnect(
+		blist_handle, "buddy-status-changed", plugin,
+		PURPLE_CALLBACK(notify_plus_buddy_status_changed_cb)
+		);
+	
+	purple_signal_disconnect(
+		blist_handle, "buddy-idle-changed", plugin,
+		PURPLE_CALLBACK(notify_plus_buddy_idle_changed_cb)
 		);
 	
 	purple_signal_disconnect(
@@ -310,12 +347,14 @@ init_plugin(PurplePlugin *plugin)
 {
 	notify_plus = plugin;
 	
-	bindtextdomain(PACKAGE, LOCALEDIR);
-	bind_textdomain_codeset(PACKAGE, "UTF-8");
+	#ifdef ENABLE_NLS
+		bindtextdomain(PACKAGE, LOCALEDIR);
+		bind_textdomain_codeset(PACKAGE, "UTF-8");
+	#endif
 	
 	info.name = _("Libnotify+");
 	info.summary = _("Displays popups via libnotify.");
-	info.description = _("Pidgin-libnotify+:\nDisplays popups via libnotify.");
+	info.description = _("Displays popups via libnotify.");
 	
 	purple_prefs_add_none("/plugins/gtk/libnotify+");
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/new-msg", TRUE);

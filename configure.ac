@@ -76,7 +76,7 @@ AC_SUBST(LIBNOTIFY_LIBS)
 # Check for pidgin
 #
 
-PKG_CHECK_MODULES(PIDGIN, pidgin >= 2.0.0,
+PKG_CHECK_MODULES(PIDGIN, pidgin >= 2.6.0,
 [
   AC_DEFINE(HAVE_PIDGIN, 1, [Define if we have found pidgin.])
 ])

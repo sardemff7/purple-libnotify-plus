@@ -1,21 +1,21 @@
 /*
- * Pidgin-libnotify+ - Provide libnotify interface to Pidgin
+ * Pidgin-Libnotify+ - Provide libnotify interface to Pidgin
  * Copyright (C) 2010 Sardem FF7
  * 
- * This file is part of Pidgin-libnotify+.
+ * This file is part of Pidgin-Libnotify+.
  * 
- * Pidgin-libnotify+ is free software: you can redistribute it and/or modify
+ * Pidgin-Libnotify+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Pidgin-libnotify+ is distributed in the hope that it will be useful,
+ * Pidgin-Libnotify+ is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Pidgin-libnotify+.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef PIDGIN_LIBNOTIFY_PLUS_H
@@ -28,9 +28,10 @@
 #include <debug.h>
 #include <util.h>
 #include <privacy.h>
+*/
 
 #include <gtkutils.h>
-*/
+
 
 
 #include <string.h>
