@@ -198,7 +198,9 @@ plugin_load(PurplePlugin *plugin)
 	blist_handle = purple_blist_get_handle();
 	conn_handle = purple_connections_get_handle();
 	
+	#ifdef MODIFY_NOTIFY
 	buddy_hash = g_hash_table_new(NULL, NULL);
+	#endif /* MODIFY_NOTIFY */
 	
 	purple_signal_connect(
 		blist_handle, "buddy-signed-on", plugin,
@@ -294,8 +296,10 @@ plugin_unload(PurplePlugin *plugin)
 		conn_handle, "signed-on", plugin,
 		PURPLE_CALLBACK(event_connection_throttle)
 		);
-		
+	
+	#ifdef MODIFY_NOTIFY
 	g_hash_table_destroy(buddy_hash);
+	#endif /* MODIFY_NOTIFY */
 	
 	
 	purple_signal_disconnect(

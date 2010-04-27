@@ -45,15 +45,15 @@
 	#include <libintl.h>
 	#define _(x) dgettext(PACKAGE, x)
 	#ifdef dgettext_noop
-		#define N_(String) dgettext_noop(PACKAGE, String)
+		#define N_(x) dgettext_noop(PACKAGE, x)
 	#else
-		#define N_(String) (String)
+		#define N_(x) (x)
 	#endif
 #else
 	#include <locale.h>
-	#define N_(String) (String)
 	#define _(x) (x)
 	#define ngettext(Singular, Plural, Number) ((Number == 1) ? (Singular) : (Plural))
+	#define N_(x) (x)
 #endif
 
 #include <libnotify/notify.h>

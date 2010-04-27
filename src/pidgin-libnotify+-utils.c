@@ -125,6 +125,7 @@ pixbuf_from_buddy_icon(PurpleBuddyIcon *buddy_icon)
 	return icon;
 }
 
+#ifdef MODIFY_NOTIFY
 static GHashTable *buddy_hash;
 
 static gboolean
@@ -138,6 +139,7 @@ notification_closed_cb(NotifyNotification *notification)
 	
 	return FALSE;
 }
+#endif /* MODIFY_NOTIFY */
 
 static void
 send_notification(
@@ -158,18 +160,20 @@ send_notification(
 	else
 		es_body = NULL;
 	
+	#ifdef MODIFY_NOTIFY
 	PurpleContact *contact = purple_buddy_get_contact(buddy);
-	
 	notification = g_hash_table_lookup(buddy_hash, contact);
 	if ( notification )
 	{
 		notify_notification_update(notification, title, es_body, NULL);
-		/* FIXME this shouldn't be necessary, file a bug */
+		// FIXME this shouldn't be necessary, file a bug
 		notify_notification_show(notification, NULL);
 		
 		g_free(es_body);
 		return;
 	}
+	#endif /* MODIFY_NOTIFY */
+	
 	notification = notify_notification_new(title, es_body, NULL, NULL);
 	
 	g_free(es_body);
@@ -178,7 +182,7 @@ send_notification(
 	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 	
 	
-	PurpleBuddyIcon *buddy_icon = purple_buddy_get_icon(buddy);
+	PurpleBuddyIcon *buddy_icon = NULL;//purple_buddy_get_icon(buddy);
 	GdkPixbuf *icon;
 	if ( buddy_icon )
 		icon = pixbuf_from_buddy_icon(buddy_icon);
@@ -192,9 +196,11 @@ send_notification(
 	}
 	
 	
+	#ifdef MODIFY_NOTIFY
 	g_hash_table_insert(buddy_hash, contact, notification);
 	g_object_set_data(G_OBJECT(notification), "contact", contact);
 	g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
+	#endif
 	
 	#ifdef DEBUG
 		if ( ! notify_notification_show(notification, NULL) )
