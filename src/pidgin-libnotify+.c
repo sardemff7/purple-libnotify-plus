@@ -37,7 +37,7 @@ notify_plus_buddy_signed_on_cb(
 		return;
 	
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, _("sign on"), buddy);
+	send_notification(name, _("signed on"), buddy);
 	g_free(name);
 }
 
@@ -50,7 +50,7 @@ notify_plus_buddy_signed_off_cb(
 		return;
 	
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, _("sign off"), buddy);
+	send_notification(name, _("signed off"), buddy);
 	g_free(name);
 }
 
@@ -66,11 +66,11 @@ notify_plus_buddy_status_changed_cb(
 	{
 		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
 			return;
-		action = _("go away");
+		action = _("went away");
 	}
 	else if ( ( ! purple_status_is_available(oldstatus) ) && ( purple_status_is_available(newstatus) ) )
 	{
-		action = _("come back");
+		action = _("came back");
 	}
 	else
 		return;
@@ -94,7 +94,7 @@ notify_plus_buddy_idle_changed_cb(
 		return;
 	
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, ( newidle ) ? ( _("go idle") ) : ( _("come back idle") ), buddy);
+	send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy);
 	g_free(name);
 }
 
