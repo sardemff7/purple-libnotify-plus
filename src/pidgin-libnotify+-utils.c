@@ -175,6 +175,7 @@ send_notification(
 	#endif /* MODIFY_NOTIFY */
 	
 	notification = notify_notification_new(title, es_body, NULL, NULL);
+	notify_notification_set_timeout(notification, 1);
 	
 	g_free(es_body);
 	

@@ -94,7 +94,8 @@ static void
 send_notification(
 	const gchar *title,
 	const gchar *body,
-	PurpleBuddy *buddy
+	PurpleBuddy *buddy,
+	int to
 	);
 
 static gboolean

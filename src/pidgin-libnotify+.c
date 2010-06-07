@@ -94,7 +94,7 @@ notify_plus_buddy_idle_changed_cb(
 		return;
 	
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy);
+	send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy, 0);
 	g_free(name);
 }
 
@@ -246,7 +246,7 @@ plugin_load(PurplePlugin *plugin)
 	
 	
 	#ifdef DEBUG
-		send_notification("Pidgin-libtonify+", "Loaded", NULL);
+		send_notification("Pidgin-libtonify+", "Loaded", NULL, 5);
 	#endif
 	
 	return TRUE;
