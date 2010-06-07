@@ -94,7 +94,7 @@ notify_plus_buddy_idle_changed_cb(
 		return;
 	
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy, 0);
+	send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy);
 	g_free(name);
 }
 
