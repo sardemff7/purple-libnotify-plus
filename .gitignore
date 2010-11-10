@@ -1,0 +1,11 @@
+*.la
+*.lo
+*.o
+*.a
+src/.deps
+src/.libs
+m4/
+config.h
+config.h.in
+.aux/
+libtool
