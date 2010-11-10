@@ -172,7 +172,7 @@ send_notification(
 		return;
 	}
 	
-	notification = notify_notification_new(title, es_body, NULL, NULL);
+	notification = notify_notification_new(title, es_body, NULL);
 	
 	g_free(es_body);
 	
