@@ -181,8 +181,8 @@ send_notification(
 	notify_notification_set_timeout(notification, 1);
 	
 	
-	PurpleBuddyIcon *buddy_icon = NULL;//purple_buddy_get_icon(buddy);
-	GdkPixbuf *icon;
+	PurpleBuddyIcon *buddy_icon = NULL;
+	GdkPixbuf *icon = NULL;
 	if ( buddy_icon )
 		icon = pixbuf_from_buddy_icon(buddy_icon);
 	else
