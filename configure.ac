@@ -43,6 +43,11 @@ AC_ARG_ENABLE([debug],
 #
 
 PKG_CHECK_MODULES(LIBNOTIFY, libnotify >= 0.3.2)
+# Check for libnotify >= 0.7
+PKG_CHECK_MODULES(LIBNOTIFY_07, [libnotify >= 0.7], [have_libnotify_07=yes],[have_libnotify_07=no])
+if test x"$have_libnotify_07" = "xyes"; then
+	AC_DEFINE(HAVE_LIBNOTIFY_07, 1, [Define if you have libnotify 0.7 or later])
+fi
 
 AC_SUBST(LIBNOTIFY_CFLAGS)
 AC_SUBST(LIBNOTIFY_LIBS)

@@ -172,7 +172,11 @@ send_notification(
 		return;
 	}
 	
-	notification = notify_notification_new(title, es_body, NULL);
+	notification = notify_notification_new(title, es_body, NULL
+	#ifdef HAVE_LIBNOTIFY_07
+		, NULL
+	#endif
+	);
 	
 	g_free(es_body);
 	

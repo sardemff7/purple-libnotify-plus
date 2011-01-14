@@ -22,14 +22,6 @@
 #define PIDGIN_LIBNOTIFY_PLUS_H
 
 #include <purple.h>
-/*
-#include <pidgin.h>
-#include <plugin.h>
-#include <debug.h>
-#include <util.h>
-#include <privacy.h>
-*/
-
 #include <gtkutils.h>
 
 
@@ -59,10 +51,6 @@
 #include <libnotify/notify.h>
 
 #define PLUGIN_ID "pidgin-libnotify+"
-
-#ifndef NOTIFY_CHECK_VERSION
-#define notify_notification_new(title, body, icon) notify_notification_new(title, body, icon, NULL)
-#endif
 
 static void
 notify_plus_buddy_signed_on_cb(
