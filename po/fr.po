@@ -24,7 +24,7 @@ msgstr "Me notifier :"
 
 #: ../src/pidgin-libnotify+-frames.c:39
 msgid "New messages"
-msgstr "L'arrivée de nouveau messages"
+msgstr "L'arrivée de nouveaux messages"
 
 #: ../src/pidgin-libnotify+-frames.c:45
 msgid "Buddy signing on"
