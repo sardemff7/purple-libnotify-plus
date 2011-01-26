@@ -350,7 +350,7 @@ init_plugin(PurplePlugin *plugin)
 		bind_textdomain_codeset(PACKAGE, "UTF-8");
 	#endif
 	
-	info.name = _("Libnotify+");
+	info.name = "Libnotify+";
 	info.summary = _("Displays popups via libnotify.");
 	info.description = _("Displays popups via libnotify.");
 	

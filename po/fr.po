@@ -1,0 +1,112 @@
+# French translations for pidgin-libnotify+ package
+# Traductions françaises du paquet pidgin-libnotify+.
+# Copyright (C) 2011 THE pidgin-libnotify+'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the pidgin-libnotify+ package.
+# Sardem FF7 <sardemff7.pub@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pidgin-libnotify+ 0.9\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-26 11:51+0100\n"
+"PO-Revision-Date: 2011-01-26 11:43+0100\n"
+"Last-Translator: Sardem FF7 <sardemff7.pub@gmail.com>\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../src/pidgin-libnotify+-frames.c:33
+msgid "Notify me on:"
+msgstr "Me notifier :"
+
+#: ../src/pidgin-libnotify+-frames.c:39
+msgid "New messages"
+msgstr "L'arrivée de nouveau messages"
+
+#: ../src/pidgin-libnotify+-frames.c:45
+msgid "Buddy signing on"
+msgstr "La connexion d'un contact"
+
+#: ../src/pidgin-libnotify+-frames.c:51
+msgid "Buddy signing off"
+msgstr "La déconnexion d'un contact"
+
+#: ../src/pidgin-libnotify+-frames.c:57
+msgid "Buddy going away"
+msgstr "L'absence d'un contact"
+
+#: ../src/pidgin-libnotify+-frames.c:63
+msgid "Buddy going idle"
+msgstr "L'inactivité d'un contact"
+
+#: ../src/pidgin-libnotify+-frames.c:69
+msgid "Buddy coming back"
+msgstr "Le retour d'un contact"
+
+#: ../src/pidgin-libnotify+-frames.c:75
+msgid "Restrictions:"
+msgstr "Restrictions :"
+
+#: ../src/pidgin-libnotify+-frames.c:81
+msgid "Even for a blocked buddy"
+msgstr "Même pour un contact bloqué"
+
+#: ../src/pidgin-libnotify+-frames.c:87
+msgid "Only from new conversation"
+msgstr "Seulement pour les nouvelles conversations"
+
+#: ../src/pidgin-libnotify+-frames.c:94
+msgid "Only when available"
+msgstr "Seulement si je suis disponible"
+
+#: ../src/pidgin-libnotify+-frames.c:231 ../src/pidgin-libnotify+-frames.c:233
+msgid "Activate libnotify+ popup"
+msgstr "Activer le popup libnotify+"
+
+#: ../src/pidgin-libnotify+-frames.c:235 ../src/pidgin-libnotify+-frames.c:241
+msgid "Deactivate libnotify+ popup"
+msgstr "Désactiver le popup libnotify+"
+
+#: ../src/pidgin-libnotify+-frames.c:248
+msgid "Reset"
+msgstr "Remettre à zéro"
+
+#: ../src/pidgin-libnotify+-frames.c:251
+msgid "Reset all"
+msgstr "Tout remettre à zéro"
+
+#: ../src/pidgin-libnotify+.c:37
+msgid "signed on"
+msgstr "s'est connecté(e)"
+
+#: ../src/pidgin-libnotify+.c:50
+msgid "signed off"
+msgstr "s'est déconnecté(é)"
+
+#: ../src/pidgin-libnotify+.c:66
+msgid "went away"
+msgstr "est parti(e)"
+
+#: ../src/pidgin-libnotify+.c:70
+msgid "came back"
+msgstr "est revenu(e)"
+
+#: ../src/pidgin-libnotify+.c:94
+msgid "went idle"
+msgstr "est inactif(ve)"
+
+#: ../src/pidgin-libnotify+.c:94
+msgid "came back idle"
+msgstr "est actif(ve)"
+
+#: ../src/pidgin-libnotify+.c:111 ../src/pidgin-libnotify+.c:136
+#, c-format
+msgid "%s says"
+msgstr "%s a dit"
+
+#: ../src/pidgin-libnotify+.c:354 ../src/pidgin-libnotify+.c:355
+msgid "Displays popups via libnotify."
+msgstr "Affiche des popups via libnotify"

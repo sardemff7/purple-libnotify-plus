@@ -29,59 +29,69 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 	
 	frame = purple_plugin_pref_frame_new();
 	
+	pref = purple_plugin_pref_new_with_label(
+		_("Notify me on:")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/new-msg",
-		_("Notify on new messages")
+		_("New messages")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/signed-on",
-		_("Notify when a buddy sign on")
+		_("Buddy signing on")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/signed-off",
-		_("Notify when a buddy sign off")
+		_("Buddy signing off")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/away",
-		_("Notify when a buddy go away")
+		_("Buddy going away")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/idle",
-		_("Notify when a buddy go idle")
+		_("Buddy going idle")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/back",
-		_("Notify when a buddy come back")
+		_("Buddy coming back")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+	
+	
+	pref = purple_plugin_pref_new_with_label(
+		_("Restrictions:")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/blocked",
-		_("Notify if a buddy is blocked")
+		_("Even for a blocked buddy")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
-	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/new-conv-only",
-		_("Notify only from new conversation")
+		_("Only from new conversation")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
 	
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/only-available",
-		_("Notify only when available")
+		_("Only when available")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	
@@ -221,16 +231,13 @@ menu_add_notify_plus(PurpleBlistNode *node, GList **menu)
 			action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(reset_no_notify), NULL, NULL);
 		else if ( ( group ) && ( purple_blist_node_get_int(group, "no-notify") == 1 ) && ( purple_blist_node_get_int(node, "no-notify") == 0 ) )
 			action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(force_notify), NULL, NULL);
-		else
-			action = purple_menu_action_new(_("Disactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
+			
 		
 		if ( action )
 			(*menu) = g_list_append(*menu, action);
 		
-		action = NULL;
-			action = purple_menu_action_new(_("Disactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
-		if ( action )
-			(*menu) = g_list_append(*menu, action);
+		action = purple_menu_action_new(_("Deactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
+		(*menu) = g_list_append(*menu, action);
 		
 		action = NULL;
 		
