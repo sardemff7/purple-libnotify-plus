@@ -1,5 +1,5 @@
-AC_PREREQ(2.65)
-AC_INIT([pidgin-libnotify+], [0.9], [])
+AC_PREREQ([2.68])
+AC_INIT([pidgin-libnotify+],[0.9],[])
 
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_HEADERS([config.h])
@@ -11,11 +11,10 @@ AC_LANG([C])
 
 # Checks for programs.
 AC_PROG_CC
-AC_PROG_LIBTOOL
+LT_INIT
 
 # Checks for header files.
 AC_CHECK_HEADERS([string.h])
-
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -30,11 +29,12 @@ AC_ARG_ENABLE([debug],
 #
 # Setup gettext
 #
-#AC_PROG_INTLTOOL
-#GETTEXT_PACKAGE=pidgin-libnotify+
-#AC_SUBST(GETTEXT_PACKAGE)
-#ALL_LINGUAS=""
-#AM_GLIB_GNU_GETTEXT
+GETTEXT_PACKAGE=$PACKAGE_NAME
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext Package])
+AC_SUBST(GETTEXT_PACKAGE)
+AM_GLIB_GNU_GETTEXT
+IT_PROG_INTLTOOL([0.35.0])
+AC_SUBST([localedir], ["$localedir"])
 
 # Checks for libraries.
 
@@ -57,11 +57,11 @@ AC_SUBST(LIBNOTIFY_LIBS)
 #
 
 PKG_CHECK_MODULES(PIDGIN, pidgin >= 2.6.0)
-
 AC_SUBST(PIDGIN_CFLAGS)
+AC_SUBST(PIDGIN_LIBS)
 PIDGIN_LIBDIR=`pkg-config --variable=libdir pidgin`
-PIDGIN_DATADIR=`pkg-config --variable=datadir pidgin`
 AC_SUBST(PIDGIN_LIBDIR)
+PIDGIN_DATADIR=`pkg-config --variable=datadir pidgin`
 AC_SUBST(PIDGIN_DATADIR)
 
 
@@ -73,5 +73,6 @@ fi
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
+	po/Makefile.in
 ])
 AC_OUTPUT
