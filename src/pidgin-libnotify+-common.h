@@ -43,7 +43,7 @@
 	#define N_(x) (x)
 #endif
 
-static struct
+struct
 {
 	GHashTable *notifications;
 	GList *just_signed_on_accounts;

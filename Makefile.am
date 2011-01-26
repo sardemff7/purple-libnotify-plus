@@ -21,7 +21,7 @@ pidgin_libnotify__la_SOURCES = \
 pidgin_libnotify__la_CFLAGS = \
 	-DVERSION=\"$(VERSION)\" \
 	-DDATADIR=\"$(PIDGIN_DATADIR)\" \
-	-DLOCALEDIR=\"$(PIDGIN_DATADIR)/locale\" \
+	-DLOCALEDIR=\"$(localedir)\" \
 	$(PIDGIN_CFLAGS) \
 	$(LIBNOTIFY_CFLAGS) \
 	$(DEBUG_CFLAGS)
