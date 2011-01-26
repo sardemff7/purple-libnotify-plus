@@ -1,5 +1,5 @@
 AC_PREREQ([2.68])
-AC_INIT([pidgin-libnotify+],[0.9],[])
+AC_INIT([pidgin-libnotify+],[1.0],[])
 
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_HEADERS([config.h])
