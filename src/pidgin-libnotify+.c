@@ -18,15 +18,12 @@
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pidgin-libnotify+-common.h"
+#include "pidgin-libnotify+-utils.h"
+#include "pidgin-libnotify+-frames.h"
 #include "pidgin-libnotify+.h"
 
 static PurplePlugin *notify_plus = NULL;
-static GList *just_signed_on_accounts = NULL;
-
-
-#include "pidgin-libnotify+-utils.c"
-#include "pidgin-libnotify+-frames.c"
-
 
 static void
 notify_plus_buddy_signed_on_cb(
@@ -134,15 +131,14 @@ notify_plus_new_chat_msg_cb(
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 	
+	gchar *body = purple_markup_strip_html(message);
 	gchar *name = get_best_buddy_name(buddy);
 	gchar *title = g_strdup_printf(_("%s says"), name);
-	g_free(name);
-	
-	gchar *body = purple_markup_strip_html(message);
 	
 	send_notification(title, body, buddy);
 	
 	g_free(title);
+	g_free(name);
 	g_free(body);
 }
 
@@ -156,14 +152,14 @@ event_connection_throttle_cb(gpointer data)
 	
 	if ( ! purple_account_get_connection(account) )
 	{
-		just_signed_on_accounts = g_list_remove(just_signed_on_accounts, account);
+		notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, account);
 		return FALSE;
 	}
 	
 	if ( ! purple_account_is_connected(account) )
 		return TRUE;
 	
-	just_signed_on_accounts = g_list_remove(just_signed_on_accounts, account);
+	notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, account);
 	return FALSE;
 }
 
@@ -179,7 +175,7 @@ event_connection_throttle(PurpleConnection *conn, gpointer data)
 	if ( ! account )
 		return;
 	
-	just_signed_on_accounts = g_list_prepend(just_signed_on_accounts, account);
+	notify_plus_data.just_signed_on_accounts = g_list_prepend(notify_plus_data.just_signed_on_accounts, account);
 	g_timeout_add(5000, event_connection_throttle_cb, (gpointer)account);
 }
 
@@ -198,7 +194,7 @@ plugin_load(PurplePlugin *plugin)
 	blist_handle = purple_blist_get_handle();
 	conn_handle = purple_connections_get_handle();
 	
-	buddy_hash = g_hash_table_new(NULL, NULL);
+	notify_plus_data.notifications = g_hash_table_new(NULL, NULL);
 	
 	purple_signal_connect(
 		blist_handle, "buddy-signed-on", plugin,
@@ -295,7 +291,7 @@ plugin_unload(PurplePlugin *plugin)
 		PURPLE_CALLBACK(event_connection_throttle)
 		);
 	
-	g_hash_table_destroy(buddy_hash);
+	g_hash_table_destroy(notify_plus_data.notifications);
 	
 	
 	purple_signal_disconnect(
@@ -309,13 +305,15 @@ plugin_unload(PurplePlugin *plugin)
 	return TRUE;
 }
 
-static PurplePluginUiInfo prefs_info = {
+static PurplePluginUiInfo
+prefs_info = {
 	notify_plus_pref_frame,
 	0,						/* page num (Reserved) */
 	NULL					/* frame (Reserved) */
 };
 
-static PurplePluginInfo info = {
+static PurplePluginInfo
+info = {
 	PURPLE_PLUGIN_MAGIC,									/* api version */
 	PURPLE_MAJOR_VERSION,
 	PURPLE_MINOR_VERSION,

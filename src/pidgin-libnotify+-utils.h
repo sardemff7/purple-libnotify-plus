@@ -18,50 +18,13 @@
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __PIDGIN_LIBNOTIFY_PLUS_H__
-#define __PIDGIN_LIBNOTIFY_PLUS_H__
+#ifndef __PIDGIN_LIBNOTIFY_PLUS_UTILS_H__
+#define __PIDGIN_LIBNOTIFY_PLUS_UTILS_H__
 
+gchar *get_best_buddy_name(PurpleBuddy *buddy);
 
-#define PLUGIN_ID "pidgin-libnotify+"
+gboolean is_buddy_notify(PurpleBuddy *buddy);
 
-static void
-notify_plus_buddy_signed_on_cb(
-	PurpleBuddy *buddy,
-	gpointer data
-	);
+void send_notification(const gchar *title, const gchar *body, PurpleBuddy *buddy);
 
-static void
-notify_plus_buddy_signed_off_cb(
-	PurpleBuddy *buddy,
-	gpointer data
-	);
-
-static void
-notify_plus_new_im_msg_cb(
-	PurpleAccount *account,
-	const gchar *sender,
-	const gchar *message,
-	int flags,
-	gpointer data
-	);
-
-static void
-notify_plus_new_chat_msg_cb(
-	PurpleAccount *account,
-	const gchar *sender,
-	const gchar *message,
-	PurpleConversation *conv,
-	gpointer data
-	);
-
-static gboolean
-plugin_load(PurplePlugin *plugin);
-
-static gboolean
-plugin_unload(PurplePlugin *plugin);
-
-
-static void
-init_plugin(PurplePlugin *plugin);
-
-#endif /* __PIDGIN_LIBNOTIFY_PLUS_H__ */
+#endif /* __PIDGIN_LIBNOTIFY_PLUS_UTILS_H__ */

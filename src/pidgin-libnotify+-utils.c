@@ -18,6 +18,11 @@
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pidgin-libnotify+-common.h"
+#include "pidgin-libnotify+-utils.h"
+#include <gtkutils.h>
+#include <libnotify/notify.h>
+
 static gchar *
 truncate_string(
 	const gchar *str,
@@ -43,10 +48,8 @@ truncate_string(
 	return tr_str;
 }
 
-static gchar *
-get_best_buddy_name(
-	PurpleBuddy *buddy
-	)
+gchar *
+get_best_buddy_name(PurpleBuddy *buddy)
 {
 	const char *name;
 	if ( purple_buddy_get_contact_alias(buddy) )
@@ -63,7 +66,7 @@ get_best_buddy_name(
 	return tr_name;
 }
 
-static gboolean
+gboolean
 is_buddy_notify(PurpleBuddy *buddy)
 {
 	#ifdef DEBUG
@@ -72,7 +75,7 @@ is_buddy_notify(PurpleBuddy *buddy)
 	
 	PurpleAccount *account = purple_buddy_get_account(buddy);
 	
-	if ( g_list_find(just_signed_on_accounts, account) )
+	if ( g_list_find(notify_plus_data.just_signed_on_accounts, account) )
 		return FALSE;
 	
 	if ( ( purple_prefs_get_bool("/plugins/gtk/libnotify+/only-available") )
@@ -125,21 +128,19 @@ pixbuf_from_buddy_icon(PurpleBuddyIcon *buddy_icon)
 	return icon;
 }
 
-static GHashTable *buddy_hash;
-
 static gboolean
 notification_closed_cb(NotifyNotification *notification)
 {
 	PurpleContact *contact = (PurpleContact *)g_object_get_data(G_OBJECT(notification), "contact");
 	if ( contact )
-		g_hash_table_remove(buddy_hash, contact);
+		g_hash_table_remove(notify_plus_data.notifications, contact);
 	
 	g_object_unref(G_OBJECT(notification));
 	
 	return FALSE;
 }
 
-static void
+void
 send_notification(
 	const gchar *title,
 	const gchar *body,
@@ -153,18 +154,17 @@ send_notification(
 	if ( body )
 	{
 		gchar *tr_body = truncate_string(body, 60);
-		es_body = g_markup_escape_text(tr_body, strlen(tr_body));
+		es_body = g_markup_escape_text(tr_body, g_utf8_strlen(tr_body, -1));
 	}
 	else
 		es_body = NULL;
 	
 	PurpleContact *contact = purple_buddy_get_contact(buddy);
-	notification = g_hash_table_lookup(buddy_hash, contact);
+	notification = g_hash_table_lookup(notify_plus_data.notifications, contact);
 	if ( notification )
 	{
 		#ifdef MODIFY_NOTIFY
 		notify_notification_update(notification, title, es_body, NULL);
-		// FIXME this shouldn't be necessary, file a bug
 		notify_notification_show(notification, NULL);
 		#endif /* MODIFY_NOTIFY */
 		
@@ -173,7 +173,7 @@ send_notification(
 	}
 	
 	notification = notify_notification_new(title, es_body, NULL
-	#ifdef HAVE_LIBNOTIFY_07
+	#ifndef HAVE_LIBNOTIFY_07
 		, NULL
 	#endif
 	);
@@ -184,7 +184,6 @@ send_notification(
 	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 	notify_notification_set_timeout(notification, 1);
 	
-	
 	PurpleBuddyIcon *buddy_icon = NULL;
 	GdkPixbuf *icon = NULL;
 	if ( buddy_icon )
@@ -194,12 +193,16 @@ send_notification(
 	
 	if ( icon )
 	{
+		#ifndef HAVE_LIBNOTIFY_07
 		notify_notification_set_icon_from_pixbuf(notification, icon);
+		#else
+		notify_notification_set_image_from_pixbuf(notification, icon);
+		#endif
 		g_object_unref(icon);
 	}
 	
 	
-	g_hash_table_insert(buddy_hash, contact, notification);
+	g_hash_table_insert(notify_plus_data.notifications, contact, notification);
 	g_object_set_data(G_OBJECT(notification), "contact", contact);
 	g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
 	

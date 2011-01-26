@@ -18,50 +18,10 @@
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __PIDGIN_LIBNOTIFY_PLUS_H__
-#define __PIDGIN_LIBNOTIFY_PLUS_H__
+#ifndef __PIDGIN_LIBNOTIFY_PLUS_FRAMES_H__
+#define __PIDGIN_LIBNOTIFY_PLUS_FRAMES_H__
 
+PurplePluginPrefFrame *notify_plus_pref_frame(PurplePlugin *plugin);
+void menu_add_notify_plus(PurpleBlistNode *node, GList **menu);
 
-#define PLUGIN_ID "pidgin-libnotify+"
-
-static void
-notify_plus_buddy_signed_on_cb(
-	PurpleBuddy *buddy,
-	gpointer data
-	);
-
-static void
-notify_plus_buddy_signed_off_cb(
-	PurpleBuddy *buddy,
-	gpointer data
-	);
-
-static void
-notify_plus_new_im_msg_cb(
-	PurpleAccount *account,
-	const gchar *sender,
-	const gchar *message,
-	int flags,
-	gpointer data
-	);
-
-static void
-notify_plus_new_chat_msg_cb(
-	PurpleAccount *account,
-	const gchar *sender,
-	const gchar *message,
-	PurpleConversation *conv,
-	gpointer data
-	);
-
-static gboolean
-plugin_load(PurplePlugin *plugin);
-
-static gboolean
-plugin_unload(PurplePlugin *plugin);
-
-
-static void
-init_plugin(PurplePlugin *plugin);
-
-#endif /* __PIDGIN_LIBNOTIFY_PLUS_H__ */
+#endif /* __PIDGIN_LIBNOTIFY_PLUS_FRAMES_H__ */

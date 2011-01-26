@@ -13,13 +13,10 @@ plugindir = $(PIDGIN_LIBDIR)/pidgin
 
 plugin_LTLIBRARIES = pidgin-libnotify+.la
 
-pidgin_libnotify__la_LDFLAGS = -module -avoid-version
-
 pidgin_libnotify__la_SOURCES = \
+	src/pidgin-libnotify+-frames.c \
+	src/pidgin-libnotify+-utils.c \
 	src/pidgin-libnotify+.c
-
-pidgin_libnotify__la_LIBADD = \
-	$(LIBNOTIFY_LIBS)
 
 pidgin_libnotify__la_CFLAGS = \
 	-DVERSION=\"$(VERSION)\" \
@@ -28,4 +25,9 @@ pidgin_libnotify__la_CFLAGS = \
 	$(PIDGIN_CFLAGS) \
 	$(LIBNOTIFY_CFLAGS) \
 	$(DEBUG_CFLAGS)
+
+pidgin_libnotify__la_LDFLAGS = -module -avoid-version -export-symbols $(srcdir)/pidgin-libnotify+.sym
+
+pidgin_libnotify__la_LIBADD = \
+	$(LIBNOTIFY_LIBS)
 

@@ -18,7 +18,10 @@
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-static PurplePluginPrefFrame *
+#include "pidgin-libnotify+-common.h"
+#include "pidgin-libnotify+-frames.h"
+
+PurplePluginPrefFrame *
 notify_plus_pref_frame(PurplePlugin *plugin)
 {
 	PurplePluginPrefFrame *frame;
@@ -199,7 +202,7 @@ reset_all_contacts_in_group(PurpleBlistNode *node, gpointer data)
 	g_list_free(already_done);
 }
 
-static void
+void
 menu_add_notify_plus(PurpleBlistNode *node, GList **menu)
 {
 	NOTIFY_PLUS_GET_CONTACT(node);
@@ -209,27 +212,34 @@ menu_add_notify_plus(PurpleBlistNode *node, GList **menu)
 	
 	(*menu) = g_list_append(*menu, NULL);
 	
-	PurpleBlistNode *group = NULL;
+	PurpleMenuAction *action = NULL;
 	if ( PURPLE_BLIST_NODE_IS_CONTACT(node) )
-		group = PURPLE_BLIST_NODE(purple_buddy_get_group(purple_contact_get_priority_buddy(PURPLE_CONTACT(node))));
-	
-	PurpleMenuAction *action;
-	if ( purple_blist_node_get_int(node, "no-notify") == 1 )
-		action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(reset_no_notify), NULL, NULL);
-	else if ( ( group ) && ( purple_blist_node_get_int(group, "no-notify") == 1 ) && ( purple_blist_node_get_int(node, "no-notify") == 0 ) )
-		action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(force_notify), NULL, NULL);
-	else
-		action = purple_menu_action_new(_("Disactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
+	{
+		PurpleBlistNode *group = PURPLE_BLIST_NODE(purple_buddy_get_group(purple_contact_get_priority_buddy(PURPLE_CONTACT(node))));
+		
+		if ( purple_blist_node_get_int(node, "no-notify") == 1 )
+			action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(reset_no_notify), NULL, NULL);
+		else if ( ( group ) && ( purple_blist_node_get_int(group, "no-notify") == 1 ) && ( purple_blist_node_get_int(node, "no-notify") == 0 ) )
+			action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(force_notify), NULL, NULL);
+		else
+			action = purple_menu_action_new(_("Disactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
+		
+		if ( action )
+			(*menu) = g_list_append(*menu, action);
+		
+		action = NULL;
+			action = purple_menu_action_new(_("Disactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
+		if ( action )
+			(*menu) = g_list_append(*menu, action);
+		
+		action = NULL;
+		
+		if ( ( purple_blist_node_get_int(node, "no-notify") != 0 ) || ( purple_blist_node_get_int(node, "save_no-notify") != 0 ) )
+			action = purple_menu_action_new(_("Reset"), PURPLE_CALLBACK(reset_contact), NULL, NULL);
+	}
+	else if ( PURPLE_BLIST_NODE_IS_GROUP(node) )
+		action = purple_menu_action_new(_("Reset all"), PURPLE_CALLBACK(reset_all_contacts_in_group), NULL, NULL);
 	
 	if ( action )
 		(*menu) = g_list_append(*menu, action);
-	
-	PurpleMenuAction *action_reset = NULL;
-	if ( PURPLE_BLIST_NODE_IS_GROUP(node) )
-		action_reset = purple_menu_action_new(_("Reset all"), PURPLE_CALLBACK(reset_all_contacts_in_group), NULL, NULL);
-	else if ( ( PURPLE_BLIST_NODE_IS_CONTACT(node) ) &&
-		( ( purple_blist_node_get_int(node, "no-notify") != 0 ) || ( purple_blist_node_get_int(node, "save_no-notify") != 0 ) ) )
-		action_reset = purple_menu_action_new(_("Reset"), PURPLE_CALLBACK(reset_contact), NULL, NULL);
-	if ( action_reset )
-		(*menu) = g_list_append(*menu, action_reset);
 }
