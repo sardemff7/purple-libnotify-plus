@@ -1,4 +1,4 @@
-AC_PREREQ([2.68])
+AC_PREREQ([2.67])
 AC_INIT([pidgin-libnotify+],[1.0],[])
 
 AC_CONFIG_SRCDIR([src/])
