@@ -1,19 +1,19 @@
 /*
  * Pidgin-Libnotify+ - Provide libnotify interface to Pidgin
  * Copyright (C) 2010 Sardem FF7
- * 
+ *
  * This file is part of Pidgin-Libnotify+.
- * 
+ *
  * Pidgin-Libnotify+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Pidgin-Libnotify+ is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,7 +32,7 @@ notify_plus_buddy_signed_on_cb(
 {
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-on") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
-	
+
 	gchar *name = get_best_buddy_name(buddy);
 	send_notification(name, _("signed on"), buddy);
 	g_free(name);
@@ -45,7 +45,7 @@ notify_plus_buddy_signed_off_cb(
 {
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-off") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
-	
+
 	gchar *name = get_best_buddy_name(buddy);
 	send_notification(name, _("signed off"), buddy);
 	g_free(name);
@@ -71,10 +71,10 @@ notify_plus_buddy_status_changed_cb(
 	}
 	else
 		return;
-	
+
 	if ( ! is_buddy_notify(buddy) )
 		return;
-	
+
 	gchar *name = get_best_buddy_name(buddy);
 	send_notification(name, action, buddy);
 	g_free(name);
@@ -89,7 +89,7 @@ notify_plus_buddy_idle_changed_cb(
 {
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/idle") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
-	
+
 	gchar *name = get_best_buddy_name(buddy);
 	send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy);
 	g_free(name);
@@ -106,15 +106,15 @@ notify_plus_new_im_msg_cb(
 	PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
 		return;
-	
+
 	gchar *name = get_best_buddy_name(buddy);
 	gchar *title = g_strdup_printf(_("%s says"), name);
 	g_free(name);
-	
+
 	gchar *body = purple_markup_strip_html(message);
-	
+
 	send_notification(title, body, buddy);
-	
+
 	g_free(title);
 	g_free(body);
 }
@@ -130,13 +130,13 @@ notify_plus_new_chat_msg_cb(
 	PurpleBuddy *buddy = purple_find_buddy (account, sender);
 	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
 		return;
-	
+
 	gchar *body = purple_markup_strip_html(message);
 	gchar *name = get_best_buddy_name(buddy);
 	gchar *title = g_strdup_printf(_("%s says"), name);
-	
+
 	send_notification(title, body, buddy);
-	
+
 	g_free(title);
 	g_free(name);
 	g_free(body);
@@ -146,19 +146,19 @@ static gboolean
 event_connection_throttle_cb(gpointer data)
 {
 	PurpleAccount *account = (PurpleAccount *)data;
-	
+
 	if ( ! account )
 		return FALSE;
-	
+
 	if ( ! purple_account_get_connection(account) )
 	{
 		notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, account);
 		return FALSE;
 	}
-	
+
 	if ( ! purple_account_is_connected(account) )
 		return TRUE;
-	
+
 	notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, account);
 	return FALSE;
 }
@@ -167,14 +167,14 @@ static void
 event_connection_throttle(PurpleConnection *conn, gpointer data)
 {
 	PurpleAccount *account;
-	
+
 	if ( ! conn )
 		return;
-	
+
 	account = purple_connection_get_account(conn);
 	if ( ! account )
 		return;
-	
+
 	notify_plus_data.just_signed_on_accounts = g_list_prepend(notify_plus_data.just_signed_on_accounts, account);
 	g_timeout_add(5000, event_connection_throttle_cb, (gpointer)account);
 }
@@ -183,66 +183,66 @@ static gboolean
 plugin_load(PurplePlugin *plugin)
 {
 	void *conv_handle, *blist_handle, *conn_handle;
-	
+
 	if ( ( ! notify_is_initted() ) && ( ! notify_init("Pidgin") ) )
 	{
 		purple_debug_error(PLUGIN_ID, "libnotify not running!\n");
 		return FALSE;
 	}
-	
+
 	conv_handle = purple_conversations_get_handle();
 	blist_handle = purple_blist_get_handle();
 	conn_handle = purple_connections_get_handle();
-	
+
 	notify_plus_data.notifications = g_hash_table_new(NULL, NULL);
-	
+
 	purple_signal_connect(
 		blist_handle, "buddy-signed-on", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_signed_on_cb), NULL
 		);
-	
+
 	purple_signal_connect(
 		blist_handle, "buddy-signed-off", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_signed_off_cb), NULL
 		);
-	
+
 	purple_signal_connect(
 		blist_handle, "buddy-status-changed", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_status_changed_cb), NULL
 		);
-	
+
 	purple_signal_connect(
 		blist_handle, "buddy-idle-changed", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_idle_changed_cb), NULL
 		);
-	
+
 	purple_signal_connect(
 		conv_handle, "received-im-msg", plugin,
 		PURPLE_CALLBACK(notify_plus_new_im_msg_cb), NULL
 		);
-	
+
 	purple_signal_connect(
 		conv_handle, "received-chat-msg", plugin,
 		PURPLE_CALLBACK(notify_plus_new_chat_msg_cb), NULL
 		);
-	
-	
+
+
 	purple_signal_connect(
 		conn_handle, "signed-on", plugin,
 		PURPLE_CALLBACK(event_connection_throttle), NULL
 		);
-	
-	
+
+
 	purple_signal_connect(
 		blist_handle, "blist-node-extended-menu", plugin,
 		PURPLE_CALLBACK(menu_add_notify_plus), NULL
 		);
-	
-	
+
+
 	#ifdef DEBUG
 		send_notification("Pidgin-libtonify+", "Loaded", NULL, 5);
 	#endif
-	
+
 	return TRUE;
 }
 
@@ -250,58 +250,58 @@ static gboolean
 plugin_unload(PurplePlugin *plugin)
 {
 	void *conv_handle, *blist_handle, *conn_handle;
-	
+
 	conv_handle = purple_conversations_get_handle();
 	blist_handle = purple_blist_get_handle();
 	conn_handle = purple_connections_get_handle();
-	
+
 	purple_signal_disconnect(
 		blist_handle, "buddy-signed-on", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_signed_on_cb)
 		);
-	
+
 	purple_signal_disconnect(
 		blist_handle, "buddy-signed-off", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_signed_off_cb)
 		);
-	
+
 	purple_signal_disconnect(
 		blist_handle, "buddy-status-changed", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_status_changed_cb)
 		);
-	
+
 	purple_signal_disconnect(
 		blist_handle, "buddy-idle-changed", plugin,
 		PURPLE_CALLBACK(notify_plus_buddy_idle_changed_cb)
 		);
-	
+
 	purple_signal_disconnect(
 		conv_handle, "received-im-msg", plugin,
 		PURPLE_CALLBACK(notify_plus_new_im_msg_cb)
 		);
-	
+
 	purple_signal_disconnect(
 		conv_handle, "received-chat-msg", plugin,
 		PURPLE_CALLBACK(notify_plus_new_chat_msg_cb)
 		);
-	
-	
+
+
 	purple_signal_disconnect(
 		conn_handle, "signed-on", plugin,
 		PURPLE_CALLBACK(event_connection_throttle)
 		);
-	
+
 	g_hash_table_destroy(notify_plus_data.notifications);
-	
-	
+
+
 	purple_signal_disconnect(
 		blist_handle, "blist-node-extended-menu", plugin,
 		PURPLE_CALLBACK(menu_add_notify_plus)
 		);
-	
-	
+
+
 	notify_uninit();
-	
+
 	return TRUE;
 }
 
@@ -344,16 +344,16 @@ static void
 init_plugin(PurplePlugin *plugin)
 {
 	notify_plus = plugin;
-	
+
 	#ifdef ENABLE_NLS
 		bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	#endif
-	
+
 	info.name = "Libnotify+";
 	info.summary = _("Displays popups via libnotify.");
 	info.description = _("Displays popups via libnotify.");
-	
+
 	purple_prefs_add_none("/plugins/gtk/libnotify+");
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/new-msg", TRUE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/signed-on", TRUE);
