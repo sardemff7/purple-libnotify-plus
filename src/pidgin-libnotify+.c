@@ -22,6 +22,7 @@
 #include "pidgin-libnotify+-utils.h"
 #include "pidgin-libnotify+-frames.h"
 #include "pidgin-libnotify+.h"
+#include <libnotify/notify.h>
 
 static PurplePlugin *notify_plus = NULL;
 
