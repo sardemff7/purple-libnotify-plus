@@ -154,7 +154,8 @@ send_notification(
 	if ( body )
 	{
 		gchar *tr_body = truncate_string(body, 60);
-		es_body = g_markup_escape_text(tr_body, g_utf8_strlen(tr_body, -1));
+		es_body = g_markup_escape_text(tr_body, -1);
+		g_free(tr_body);
 	}
 	else
 		es_body = NULL;
