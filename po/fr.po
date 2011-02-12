@@ -84,7 +84,7 @@ msgstr "s'est connecté(e)"
 
 #: ../src/pidgin-libnotify+.c:50
 msgid "signed off"
-msgstr "s'est déconnecté(é)"
+msgstr "s'est déconnecté(e)"
 
 #: ../src/pidgin-libnotify+.c:66
 msgid "went away"
