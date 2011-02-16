@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pidgin-libnotify+ 0.9\n"
+"Project-Id-Version: pidgin-libnotify+ 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-26 11:51+0100\n"
+"POT-Creation-Date: 2011-02-16 12:40+0100\n"
 "PO-Revision-Date: 2011-01-26 11:43+0100\n"
 "Last-Translator: Sardem FF7 <sardemff7.pub@gmail.com>\n"
 "Language-Team: French\n"
@@ -66,47 +66,47 @@ msgstr "Seulement si je suis disponible"
 msgid "Activate libnotify+ popup"
 msgstr "Activer le popup libnotify+"
 
-#: ../src/pidgin-libnotify+-frames.c:235 ../src/pidgin-libnotify+-frames.c:241
+#: ../src/pidgin-libnotify+-frames.c:239
 msgid "Deactivate libnotify+ popup"
 msgstr "Désactiver le popup libnotify+"
 
-#: ../src/pidgin-libnotify+-frames.c:248
+#: ../src/pidgin-libnotify+-frames.c:245
 msgid "Reset"
 msgstr "Remettre à zéro"
 
-#: ../src/pidgin-libnotify+-frames.c:251
+#: ../src/pidgin-libnotify+-frames.c:248
 msgid "Reset all"
 msgstr "Tout remettre à zéro"
 
-#: ../src/pidgin-libnotify+.c:37
+#: ../src/pidgin-libnotify+.c:38
 msgid "signed on"
 msgstr "s'est connecté(e)"
 
-#: ../src/pidgin-libnotify+.c:50
+#: ../src/pidgin-libnotify+.c:51
 msgid "signed off"
 msgstr "s'est déconnecté(e)"
 
-#: ../src/pidgin-libnotify+.c:66
+#: ../src/pidgin-libnotify+.c:67
 msgid "went away"
 msgstr "est parti(e)"
 
-#: ../src/pidgin-libnotify+.c:70
+#: ../src/pidgin-libnotify+.c:71
 msgid "came back"
 msgstr "est revenu(e)"
 
-#: ../src/pidgin-libnotify+.c:94
+#: ../src/pidgin-libnotify+.c:95
 msgid "went idle"
 msgstr "est inactif(ve)"
 
-#: ../src/pidgin-libnotify+.c:94
+#: ../src/pidgin-libnotify+.c:95
 msgid "came back idle"
 msgstr "est actif(ve)"
 
-#: ../src/pidgin-libnotify+.c:111 ../src/pidgin-libnotify+.c:136
+#: ../src/pidgin-libnotify+.c:112 ../src/pidgin-libnotify+.c:137
 #, c-format
 msgid "%s says"
 msgstr "%s a dit"
 
-#: ../src/pidgin-libnotify+.c:354 ../src/pidgin-libnotify+.c:355
+#: ../src/pidgin-libnotify+.c:355 ../src/pidgin-libnotify+.c:356
 msgid "Displays popups via libnotify."
 msgstr "Affiche des popups via libnotify"
