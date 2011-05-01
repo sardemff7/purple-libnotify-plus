@@ -97,14 +97,13 @@ is_buddy_notify(PurpleBuddy *buddy)
 		return FALSE;
 
 	PurpleBlistNode *contact = &(purple_buddy_get_contact(buddy)->node);
-	if ( purple_blist_node_get_int(contact, "no-notify") == 1 )
-		return FALSE;
-
-	PurpleBlistNode *group = &(purple_buddy_get_group(buddy)->node);
-	if ( ( purple_blist_node_get_int(group, "no-notify") == 1 ) && ( purple_blist_node_get_int(contact, "no-notify") == 0 ) )
-		return FALSE;
-
-	return TRUE;
+	gint deactivate = purple_blist_node_get_int(contact, PACKAGE_NAME"/deactivate");
+	if ( deactivate == 0 )
+	{
+		PurpleBlistNode *group = &(purple_buddy_get_group(buddy)->node);
+		deactivate = purple_blist_node_get_int(group, PACKAGE_NAME"/deactivate");
+	}
+	return ( deactivate != 1 );
 }
 
 static GdkPixbuf *

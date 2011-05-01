@@ -125,112 +125,27 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 		node = PURPLE_BLIST_NODE(purple_buddy_get_contact(PURPLE_BUDDY(node)));
 
 static void
-reset_no_notify(PurpleBlistNode *node, gpointer data)
+deactivate_reset(PurpleBlistNode *node, gpointer data)
 {
 	NOTIFY_PLUS_GET_CONTACT(node);
 
-	purple_blist_node_remove_setting(node, "no-notify");
-
-	if ( PURPLE_BLIST_NODE_IS_GROUP(node) )
-	{
-		GList *already_done = NULL;
-		PurpleBlistNode *contact = purple_blist_node_get_first_child(node);
-		do
-		{
-			NOTIFY_PLUS_GET_CONTACT(contact);
-
-			if ( ! g_list_find(already_done, contact) )
-			{
-				int no = purple_blist_node_get_int(contact, "no-notify");
-				int save = purple_blist_node_get_int(contact, "save_no-notify");
-
-				if ( no == -1 )
-					purple_blist_node_set_int(contact, "save_no-notify", -1);
-				else
-					purple_blist_node_remove_setting(contact, "save_no-notify");
-
-				if ( save == 1 )
-					purple_blist_node_set_int(contact, "no-notify", 1);
-				else
-					purple_blist_node_remove_setting(contact, "no-notify");
-
-				already_done = g_list_append(already_done, contact);
-			}
-		} while ( ( contact = purple_blist_node_get_sibling_next(contact) ) != NULL );
-		g_list_free(already_done);
-	}
+	purple_blist_node_remove_setting(node, PACKAGE_NAME"/deactivate");
 }
 
 static void
-set_no_notify(PurpleBlistNode *node, gpointer data)
+deactivate_set(PurpleBlistNode *node, gpointer data)
 {
 	NOTIFY_PLUS_GET_CONTACT(node);
 
-	purple_blist_node_set_int(node, "no-notify", 1);
-
-	if ( PURPLE_BLIST_NODE_IS_GROUP(node) )
-	{
-		GList *already_done = NULL;
-		PurpleBlistNode *contact = purple_blist_node_get_first_child(node);
-		do
-		{
-			NOTIFY_PLUS_GET_CONTACT(contact);
-
-			if ( ! g_list_find(already_done, contact) )
-			{
-				int no = purple_blist_node_get_int(contact, "no-notify");
-				int save = purple_blist_node_get_int(contact, "save_no-notify");
-
-				if ( no == 1 )
-					purple_blist_node_set_int(contact, "save_no-notify", 1);
-				else
-					purple_blist_node_remove_setting(contact, "save_no-notify");
-
-				if ( save == -1 )
-					purple_blist_node_set_int(contact, "no-notify", -1);
-				else
-					purple_blist_node_remove_setting(contact, "no-notify");
-
-				already_done = g_list_append(already_done, contact);
-			}
-		} while ( ( contact = purple_blist_node_get_sibling_next(contact) ) != NULL );
-		g_list_free(already_done);
-	}
+	purple_blist_node_set_int(node, PACKAGE_NAME"/deactivate", 1);
 }
 
 static void
-force_notify(PurpleBlistNode *node, gpointer data)
+deactivate_unset(PurpleBlistNode *node, gpointer data)
 {
 	NOTIFY_PLUS_GET_CONTACT(node);
 
-	purple_blist_node_set_int(node, "no-notify", -1);
-}
-
-static void
-reset_contact(PurpleBlistNode *node, gpointer data)
-{
-	NOTIFY_PLUS_GET_CONTACT(node);
-
-	purple_blist_node_remove_setting(node, "no-notify");
-	purple_blist_node_remove_setting(node, "save_no-notify");
-}
-
-static void
-reset_all_contacts_in_group(PurpleBlistNode *node, gpointer data)
-{
-	GList *already_done = NULL;
-	PurpleBlistNode *contact = purple_blist_node_get_first_child(node);
-	do
-	{
-		NOTIFY_PLUS_GET_CONTACT(contact);
-
-		if ( ! g_list_find(already_done, contact) )
-		{
-			reset_contact(contact, NULL);
-			already_done = g_list_append(already_done, contact);
-		}
-	} while ( ( contact = purple_blist_node_get_sibling_next(contact) ) != NULL );
-	g_list_free(already_done);
+	purple_blist_node_set_int(node, PACKAGE_NAME"/deactivate", -1);
 }
 
 void
@@ -241,33 +156,25 @@ menu_add_notify_plus(PurpleBlistNode *node, GList **menu)
 	if ( ( purple_blist_node_get_flags(node) & PURPLE_BLIST_NODE_FLAG_NO_SAVE ) || ( PURPLE_BLIST_NODE_IS_CHAT(node) ) )
 		return;
 
-	(*menu) = g_list_append(*menu, NULL);
+	gint current = purple_blist_node_get_int(node, PACKAGE_NAME"/deactivate");
 
-	PurpleMenuAction *action = NULL;
-	if ( PURPLE_BLIST_NODE_IS_CONTACT(node) )
+	GList *submenu = NULL;
+
+	if ( current != 0 )
+		submenu = g_list_prepend(submenu, purple_menu_action_new(_("Use defaults"), PURPLE_CALLBACK(deactivate_reset), NULL, NULL));
+	else if ( PURPLE_BLIST_NODE_IS_CONTACT(node) )
 	{
 		PurpleBlistNode *group = PURPLE_BLIST_NODE(purple_buddy_get_group(purple_contact_get_priority_buddy(PURPLE_CONTACT(node))));
-
-		if ( purple_blist_node_get_int(node, "no-notify") == 1 )
-			action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(reset_no_notify), NULL, NULL);
-		else if ( ( group ) && ( purple_blist_node_get_int(group, "no-notify") == 1 ) && ( purple_blist_node_get_int(node, "no-notify") == 0 ) )
-			action = purple_menu_action_new(_("Activate libnotify+ popup"), PURPLE_CALLBACK(force_notify), NULL, NULL);
-
-
-		if ( action )
-			(*menu) = g_list_append(*menu, action);
-
-		action = purple_menu_action_new(_("Deactivate libnotify+ popup"), PURPLE_CALLBACK(set_no_notify), NULL, NULL);
-		(*menu) = g_list_append(*menu, action);
-
-		action = NULL;
-
-		if ( ( purple_blist_node_get_int(node, "no-notify") != 0 ) || ( purple_blist_node_get_int(node, "save_no-notify") != 0 ) )
-			action = purple_menu_action_new(_("Reset"), PURPLE_CALLBACK(reset_contact), NULL, NULL);
+		current = purple_blist_node_get_int(group, PACKAGE_NAME"/deactivate");
 	}
-	else if ( PURPLE_BLIST_NODE_IS_GROUP(node) )
-		action = purple_menu_action_new(_("Reset all"), PURPLE_CALLBACK(reset_all_contacts_in_group), NULL, NULL);
 
-	if ( action )
-		(*menu) = g_list_append(*menu, action);
+	PurpleMenuAction *action = NULL;
+	if ( current == 1 )
+		action = purple_menu_action_new(_("Activate popup"), PURPLE_CALLBACK(deactivate_unset), NULL, NULL);
+	else
+		action = purple_menu_action_new(_("Deactivate popup"), PURPLE_CALLBACK(deactivate_set), NULL, NULL);
+
+	submenu = g_list_prepend(submenu, action);
+
+	(*menu) = g_list_append(*menu, purple_menu_action_new("Libnotify+", NULL, NULL, g_list_reverse(submenu)));
 }
