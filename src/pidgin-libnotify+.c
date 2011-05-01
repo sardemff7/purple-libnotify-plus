@@ -59,42 +59,40 @@ notify_plus_buddy_status_changed_cb(
 	PurpleStatus *new_status,
 	gpointer data)
 {
-	if ( ! is_buddy_notify(buddy) )
+	if ( ( ! is_buddy_notify(buddy) ) || ( ! purple_status_is_exclusive(old_status) ) || ( purple_status_is_exclusive(new_status) ) )
 		return;
 
 	gchar *action = NULL;
-	if ( purple_status_is_exclusive(old_status) && purple_status_is_exclusive(new_status) )
+
+	gboolean old_avail = purple_status_is_available(old_status);
+	gboolean new_avail = purple_status_is_available(new_status);
+	const gchar *msg = purple_status_get_attr_string(new_status, "message");
+	if ( old_avail && ( ! new_avail ) )
 	{
-		gboolean old_avail = purple_status_is_available(old_status);
-		gboolean new_avail = purple_status_is_available(new_status);
-		const gchar *msg = purple_status_get_attr_string(new_status, "message");
-		if ( old_avail && ( ! new_avail ) )
-		{
-			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
-				return;
-			if ( msg )
-				action = g_strdup_printf(_("went away: %s"), msg);
-			else
-				action = g_strdup(_("went away"));
-		}
-		else if ( ( ! old_avail ) && new_avail )
-		{
-			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/back") )
-				return;
-			if ( msg )
-				action = g_strdup_printf(_("came back: %s"), msg);
-			else
-				action = g_strdup(_("came back"));
-		}
-		else if ( old_avail && new_avail )
-		{
-			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/status-message") )
-				return;
-			if ( msg )
-				action = g_strdup_printf(_("changed status message to %s"), msg);
-			else
-				action = g_strdup(_("removed status message"));
-		}
+		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
+			return;
+		if ( msg )
+			action = g_strdup_printf(_("went away: %s"), msg);
+		else
+			action = g_strdup(_("went away"));
+	}
+	else if ( ( ! old_avail ) && new_avail )
+	{
+		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/back") )
+			return;
+		if ( msg )
+			action = g_strdup_printf(_("came back: %s"), msg);
+		else
+			action = g_strdup(_("came back"));
+	}
+	else if ( old_avail && new_avail )
+	{
+		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/status-message") )
+			return;
+		if ( msg )
+			action = g_strdup_printf(_("changed status message to %s"), msg);
+		else
+			action = g_strdup(_("removed status message"));
 	}
 	else
 		return;
