@@ -1,7 +1,4 @@
 EXTRA_DIST = \
-	AUTHORS \
-	VERSION \
-	NEWS \
 	COPYING \
 	pidgin-libnotify+.sym
 
@@ -24,7 +21,6 @@ pidgin_libnotify__la_SOURCES = \
 	src/pidgin-libnotify+.c
 
 pidgin_libnotify__la_CFLAGS = \
-	-DVERSION=\"$(VERSION)\" \
 	-DDATADIR=\"$(PIDGIN_DATADIR)\" \
 	-DLOCALEDIR=\"$(localedir)\" \
 	$(PIDGIN_CFLAGS) \

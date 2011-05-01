@@ -350,7 +350,7 @@ info = {
 
 	PLUGIN_ID,												/* id */
 	NULL,													/* name */
-	VERSION,												/* version */
+	PACKAGE_VERSION,												/* version */
 	NULL,													/* summary */
 	NULL,													/* description */
 
