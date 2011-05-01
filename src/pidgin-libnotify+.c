@@ -195,7 +195,7 @@ plugin_load(PurplePlugin *plugin)
 	blist_handle = purple_blist_get_handle();
 	conn_handle = purple_connections_get_handle();
 
-	notify_plus_data.notifications = g_hash_table_new(NULL, NULL);
+	notify_plus_data.notifications = g_hash_table_new_full(NULL, NULL, NULL, (GDestroyNotify)g_list_free);
 
 	purple_signal_connect(
 		blist_handle, "buddy-signed-on", plugin,
@@ -292,7 +292,7 @@ plugin_unload(PurplePlugin *plugin)
 		PURPLE_CALLBACK(event_connection_throttle)
 		);
 
-	g_hash_table_destroy(notify_plus_data.notifications);
+	g_hash_table_unref(notify_plus_data.notifications);
 
 
 	purple_signal_disconnect(
@@ -365,6 +365,7 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/blocked", TRUE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/new-conv-only", FALSE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/only-available", FALSE);
+	purple_prefs_add_bool("/plugins/gtk/libnotify+/stack-notifications", FALSE);
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)

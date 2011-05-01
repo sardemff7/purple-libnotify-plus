@@ -133,8 +133,14 @@ notification_closed_cb(NotifyNotification *notification)
 {
 	PurpleContact *contact = (PurpleContact *)g_object_get_data(G_OBJECT(notification), "contact");
 	if ( contact )
-		g_hash_table_remove(notify_plus_data.notifications, contact);
+	{
+		GList *list = g_hash_table_lookup(notify_plus_data.notifications, contact);
+		list = g_list_remove(list, contact);
+		if ( list == NULL )
+			g_hash_table_remove(notify_plus_data.notifications, contact);
+	}
 
+	g_hash_table_unref(notify_plus_data.notifications);
 	g_object_unref(G_OBJECT(notification));
 
 	return FALSE;
@@ -161,12 +167,13 @@ send_notification(
 		es_body = NULL;
 
 	PurpleContact *contact = purple_buddy_get_contact(buddy);
-	notification = g_hash_table_lookup(notify_plus_data.notifications, contact);
-	if ( notification )
+	GList *list = g_hash_table_lookup(notify_plus_data.notifications, contact);
+	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/stack-notifications") )
+	&& ( list ) )
 	{
 		#ifdef MODIFY_NOTIFY
-		notify_notification_update(notification, title, es_body, NULL);
-		notify_notification_show(notification, NULL);
+		notify_notification_update(list->data, title, es_body, NULL);
+		notify_notification_show(list->data, NULL);
 		#endif /* MODIFY_NOTIFY */
 
 		g_free(es_body);
@@ -203,7 +210,9 @@ send_notification(
 	}
 
 
-	g_hash_table_insert(notify_plus_data.notifications, contact, notification);
+	list = g_list_prepend(NULL, notification);
+	g_hash_table_insert(notify_plus_data.notifications, contact, list);
+	g_hash_table_ref(notify_plus_data.notifications);
 	g_object_set_data(G_OBJECT(notification), "contact", contact);
 	g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
 
