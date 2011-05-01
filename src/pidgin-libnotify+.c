@@ -339,26 +339,26 @@ prefs_info = {
 
 static PurplePluginInfo
 info = {
-	PURPLE_PLUGIN_MAGIC,									/* api version */
+	PURPLE_PLUGIN_MAGIC,						/* api version */
 	PURPLE_MAJOR_VERSION,
 	PURPLE_MINOR_VERSION,
-	PURPLE_PLUGIN_STANDARD,									/* type */
-	0,														/* ui requirement */
-	0,														/* flags */
-	NULL,													/* dependencies */
-	PURPLE_PRIORITY_DEFAULT,								/* priority */
+	PURPLE_PLUGIN_STANDARD,						/* type */
+	0,								/* ui requirement */
+	0,								/* flags */
+	NULL,								/* dependencies */
+	PURPLE_PRIORITY_DEFAULT,					/* priority */
 
-	PLUGIN_ID,												/* id */
-	NULL,													/* name */
-	PACKAGE_VERSION,												/* version */
-	NULL,													/* summary */
-	NULL,													/* description */
+	PLUGIN_ID,							/* id */
+	NULL,								/* name */
+	PACKAGE_VERSION,						/* version */
+	NULL,								/* summary */
+	NULL,								/* description */
 
-	"Sardem FF7 <sardemff7.pub@gmail.com>",					/* author */
-	"",		/* homepage */
+	"Sardem FF7 <sardemff7.pub@gmail.com>",				/* author */
+	"http://sardemff7.github.com/Pidgin-Libnotify-plus/",		/* homepage */
 
-	plugin_load,	/* load */
-	plugin_unload,	/* unload */
+	plugin_load,		/* load */
+	plugin_unload,		/* unload */
 	NULL,			/* destroy */
 	NULL,			/* ui info */
 	NULL,			/* extra info */
