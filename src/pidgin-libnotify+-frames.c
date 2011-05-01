@@ -70,6 +70,12 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/gtk/libnotify+/status-message",
+		_("Status message change")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
 
 	pref = purple_plugin_pref_new_with_label(
 		_("Restrictions:")

@@ -55,30 +55,44 @@ notify_plus_buddy_signed_off_cb(
 static void
 notify_plus_buddy_status_changed_cb(
 	PurpleBuddy *buddy,
-	PurpleStatus *oldstatus,
-	PurpleStatus *newstatus,
+	PurpleStatus *old_status,
+	PurpleStatus *new_status,
 	gpointer data)
 {
-	const char *action;
-	if ( ( purple_status_is_available(oldstatus) ) && ( ! purple_status_is_available(newstatus) ) )
-	{
-		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
-			return;
-		action = _("went away");
-	}
-	else if ( ( ! purple_status_is_available(oldstatus) ) && ( purple_status_is_available(newstatus) ) )
-	{
-		action = _("came back");
-	}
-	else
+	if ( ! is_buddy_notify(buddy) )
 		return;
 
-	if ( ! is_buddy_notify(buddy) )
+	gchar *action = NULL;
+	if ( purple_status_is_exclusive(old_status) && purple_status_is_exclusive(new_status) )
+	{
+		gboolean old_avail = purple_status_is_available(old_status);
+		gboolean new_avail = purple_status_is_available(new_status);
+		if ( old_avail && ( ! new_avail ) )
+		{
+			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
+				return;
+			action = g_strdup(_("went away"));
+		}
+		else if ( ( ! old_avail ) && new_avail )
+		{
+			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/back") )
+				return;
+			action = g_strdup(_("came back"));
+		}
+		else if ( old_avail && new_avail )
+		{
+			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/status-message") )
+				return;
+			action = g_strdup_printf(_("changed status message to %s"), purple_status_get_attr_string(new_status, "message"));
+		}
+	}
+	else
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
 	send_notification(name, action, buddy);
 	g_free(name);
+	g_free(action);
 }
 
 static void
@@ -362,6 +376,7 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/away", TRUE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/idle", TRUE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/back", TRUE);
+	purple_prefs_add_bool("/plugins/gtk/libnotify+/status-message", FALSE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/blocked", TRUE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/new-conv-only", FALSE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/only-available", FALSE);
