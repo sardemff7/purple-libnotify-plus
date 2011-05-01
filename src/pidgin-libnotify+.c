@@ -67,23 +67,33 @@ notify_plus_buddy_status_changed_cb(
 	{
 		gboolean old_avail = purple_status_is_available(old_status);
 		gboolean new_avail = purple_status_is_available(new_status);
+		const gchar *msg = purple_status_get_attr_string(new_status, "message");
 		if ( old_avail && ( ! new_avail ) )
 		{
 			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
 				return;
-			action = g_strdup(_("went away"));
+			if ( msg )
+				action = g_strdup_printf(_("went away: %s"), msg);
+			else
+				action = g_strdup(_("went away"));
 		}
 		else if ( ( ! old_avail ) && new_avail )
 		{
 			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/back") )
 				return;
-			action = g_strdup(_("came back"));
+			if ( msg )
+				action = g_strdup_printf(_("came back: %s"), msg);
+			else
+				action = g_strdup(_("came back"));
 		}
 		else if ( old_avail && new_avail )
 		{
 			if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/status-message") )
 				return;
-			action = g_strdup_printf(_("changed status message to %s"), purple_status_get_attr_string(new_status, "message"));
+			if ( msg )
+				action = g_strdup_printf(_("changed status message to %s"), msg);
+			else
+				action = g_strdup(_("removed status message"));
 		}
 	}
 	else

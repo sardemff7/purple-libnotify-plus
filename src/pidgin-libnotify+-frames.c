@@ -72,7 +72,7 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/status-message",
-		_("Status message change")
+		_("Status message change (or removal)")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
