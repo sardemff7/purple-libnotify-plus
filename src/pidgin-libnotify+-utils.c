@@ -190,7 +190,10 @@ send_notification(
 
 
 	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
-	notify_notification_set_timeout(notification, 1);
+	gint timeout = purple_prefs_get_int("/plugins/gtk/libnotify+/expire-timeout");
+	if ( timeout < 1 )
+		timeout = ( timeout == -1 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
+	notify_notification_set_timeout(notification, timeout);
 
 	PurpleBuddyIcon *buddy_icon = NULL;
 	GdkPixbuf *icon = NULL;

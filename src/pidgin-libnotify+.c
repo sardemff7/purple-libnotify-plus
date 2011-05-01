@@ -365,6 +365,7 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/blocked", TRUE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/new-conv-only", FALSE);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/only-available", FALSE);
+	purple_prefs_add_int("/plugins/gtk/libnotify+/expire-timeout", -1);
 	purple_prefs_add_bool("/plugins/gtk/libnotify+/stack-notifications", FALSE);
 }
 

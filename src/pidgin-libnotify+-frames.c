@@ -97,6 +97,14 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 
 
 	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/gtk/libnotify+/expire-timeout",
+		_("Expire timeout (1-120, 0 fox never, -1 for auto)")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+	purple_plugin_pref_set_bounds(pref, -1, 120);
+
+
+	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/gtk/libnotify+/stack-notifications",
 		_("Stack notifications (do not ignore a buddy action if a notification is already attached to)")
 		);
