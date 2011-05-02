@@ -217,7 +217,7 @@ plugin_load(PurplePlugin *plugin)
 	blist_handle = purple_blist_get_handle();
 	conn_handle = purple_connections_get_handle();
 
-	notify_plus_data.notifications = g_hash_table_new_full(NULL, NULL, NULL, (GDestroyNotify)g_list_free);
+	notify_plus_data.notifications = g_hash_table_new(NULL, NULL);
 
 	purple_signal_connect(
 		blist_handle, "buddy-signed-on", plugin,

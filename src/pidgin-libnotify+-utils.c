@@ -134,7 +134,7 @@ notification_closed_cb(NotifyNotification *notification)
 	if ( contact )
 	{
 		GList *list = g_hash_table_lookup(notify_plus_data.notifications, contact);
-		list = g_list_remove(list, contact);
+		list = g_list_remove(list, notification);
 		if ( list == NULL )
 			g_hash_table_remove(notify_plus_data.notifications, contact);
 	}
@@ -212,7 +212,7 @@ send_notification(
 	}
 
 
-	list = g_list_prepend(NULL, notification);
+	list = g_list_prepend(list, notification);
 	g_hash_table_insert(notify_plus_data.notifications, contact, list);
 	g_hash_table_ref(notify_plus_data.notifications);
 	g_object_set_data(G_OBJECT(notification), "contact", contact);
