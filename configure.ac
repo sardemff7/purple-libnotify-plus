@@ -32,7 +32,7 @@ AC_PROG_INSTALL
 #
 PKG_CHECK_MODULES(LIBNOTIFY, libnotify >= 0.3.2)
 # Check for libnotify >= 0.7
-PKG_CHECK_MODULES(LIBNOTIFY_07, [libnotify >= 0.7],
+PKG_CHECK_EXISTS([libnotify >= 0.7],
 	AC_DEFINE(HAVE_LIBNOTIFY_07, 1, [Define if you have libnotify 0.7 or later])
 )
 AC_SUBST(LIBNOTIFY_CFLAGS)
