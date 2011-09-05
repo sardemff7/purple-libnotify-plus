@@ -1,6 +1,6 @@
 /*
  * Pidgin-Libnotify+ - Provide libnotify interface to Pidgin
- * Copyright (C) 2010 Sardem FF7
+ * Copyright © 2010-2011 Quentin "Sardem FF7" Glidic
  *
  * This file is part of Pidgin-Libnotify+.
  *
@@ -331,36 +331,36 @@ plugin_unload(PurplePlugin *plugin)
 static PurplePluginUiInfo
 prefs_info = {
 	notify_plus_pref_frame,
-	0,						/* page num (Reserved) */
-	NULL					/* frame (Reserved) */
+	0,                                                               /* page num (Reserved) */
+	NULL                                                             /* frame (Reserved) */
 };
 
 static PurplePluginInfo
 info = {
-	PURPLE_PLUGIN_MAGIC,						/* api version */
+	PURPLE_PLUGIN_MAGIC,                                              /* api version */
 	PURPLE_MAJOR_VERSION,
 	PURPLE_MINOR_VERSION,
-	PURPLE_PLUGIN_STANDARD,						/* type */
-	0,								/* ui requirement */
-	0,								/* flags */
-	NULL,								/* dependencies */
-	PURPLE_PRIORITY_DEFAULT,					/* priority */
+	PURPLE_PLUGIN_STANDARD,                                           /* type */
+	PIDGIN_PLUGIN_TYPE,                                               /* ui requirement */
+	0,                                                                /* flags */
+	NULL,                                                             /* dependencies */
+	PURPLE_PRIORITY_DEFAULT,                                          /* priority */
 
-	PLUGIN_ID,							/* id */
-	NULL,								/* name */
-	PACKAGE_VERSION,						/* version */
-	NULL,								/* summary */
-	NULL,								/* description */
+	PLUGIN_ID,                                                        /* id */
+	NULL,                                                             /* name */
+	PACKAGE_VERSION,                                                  /* version */
+	NULL,                                                             /* summary */
+	NULL,                                                             /* description */
 
-	"Sardem FF7 <sardemff7.pub@gmail.com>",				/* author */
-	"http://sardemff7.github.com/Pidgin-Libnotify-plus/",		/* homepage */
+	"Quentin \"Sardem FF7\" Glidic <sardemff7+pidgin@sardemff7.net>", /* author */
+	"http://sardemff7.github.com/Pidgin-Libnotify-plus/",             /* homepage */
 
-	plugin_load,		/* load */
-	plugin_unload,		/* unload */
-	NULL,			/* destroy */
-	NULL,			/* ui info */
-	NULL,			/* extra info */
-	&prefs_info		/* prefs info */
+	plugin_load,                                                      /* load */
+	plugin_unload,                                                    /* unload */
+	NULL,	                                                          /* destroy */
+	NULL,                                                             /* ui info */
+	NULL,	                                                          /* extra info */
+	&prefs_info	                                                  /* prefs info */
 };
 
 static void

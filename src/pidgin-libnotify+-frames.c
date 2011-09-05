@@ -1,6 +1,6 @@
 /*
  * Pidgin-Libnotify+ - Provide libnotify interface to Pidgin
- * Copyright (C) 2010 Sardem FF7
+ * Copyright © 2010-2011 Quentin "Sardem FF7" Glidic
  *
  * This file is part of Pidgin-Libnotify+.
  *
