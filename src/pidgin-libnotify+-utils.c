@@ -78,21 +78,21 @@ is_buddy_notify(PurpleBuddy *buddy)
 	if ( g_list_find(notify_plus_data.just_signed_on_accounts, account) )
 		return FALSE;
 
-	if ( ( purple_prefs_get_bool("/plugins/gtk/libnotify+/only-available") )
+	if ( ( purple_prefs_get_bool("/plugins/core/libnotify+/only-available") )
 	&& ( ! purple_status_is_available(purple_account_get_active_status(account)) ) )
 		return FALSE;
 
 	const gchar *name = purple_buddy_get_name(buddy);
 
 	if ( ( ! purple_privacy_check(account, name) )
-		&& ( purple_prefs_get_bool("/plugins/gtk/libnotify+/blocked") ) )
+		&& ( purple_prefs_get_bool("/plugins/core/libnotify+/blocked") ) )
 		return FALSE;
 
 	PurpleConversation *conv = purple_find_conversation_with_account(PURPLE_CONV_TYPE_IM, name, account);
 	if ( ( conv )
 		&& (
 			( purple_conversation_has_focus(conv) )
-			|| ( purple_prefs_get_bool("/plugins/gtk/libnotify+/new-conv-only") )
+			|| ( purple_prefs_get_bool("/plugins/core/libnotify+/new-conv-only") )
 		) )
 		return FALSE;
 
@@ -167,7 +167,7 @@ send_notification(
 
 	PurpleContact *contact = purple_buddy_get_contact(buddy);
 	GList *list = g_hash_table_lookup(notify_plus_data.notifications, contact);
-	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/stack-notifications") )
+	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
 	&& ( list ) )
 	{
 		#ifdef MODIFY_NOTIFY
@@ -189,7 +189,7 @@ send_notification(
 
 
 	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
-	gint timeout = purple_prefs_get_int("/plugins/gtk/libnotify+/expire-timeout");
+	gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
 	if ( timeout < 1 )
 		timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
 	notify_notification_set_timeout(notification, timeout);

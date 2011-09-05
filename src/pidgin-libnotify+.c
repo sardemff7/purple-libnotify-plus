@@ -31,7 +31,7 @@ notify_plus_buddy_signed_on_cb(
 	PurpleBuddy *buddy,
 	gpointer data)
 {
-	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-on") ) || ( ! is_buddy_notify(buddy) ) )
+	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/signed-on") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
@@ -44,7 +44,7 @@ notify_plus_buddy_signed_off_cb(
 	PurpleBuddy *buddy,
 	gpointer data)
 {
-	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-off") ) || ( ! is_buddy_notify(buddy) ) )
+	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/signed-off") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
@@ -69,7 +69,7 @@ notify_plus_buddy_status_changed_cb(
 	const gchar *msg = purple_status_get_attr_string(new_status, "message");
 	if ( old_avail && ( ! new_avail ) )
 	{
-		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/away") )
+		if ( ! purple_prefs_get_bool("/plugins/core/libnotify+/away") )
 			return;
 		if ( msg )
 			action = g_strdup_printf(_("went away: %s"), msg);
@@ -78,7 +78,7 @@ notify_plus_buddy_status_changed_cb(
 	}
 	else if ( ( ! old_avail ) && new_avail )
 	{
-		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/back") )
+		if ( ! purple_prefs_get_bool("/plugins/core/libnotify+/back") )
 			return;
 		if ( msg )
 			action = g_strdup_printf(_("came back: %s"), msg);
@@ -87,7 +87,7 @@ notify_plus_buddy_status_changed_cb(
 	}
 	else if ( old_avail && new_avail )
 	{
-		if ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/status-message") )
+		if ( ! purple_prefs_get_bool("/plugins/core/libnotify+/status-message") )
 			return;
 		if ( msg )
 			action = g_strdup_printf(_("changed status message to %s"), msg);
@@ -110,7 +110,7 @@ notify_plus_buddy_idle_changed_cb(
 	gboolean newidle,
 	gpointer data)
 {
-	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/idle") ) || ( ! is_buddy_notify(buddy) ) )
+	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/idle") ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
@@ -127,7 +127,7 @@ notify_plus_new_im_msg_cb(
 	gpointer data)
 {
 	PurpleBuddy *buddy = purple_find_buddy(account, sender);
-	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
+	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
@@ -151,7 +151,7 @@ notify_plus_new_chat_msg_cb(
 	gpointer data)
 {
 	PurpleBuddy *buddy = purple_find_buddy (account, sender);
-	if ( ( ! purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
+	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/new-msg") ) || ( ! buddy ) || ( ! is_buddy_notify(buddy) ) )
 		return;
 
 	gchar *body = purple_markup_strip_html(message);
@@ -377,19 +377,40 @@ init_plugin(PurplePlugin *plugin)
 	info.summary = _("Displays popups via libnotify.");
 	info.description = _("Displays popups via libnotify.");
 
-	purple_prefs_add_none("/plugins/gtk/libnotify+");
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/new-msg", TRUE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/signed-on", TRUE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/signed-off", FALSE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/away", TRUE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/idle", TRUE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/back", TRUE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/status-message", FALSE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/blocked", TRUE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/new-conv-only", FALSE);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/only-available", FALSE);
-	purple_prefs_add_int("/plugins/gtk/libnotify+/expire-timeout", -1);
-	purple_prefs_add_bool("/plugins/gtk/libnotify+/stack-notifications", FALSE);
+	if ( purple_prefs_exists("/plugins/gtk/libnotify+") )
+	{
+		purple_prefs_add_none("/plugins/core/libnotify+");
+		purple_prefs_add_none("/plugins/core/libnotify+");
+		purple_prefs_add_bool("/plugins/core/libnotify+/new-msg", purple_prefs_get_bool("/plugins/gtk/libnotify+/new-msg"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/signed-on", purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-on"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/signed-off", purple_prefs_get_bool("/plugins/gtk/libnotify+/signed-off"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/away", purple_prefs_get_bool("/plugins/gtk/libnotify+/away"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/idle", purple_prefs_get_bool("/plugins/gtk/libnotify+/idle"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/back", purple_prefs_get_bool("/plugins/gtk/libnotify+/back"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/status-message", purple_prefs_get_bool("/plugins/gtk/libnotify+/status-message"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/blocked", purple_prefs_get_bool("/plugins/gtk/libnotify+/blocked"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/new-conv-only", purple_prefs_get_bool("/plugins/gtk/libnotify+/new-conv-only"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/only-available", purple_prefs_get_bool("/plugins/gtk/libnotify+/only-available"));
+		purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", purple_prefs_get_int("/plugins/gtk/libnotify+/expire-timeout"));
+		purple_prefs_add_bool("/plugins/core/libnotify+/stack-notifications", purple_prefs_get_bool("/plugins/gtk/libnotify+/stack-notifications"));
+		purple_prefs_remove("/plugins/gtk/libnotify+");
+	}
+	else if ( ! purple_prefs_exists("/plugins/core/libnotify+") )
+	{
+		purple_prefs_add_none("/plugins/core/libnotify+");
+		purple_prefs_add_bool("/plugins/core/libnotify+/new-msg", TRUE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/signed-on", TRUE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/signed-off", FALSE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/away", TRUE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/idle", TRUE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/back", TRUE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/status-message", FALSE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/blocked", TRUE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/new-conv-only", FALSE);
+		purple_prefs_add_bool("/plugins/core/libnotify+/only-available", FALSE);
+		purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", -1);
+		purple_prefs_add_bool("/plugins/core/libnotify+/stack-notifications", FALSE);
+	}
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)

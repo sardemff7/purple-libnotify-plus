@@ -35,43 +35,43 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/new-msg",
+		"/plugins/core/libnotify+/new-msg",
 		_("New messages")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/signed-on",
+		"/plugins/core/libnotify+/signed-on",
 		_("Buddy signing on")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/signed-off",
+		"/plugins/core/libnotify+/signed-off",
 		_("Buddy signing off")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/away",
+		"/plugins/core/libnotify+/away",
 		_("Buddy going away")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/idle",
+		"/plugins/core/libnotify+/idle",
 		_("Buddy going idle")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/back",
+		"/plugins/core/libnotify+/back",
 		_("Buddy coming back")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/status-message",
+		"/plugins/core/libnotify+/status-message",
 		_("Status message change (or removal)")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
@@ -83,27 +83,27 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/blocked",
+		"/plugins/core/libnotify+/blocked",
 		_("Even for a blocked buddy")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/new-conv-only",
+		"/plugins/core/libnotify+/new-conv-only",
 		_("Only from new conversation")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/only-available",
+		"/plugins/core/libnotify+/only-available",
 		_("Only when available")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/expire-timeout",
+		"/plugins/core/libnotify+/expire-timeout",
 		_("Expire timeout (1-120, 0 fox never, -1 for auto)")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
@@ -111,7 +111,7 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/gtk/libnotify+/stack-notifications",
+		"/plugins/core/libnotify+/stack-notifications",
 		_("Stack notifications (do not ignore a buddy action if a notification is already attached to)")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
