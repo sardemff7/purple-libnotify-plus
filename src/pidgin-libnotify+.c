@@ -341,7 +341,7 @@ info = {
 	PURPLE_MAJOR_VERSION,
 	PURPLE_MINOR_VERSION,
 	PURPLE_PLUGIN_STANDARD,                                           /* type */
-	PIDGIN_PLUGIN_TYPE,                                               /* ui requirement */
+	NULL,                                                             /* ui requirement */
 	0,                                                                /* flags */
 	NULL,                                                             /* dependencies */
 	PURPLE_PRIORITY_DEFAULT,                                          /* priority */

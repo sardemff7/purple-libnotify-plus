@@ -7,7 +7,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = po
 
 
-plugindir = $(PIDGIN_LIBDIR)/pidgin
+plugindir = $(PURPLE_LIBDIR)/purple-2
 
 plugin_LTLIBRARIES = pidgin-libnotify+.la
 
@@ -21,13 +21,16 @@ pidgin_libnotify__la_SOURCES = \
 	src/pidgin-libnotify+.c
 
 pidgin_libnotify__la_CFLAGS = \
-	-DDATADIR=\"$(PIDGIN_DATADIR)\" \
+	-DDATADIR=\"$(PURPLE_DATADIR)\" \
 	-DLOCALEDIR=\"$(localedir)\" \
-	$(PIDGIN_CFLAGS) \
+	$(PURPLE_CFLAGS) \
+	$(GDK_PIXBUF_CFLAGS) \
 	$(LIBNOTIFY_CFLAGS) \
 	$(DEBUG_CFLAGS)
 
 pidgin_libnotify__la_LDFLAGS = -module -avoid-version -export-symbols $(srcdir)/pidgin-libnotify+.sym
 
 pidgin_libnotify__la_LIBADD = \
+	$(PURPLE_LIBS) \
+	$(GDK_PIXBUF_LIBS) \
 	$(LIBNOTIFY_LIBS)

@@ -39,15 +39,22 @@ AC_SUBST(LIBNOTIFY_CFLAGS)
 AC_SUBST(LIBNOTIFY_LIBS)
 
 #
+# Check for gdk-pixbuf
+#
+PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0 >= 0.26)
+AC_SUBST(GDK_PIXBUF_CFLAGS)
+AC_SUBST(GDK_PIXBUF_LIBS)
+
+#
 # Check for pidgin
 #
-PKG_CHECK_MODULES(PIDGIN, pidgin >= 2.6.0)
-AC_SUBST(PIDGIN_CFLAGS)
-AC_SUBST(PIDGIN_LIBS)
-PIDGIN_LIBDIR=`pkg-config --variable=libdir pidgin`
-AC_SUBST(PIDGIN_LIBDIR)
-PIDGIN_DATADIR=`pkg-config --variable=datadir pidgin`
-AC_SUBST(PIDGIN_DATADIR)
+PKG_CHECK_MODULES(PURPLE, pidgin >= 2.6.0)
+AC_SUBST(PURPLE_CFLAGS)
+AC_SUBST(PURPLE_LIBS)
+PURPLE_LIBDIR=`pkg-config --variable=libdir purple`
+AC_SUBST(PURPLE_LIBDIR)
+PURPLE_DATADIR=`pkg-config --variable=datadir purple`
+AC_SUBST(PURPLE_DATADIR)
 
 
 AC_MSG_CHECKING([whether to activate debug])

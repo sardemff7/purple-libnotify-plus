@@ -20,7 +20,6 @@
 
 #include "pidgin-libnotify+-common.h"
 #include "pidgin-libnotify+-utils.h"
-#include <gtkutils.h>
 #include <libnotify/notify.h>
 
 static gchar *
@@ -198,8 +197,6 @@ send_notification(
 	GdkPixbuf *icon = NULL;
 	if ( buddy_icon )
 		icon = pixbuf_from_buddy_icon(buddy_icon);
-	else
-		icon = pidgin_create_prpl_icon(purple_buddy_get_account(buddy), PIDGIN_PRPL_ICON_LARGE);
 
 	if ( icon )
 	{
