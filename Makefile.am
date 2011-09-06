@@ -1,6 +1,6 @@
 EXTRA_DIST = \
 	COPYING \
-	pidgin-libnotify+.sym
+	purple-libnotify+.sym
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -9,18 +9,18 @@ SUBDIRS = po
 
 plugindir = $(PURPLE_LIBDIR)/purple-2
 
-plugin_LTLIBRARIES = pidgin-libnotify+.la
+plugin_LTLIBRARIES = purple-libnotify+.la
 
-pidgin_libnotify__la_SOURCES = \
-	src/pidgin-libnotify+-frames.h \
-	src/pidgin-libnotify+-utils.h \
-	src/pidgin-libnotify+-common.h \
-	src/pidgin-libnotify+.h \
-	src/pidgin-libnotify+-frames.c \
-	src/pidgin-libnotify+-utils.c \
-	src/pidgin-libnotify+.c
+purple_libnotify__la_SOURCES = \
+	src/purple-libnotify+-frames.h \
+	src/purple-libnotify+-utils.h \
+	src/purple-libnotify+-common.h \
+	src/purple-libnotify+.h \
+	src/purple-libnotify+-frames.c \
+	src/purple-libnotify+-utils.c \
+	src/purple-libnotify+.c
 
-pidgin_libnotify__la_CFLAGS = \
+purple_libnotify__la_CFLAGS = \
 	-DDATADIR=\"$(PURPLE_DATADIR)\" \
 	-DLOCALEDIR=\"$(localedir)\" \
 	$(PURPLE_CFLAGS) \
@@ -28,9 +28,9 @@ pidgin_libnotify__la_CFLAGS = \
 	$(LIBNOTIFY_CFLAGS) \
 	$(DEBUG_CFLAGS)
 
-pidgin_libnotify__la_LDFLAGS = -module -avoid-version -export-symbols $(srcdir)/pidgin-libnotify+.sym
+purple_libnotify__la_LDFLAGS = -module -avoid-version -export-symbols $(srcdir)/purple-libnotify+.sym
 
-pidgin_libnotify__la_LIBADD = \
+purple_libnotify__la_LIBADD = \
 	$(PURPLE_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
 	$(LIBNOTIFY_LIBS)

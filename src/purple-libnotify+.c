@@ -18,10 +18,10 @@
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "pidgin-libnotify+-common.h"
-#include "pidgin-libnotify+-utils.h"
-#include "pidgin-libnotify+-frames.h"
-#include "pidgin-libnotify+.h"
+#include "purple-libnotify+-common.h"
+#include "purple-libnotify+-utils.h"
+#include "purple-libnotify+-frames.h"
+#include "purple-libnotify+.h"
 #include <libnotify/notify.h>
 
 static PurplePlugin *notify_plus = NULL;

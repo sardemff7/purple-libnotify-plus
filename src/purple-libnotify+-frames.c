@@ -18,8 +18,8 @@
  * along with Pidgin-Libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "pidgin-libnotify+-common.h"
-#include "pidgin-libnotify+-frames.h"
+#include "purple-libnotify+-common.h"
+#include "purple-libnotify+-frames.h"
 
 PurplePluginPrefFrame *
 notify_plus_pref_frame(PurplePlugin *plugin)
