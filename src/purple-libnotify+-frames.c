@@ -104,7 +104,7 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/core/libnotify+/expire-timeout",
-		_("Expire timeout (1-120, 0 fox never, -1 for auto)")
+		_("Expire timeout (1-120, 0 for never, -1 for auto)")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	purple_plugin_pref_set_bounds(pref, -1, 120);

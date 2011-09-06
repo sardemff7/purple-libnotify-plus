@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pidgin-libnotify+ 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-06 04:07+0200\n"
+"POT-Creation-Date: 2011-09-06 04:14+0200\n"
 "PO-Revision-Date: 2011-01-26 11:43+0100\n"
 "Last-Translator: Sardem FF7 <sardemff7.pub@gmail.com>\n"
 "Language-Team: French\n"
@@ -67,7 +67,7 @@ msgid "Only when available"
 msgstr "Seulement si je suis disponible"
 
 #: ../src/purple-libnotify+-frames.c:107
-msgid "Expire timeout (1-120, 0 fox never, -1 for auto)"
+msgid "Expire timeout (1-120, 0 for never, -1 for auto)"
 msgstr "Délai d’expiration (1-120, 0 pour jamais, -1 pour auto)"
 
 #: ../src/purple-libnotify+-frames.c:115
