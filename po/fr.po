@@ -24,27 +24,27 @@ msgstr "Me notifier :"
 
 #: ../src/purple-libnotify+-frames.c:39
 msgid "New messages"
-msgstr "L'arrivée de nouveaux messages"
+msgstr "L’arrivée de nouveaux messages"
 
 #: ../src/purple-libnotify+-frames.c:45
 msgid "Buddy signing on"
-msgstr "La connexion d'un contact"
+msgstr "La connexion d’un contact"
 
 #: ../src/purple-libnotify+-frames.c:51
 msgid "Buddy signing off"
-msgstr "La déconnexion d'un contact"
+msgstr "La déconnexion d’un contact"
 
 #: ../src/purple-libnotify+-frames.c:57
 msgid "Buddy going away"
-msgstr "L'absence d'un contact"
+msgstr "L’absence d’un contact"
 
 #: ../src/purple-libnotify+-frames.c:63
 msgid "Buddy going idle"
-msgstr "L'inactivité d'un contact"
+msgstr "L’inactivité d’un contact"
 
 #: ../src/purple-libnotify+-frames.c:69
 msgid "Buddy coming back"
-msgstr "Le retour d'un contact"
+msgstr "Le retour d’un contact"
 
 #: ../src/purple-libnotify+-frames.c:75
 msgid "Status message change (or removal)"
@@ -123,7 +123,7 @@ msgstr "a changé son message de statut en %s"
 
 #: ../src/purple-libnotify+.c:95
 msgid "removed status message"
-msgstr "a supprimé sont message de statut"
+msgstr "a supprimé son message de statut"
 
 #: ../src/purple-libnotify+.c:117
 msgid "went idle"
