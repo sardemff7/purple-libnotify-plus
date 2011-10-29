@@ -30,6 +30,7 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 
 	frame = purple_plugin_pref_frame_new();
 
+
 	pref = purple_plugin_pref_new_with_label(
 		_("Notify me on:")
 		);
@@ -95,7 +96,6 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
-
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/core/libnotify+/only-available",
 		_("Only when available")
@@ -103,13 +103,17 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 	purple_plugin_pref_frame_add(frame, pref);
 
 
+	pref = purple_plugin_pref_new_with_label(
+		_("Notification settings:")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/core/libnotify+/expire-timeout",
 		_("Expire timeout (1-120, 0 for never, -1 for auto)")
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 	purple_plugin_pref_set_bounds(pref, -1, 120);
-
 
 	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/core/libnotify+/stack-notifications",
