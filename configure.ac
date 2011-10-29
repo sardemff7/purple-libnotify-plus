@@ -6,23 +6,19 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([.aux])
 
-AC_SUBST([PACKAGE_NAME], ["$PACKAGE_NAME"])
-AC_SUBST([PACKAGE_VERSION], ["$PACKAGE_VERSION"])
-
 AM_INIT_AUTOMAKE([1.10 subdir-objects dist-xz no-dist-gzip tar-ustar foreign])
-AM_MAINTAINER_MODE
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_PROG_CC
-AC_PROG_LIBTOOL
+AM_PROG_CC_C_O
+AC_DISABLE_STATIC
+LT_INIT
 
 GETTEXT_PACKAGE=$PACKAGE_NAME
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext Package])
 AC_SUBST(GETTEXT_PACKAGE)
 IT_PROG_INTLTOOL([0.35.0])
-
-AC_SUBST([localedir], ["$localedir"])
 
 AC_PROG_INSTALL
 
@@ -32,7 +28,7 @@ AM_LDFLAGS=""
 #
 # Check for libnotify
 #
-PKG_CHECK_MODULES(NOTIFY, libnotify >= 0.3.2)
+PKG_CHECK_MODULES(NOTIFY, libnotify >= 0.5.0)
 
 #
 # Check for gdk-pixbuf
@@ -44,7 +40,7 @@ PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0 >= 0.26)
 #
 PKG_CHECK_MODULES(PURPLE, pidgin >= 2.6.0)
 AC_DEFINE_UNQUOTED([PURPLE_DATADIR], ["`pkg-config --variable=datadir purple`"], [libpurple data directory])
-plugindir=`pkg-config --variable=plugindir purple`
+plugindir="`pkg-config --variable=plugindir purple`"
 AC_SUBST(plugindir)
 
 
