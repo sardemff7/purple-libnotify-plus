@@ -6,8 +6,9 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po
 
-
-plugindir = $(PURPLE_LIBDIR)/purple-2
+AM_CFLAGS += \
+	-DLOCALEDIR=\"$(localedir)\" \
+	--include config.h
 
 plugin_LTLIBRARIES = purple-libnotify+.la
 
@@ -21,16 +22,16 @@ purple_libnotify__la_SOURCES = \
 	src/purple-libnotify+.c
 
 purple_libnotify__la_CFLAGS = \
-	-DDATADIR=\"$(PURPLE_DATADIR)\" \
-	-DLOCALEDIR=\"$(localedir)\" \
+	$(AM_CFLAGS) \
 	$(PURPLE_CFLAGS) \
 	$(GDK_PIXBUF_CFLAGS) \
-	$(LIBNOTIFY_CFLAGS) \
-	$(DEBUG_CFLAGS)
+	$(NOTIFY_CFLAGS)
 
-purple_libnotify__la_LDFLAGS = -module -avoid-version -export-symbols $(srcdir)/purple-libnotify+.sym
+purple_libnotify__la_LDFLAGS = \
+	-module -avoid-version \
+	-export-symbols $(srcdir)/purple-libnotify+.sym
 
 purple_libnotify__la_LIBADD = \
 	$(PURPLE_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
-	$(LIBNOTIFY_LIBS)
+	$(NOTIFY_LIBS)

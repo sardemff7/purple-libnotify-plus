@@ -19,8 +19,13 @@
  */
 
 #include "purple-libnotify+-common.h"
-#include "purple-libnotify+-utils.h"
+
 #include <libnotify/notify.h>
+#if ! NOTIFY_CHECK_VERSION(0,7,0)
+#include "libnotify-compat.h"
+#endif
+
+#include "purple-libnotify+-utils.h"
 
 static gchar *
 truncate_string(
@@ -68,7 +73,7 @@ get_best_buddy_name(PurpleBuddy *buddy)
 gboolean
 is_buddy_notify(PurpleBuddy *buddy)
 {
-	#ifdef DEBUG
+	#if DEBUG
 		return TRUE;
 	#endif
 
@@ -169,7 +174,7 @@ send_notification(
 	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
 	&& ( list ) )
 	{
-		#ifdef MODIFY_NOTIFY
+		#if MODIFY_NOTIFY
 		notify_notification_update(list->data, title, es_body, NULL);
 		notify_notification_show(list->data, NULL);
 		#endif /* MODIFY_NOTIFY */
@@ -178,11 +183,7 @@ send_notification(
 		return;
 	}
 
-	notification = notify_notification_new(title, es_body, NULL
-	#ifndef HAVE_LIBNOTIFY_07
-		, NULL
-	#endif
-	);
+	notification = notify_notification_new(title, es_body, NULL);
 
 	g_free(es_body);
 
@@ -200,11 +201,7 @@ send_notification(
 
 	if ( icon )
 	{
-		#ifndef HAVE_LIBNOTIFY_07
-		notify_notification_set_icon_from_pixbuf(notification, icon);
-		#else
 		notify_notification_set_image_from_pixbuf(notification, icon);
-		#endif
 		g_object_unref(icon);
 	}
 
@@ -215,7 +212,7 @@ send_notification(
 	g_object_set_data(G_OBJECT(notification), "contact", contact);
 	g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
 
-	#ifdef DEBUG
+	#if DEBUG
 		if ( ! notify_notification_show(notification, NULL) )
 		{
 				gchar *err_body;

@@ -19,10 +19,13 @@
  */
 
 #include "purple-libnotify+-common.h"
+
+#include <libnotify/notify.h>
+
 #include "purple-libnotify+-utils.h"
 #include "purple-libnotify+-frames.h"
+
 #include "purple-libnotify+.h"
-#include <libnotify/notify.h>
 
 static PurplePlugin *notify_plus = NULL;
 
@@ -262,7 +265,7 @@ plugin_load(PurplePlugin *plugin)
 		);
 
 
-	#ifdef DEBUG
+	#if DEBUG
 		send_notification("Pidgin-libtonify+", "Loaded", NULL, 5);
 	#endif
 
@@ -368,7 +371,7 @@ init_plugin(PurplePlugin *plugin)
 {
 	notify_plus = plugin;
 
-	#ifdef ENABLE_NLS
+	#if ENABLE_NLS
 		bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	#endif

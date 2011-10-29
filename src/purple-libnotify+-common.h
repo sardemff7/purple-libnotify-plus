@@ -21,27 +21,9 @@
 #ifndef __PIDGIN_LIBNOTIFY_PLUS_COMMON_H__
 #define __PIDGIN_LIBNOTIFY_PLUS_COMMON_H__
 
+#include <glib.h>
+#include <glib/gi18n-lib.h>
 #include <purple.h>
-
-#ifdef HAVE_CONFIG_H
-	#include <config.h>
-#endif
-
-#ifdef ENABLE_NLS
-	#include <locale.h>
-	#include <libintl.h>
-	#define _(x) dgettext(GETTEXT_PACKAGE, x)
-	#ifdef dgettext_noop
-		#define N_(x) dgettext_noop(GETTEXT_PACKAGE, x)
-	#else
-		#define N_(x) (x)
-	#endif
-#else
-	#include <locale.h>
-	#define _(x) (x)
-	#define ngettext(Singular, Plural, Number) ((Number == 1) ? (Singular) : (Plural))
-	#define N_(x) (x)
-#endif
 
 struct
 {

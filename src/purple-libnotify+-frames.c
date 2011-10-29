@@ -19,6 +19,7 @@
  */
 
 #include "purple-libnotify+-common.h"
+
 #include "purple-libnotify+-frames.h"
 
 PurplePluginPrefFrame *
