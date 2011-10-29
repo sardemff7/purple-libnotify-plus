@@ -69,6 +69,7 @@ notify_plus_buddy_status_changed_cb(
 
 	gboolean old_avail = purple_status_is_available(old_status);
 	gboolean new_avail = purple_status_is_available(new_status);
+	const gchar *old_msg = purple_status_get_attr_string(old_status, "message");
 	const gchar *msg = purple_status_get_attr_string(new_status, "message");
 	if ( old_avail && ( ! new_avail ) )
 	{
@@ -88,7 +89,7 @@ notify_plus_buddy_status_changed_cb(
 		else
 			action = g_strdup(_("came back"));
 	}
-	else if ( old_avail && new_avail )
+	else if ( ( old_msg != msg ) && ( g_utf8_collate(old_msg, msg) != 0 ) )
 	{
 		if ( ! purple_prefs_get_bool("/plugins/core/libnotify+/status-message") )
 			return;
