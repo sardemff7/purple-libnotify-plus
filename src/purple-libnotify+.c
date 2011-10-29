@@ -212,7 +212,7 @@ plugin_load(PurplePlugin *plugin)
 
 	if ( ( ! notify_is_initted() ) && ( ! notify_init("Pidgin") ) )
 	{
-		purple_debug_error(PLUGIN_ID, "libnotify not running!\n");
+		purple_debug_error(PACKAGE_NAME, "libnotify not running!\n");
 		return FALSE;
 	}
 
@@ -331,39 +331,37 @@ plugin_unload(PurplePlugin *plugin)
 	return TRUE;
 }
 
-static PurplePluginUiInfo
-prefs_info = {
-	notify_plus_pref_frame,
-	0,                                                               /* page num (Reserved) */
-	NULL                                                             /* frame (Reserved) */
+
+static PurplePluginUiInfo prefs_info = {
+    .get_plugin_pref_frame = notify_plus_pref_frame
 };
 
-static PurplePluginInfo
-info = {
-	PURPLE_PLUGIN_MAGIC,                                              /* api version */
-	PURPLE_MAJOR_VERSION,
-	PURPLE_MINOR_VERSION,
-	PURPLE_PLUGIN_STANDARD,                                           /* type */
-	NULL,                                                             /* ui requirement */
-	0,                                                                /* flags */
-	NULL,                                                             /* dependencies */
-	PURPLE_PRIORITY_DEFAULT,                                          /* priority */
+static PurplePluginInfo info = {
+    .magic          = PURPLE_PLUGIN_MAGIC,
+    .major_version  = PURPLE_MAJOR_VERSION,
+    .minor_version  = PURPLE_MINOR_VERSION,
+    .type           = PURPLE_PLUGIN_STANDARD,
+    .ui_requirement = 0,
+    .flags          = 0,
+    .dependencies   = NULL,
+    .priority       = PURPLE_PRIORITY_DEFAULT,
 
-	PLUGIN_ID,                                                        /* id */
-	NULL,                                                             /* name */
-	PACKAGE_VERSION,                                                  /* version */
-	NULL,                                                             /* summary */
-	NULL,                                                             /* description */
+    .id             = PACKAGE_NAME,
+    .name           = "Libnotify+",
+    .version        = PACKAGE_VERSION,
+    .summary        = NULL,
+    .description    = NULL,
+    .author         = "Quentin \"Sardem FF7\" Glidic <sardemff7+pidgin@sardemff7.net>",
+    .homepage       = "http://sardemff7.github.com/pidgin-libnotify-plus/",
 
-	"Quentin \"Sardem FF7\" Glidic <sardemff7+pidgin@sardemff7.net>", /* author */
-	"http://sardemff7.github.com/Pidgin-Libnotify-plus/",             /* homepage */
+    .load           = plugin_load,
+    .unload         = plugin_unload,
+    .destroy        = NULL,
 
-	plugin_load,                                                      /* load */
-	plugin_unload,                                                    /* unload */
-	NULL,	                                                          /* destroy */
-	NULL,                                                             /* ui info */
-	NULL,	                                                          /* extra info */
-	&prefs_info	                                                  /* prefs info */
+    .ui_info        = NULL,
+    .extra_info     = NULL,
+    .prefs_info     = &prefs_info,
+    .actions        = NULL
 };
 
 static void
@@ -376,7 +374,6 @@ init_plugin(PurplePlugin *plugin)
 		bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	#endif
 
-	info.name = "Libnotify+";
 	info.summary = _("Displays popups via libnotify.");
 	info.description = _("Displays popups via libnotify.");
 
@@ -398,22 +395,20 @@ init_plugin(PurplePlugin *plugin)
 		purple_prefs_add_bool("/plugins/core/libnotify+/stack-notifications", purple_prefs_get_bool("/plugins/gtk/libnotify+/stack-notifications"));
 		purple_prefs_remove("/plugins/gtk/libnotify+");
 	}
-	else if ( ! purple_prefs_exists("/plugins/core/libnotify+") )
-	{
-		purple_prefs_add_none("/plugins/core/libnotify+");
-		purple_prefs_add_bool("/plugins/core/libnotify+/new-msg", TRUE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/signed-on", TRUE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/signed-off", FALSE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/away", TRUE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/idle", TRUE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/back", TRUE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/status-message", FALSE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/blocked", TRUE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/new-conv-only", FALSE);
-		purple_prefs_add_bool("/plugins/core/libnotify+/only-available", FALSE);
-		purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", -1);
-		purple_prefs_add_bool("/plugins/core/libnotify+/stack-notifications", FALSE);
-	}
+
+	purple_prefs_add_none("/plugins/core/libnotify+");
+	purple_prefs_add_bool("/plugins/core/libnotify+/new-msg", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/signed-on", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/signed-off", FALSE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/away", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/idle", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/back", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/status-message", FALSE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/blocked", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/new-conv-only", FALSE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/only-available", FALSE);
+	purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", -1);
+	purple_prefs_add_bool("/plugins/core/libnotify+/stack-notifications", FALSE);
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)

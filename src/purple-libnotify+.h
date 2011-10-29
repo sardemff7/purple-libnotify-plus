@@ -22,8 +22,6 @@
 #define __PIDGIN_LIBNOTIFY_PLUS_H__
 
 
-#define PLUGIN_ID "pidgin-libnotify+"
-
 static void
 notify_plus_buddy_signed_on_cb(
 	PurpleBuddy *buddy,
