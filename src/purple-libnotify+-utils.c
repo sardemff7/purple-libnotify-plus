@@ -117,7 +117,6 @@ pixbuf_from_buddy_icon(PurpleBuddyIcon *buddy_icon)
 	const guchar *data = purple_buddy_icon_get_data(buddy_icon, &len);
 
 	GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
-	gdk_pixbuf_loader_set_size(loader, 48, 48);
 	gdk_pixbuf_loader_write(loader, data, len, NULL);
 	gdk_pixbuf_loader_close(loader, NULL);
 
@@ -194,17 +193,85 @@ send_notification(
 		timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
 	notify_notification_set_timeout(notification, timeout);
 
-	PurpleBuddyIcon *buddy_icon = NULL;
-	GdkPixbuf *icon = NULL;
-	if ( buddy_icon )
-		icon = pixbuf_from_buddy_icon(buddy_icon);
-
-	if ( icon )
 	{
-		notify_notification_set_image_from_pixbuf(notification, icon);
-		g_object_unref(icon);
-	}
+		PurpleBuddyIcon *buddy_icon = NULL;
+		GdkPixbuf *icon = NULL;
+		GdkPixbuf *protocol_icon = NULL;
+		PurplePluginProtocolInfo *info;
+		gchar *protoname = NULL;
+		gchar *filename = NULL;
 
+		buddy_icon = purple_buddy_get_icon(buddy);
+		if ( buddy_icon )
+			icon = pixbuf_from_buddy_icon(buddy_icon);
+
+
+		info = PURPLE_PLUGIN_PROTOCOL_INFO(purple_find_prpl(purple_account_get_protocol_id(buddy->account)));
+		if ( info->list_icon != NULL )
+			protoname = info->list_icon(buddy->account, NULL);
+
+		if ( protoname != NULL )
+		{
+			gchar *tmp;
+			tmp = g_strconcat(protoname, ".svg", NULL);
+			filename = g_build_filename(PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
+			g_free(tmp);
+		}
+
+		if ( ( filename != NULL ) && ( g_file_test(filename, G_FILE_TEST_IS_REGULAR) ) )
+		{
+			GError *error = NULL;
+
+			protocol_icon = gdk_pixbuf_new_from_file(filename, &error);
+
+			if ( protocol_icon == NULL )
+			{
+				g_warning("Couldn’t load protocol icon file: %s", error->message);
+				g_clear_error(&error);
+			}
+		}
+
+		if ( icon != NULL )
+		{
+			if ( protocol_icon != NULL )
+			{
+				gint icon_width, icon_height;
+				gint overlay_icon_width, overlay_icon_height;
+				gint x, y;
+				gdouble scale;
+
+				icon_width = gdk_pixbuf_get_width(icon);
+				icon_height = gdk_pixbuf_get_height(icon);
+
+				scale = (gdouble)purple_prefs_get_int("/plugins/core/libnotify+/overlay-scale") / 100.;
+
+				overlay_icon_width = scale * (gdouble)icon_width;
+				overlay_icon_height = scale * (gdouble)icon_height;
+
+				x = icon_width - overlay_icon_width;
+				y = icon_height - overlay_icon_height;
+
+				scale = (gdouble)overlay_icon_width / (gdouble)gdk_pixbuf_get_width(protocol_icon);
+
+				gdk_pixbuf_composite(protocol_icon, icon,
+									 x, y,
+									 overlay_icon_width, overlay_icon_height,
+									 x, y,
+									 scale, scale,
+									 GDK_INTERP_BILINEAR, 255);
+
+				g_object_unref(protocol_icon);
+			}
+
+			notify_notification_set_image_from_pixbuf(notification, icon);
+			g_object_unref(icon);
+		}
+		else if ( protocol_icon != NULL )
+		{
+			notify_notification_set_image_from_pixbuf(notification, protocol_icon);
+			g_object_unref(protocol_icon);
+		}
+	}
 
 	list = g_list_prepend(list, notification);
 	g_hash_table_insert(notify_plus_data.notifications, contact, list);

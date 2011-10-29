@@ -409,6 +409,7 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_bool("/plugins/core/libnotify+/only-available", FALSE);
 	purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", -1);
 	purple_prefs_add_bool("/plugins/core/libnotify+/stack-notifications", FALSE);
+	purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)
