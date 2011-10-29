@@ -35,3 +35,11 @@ purple_libnotify__la_LIBADD = \
 	$(PURPLE_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
 	$(NOTIFY_LIBS)
+
+# Hooks
+install-data-hook: la-files-removal
+
+# *.la files cleanup
+la-files-removal:
+	cd $(DESTDIR)/$(pluginsdir) && \
+		rm $(plugins_LTLIBRARIES)
