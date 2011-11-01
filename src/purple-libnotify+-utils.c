@@ -77,10 +77,15 @@ is_buddy_notify(PurpleBuddy *buddy)
 		return TRUE;
 	#endif
 
+	GList *list;
 	PurpleAccount *account = purple_buddy_get_account(buddy);
 
-	if ( g_list_find(notify_plus_data.just_signed_on_accounts, account) )
-		return FALSE;
+	for ( list = g_list_first(notify_plus_data.just_signed_on_accounts) ; list != NULL ; list = g_list_next(list) )
+	{
+		JustSignedOnAccount *just_signed_on_account = (JustSignedOnAccount *)list->data;
+		if ( account == just_signed_on_account->account )
+			return FALSE;
+	}
 
 	if ( ( purple_prefs_get_bool("/plugins/core/libnotify+/only-available") )
 	&& ( ! purple_status_is_available(purple_account_get_active_status(account)) ) )

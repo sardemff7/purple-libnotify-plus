@@ -172,38 +172,42 @@ notify_plus_new_chat_msg_cb(
 static gboolean
 event_connection_throttle_cb(gpointer data)
 {
-	PurpleAccount *account = (PurpleAccount *)data;
+	PurpleAccount *account;
 
-	if ( ! account )
+	if ( data == NULL )
 		return FALSE;
+
+	account = ((JustSignedOnAccount *)data)->account;
 
 	if ( ! purple_account_get_connection(account) )
-	{
-		notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, account);
-		return FALSE;
-	}
+		goto stop;
 
 	if ( ! purple_account_is_connected(account) )
 		return TRUE;
 
-	notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, account);
+stop:
+	notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, data);
+	g_free(data);
 	return FALSE;
 }
 
 static void
 event_connection_throttle(PurpleConnection *conn, gpointer data)
 {
+	JustSignedOnAccount *just_signed_on_account;
 	PurpleAccount *account;
 
-	if ( ! conn )
+	if ( conn == NULL )
 		return;
 
 	account = purple_connection_get_account(conn);
-	if ( ! account )
+	if ( account == NULL )
 		return;
 
-	notify_plus_data.just_signed_on_accounts = g_list_prepend(notify_plus_data.just_signed_on_accounts, account);
-	g_timeout_add(5000, event_connection_throttle_cb, (gpointer)account);
+	just_signed_on_account = g_new0(JustSignedOnAccount, 1);
+	just_signed_on_account->account = account;
+	notify_plus_data.just_signed_on_accounts = g_list_prepend(notify_plus_data.just_signed_on_accounts, just_signed_on_account);
+	just_signed_on_account->handle = purple_timeout_add_seconds(5, event_connection_throttle_cb, (gpointer)just_signed_on_account);
 }
 
 static gboolean
@@ -277,6 +281,15 @@ static gboolean
 plugin_unload(PurplePlugin *plugin)
 {
 	void *conv_handle, *blist_handle, *conn_handle;
+	GList *account;
+
+	for ( account = g_list_first(notify_plus_data.just_signed_on_accounts) ; account != NULL ; account = g_list_next(account) )
+	{
+		JustSignedOnAccount *just_signed_on_account = account->data;
+		purple_timeout_remove(just_signed_on_account->handle);
+		g_free(account->data);
+	}
+	g_list_free(notify_plus_data.just_signed_on_accounts);
 
 	conv_handle = purple_conversations_get_handle();
 	blist_handle = purple_blist_get_handle();
