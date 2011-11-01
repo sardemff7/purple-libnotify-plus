@@ -183,7 +183,6 @@ event_connection_throttle_cb(gpointer data)
 	     && ( ! purple_account_is_connected(account) ) )
 		return TRUE;
 
-stop:
 	notify_plus_data.just_signed_on_accounts = g_list_remove(notify_plus_data.just_signed_on_accounts, data);
 	g_free(data);
 	return FALSE;
