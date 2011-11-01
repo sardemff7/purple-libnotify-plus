@@ -35,19 +35,21 @@ truncate_string(
 {
 	gchar *tr_str;
 
-	if ( g_utf8_strlen(str, num_chars*2+1) > num_chars )
+	tr_str = g_strdup(str);
+
+	if ( g_utf8_strlen(str, -1) > num_chars )
 	{
-		gchar *str2;
+		gchar *tmp;
 
-		/* allocate number of bytes and not number of utf-8 chars */
-		str2 = g_malloc((num_chars-2) * 2 * sizeof(gchar));
+		/* keep num_chars characters */
+		tmp = g_utf8_offset_to_pointer(tr_str, num_chars+1);
+		*tmp = 0;
 
-		g_utf8_strncpy(str2, str, num_chars-3);
-		tr_str = g_strdup_printf("%s...", str2);
-		g_free(str2);
+		/* add ellipsis */
+		tmp = tr_str;
+		tr_str = g_strconcat(tmp, "…", NULL);
+		g_free(tmp);
 	}
-	else
-		tr_str = g_strdup(str);
 
 	return tr_str;
 }
