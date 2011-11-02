@@ -179,10 +179,8 @@ event_connection_throttle_cb(gpointer data)
 
 	account = ((JustSignedOnAccount *)data)->account;
 
-	if ( ! purple_account_get_connection(account) )
-		goto stop;
-
-	if ( ! purple_account_is_connected(account) )
+	if ( ( purple_account_get_connection(account) )
+	     && ( ! purple_account_is_connected(account) ) )
 		return TRUE;
 
 stop:
