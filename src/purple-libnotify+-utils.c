@@ -37,7 +37,7 @@ truncate_string(
 
 	tr_str = g_strdup(str);
 
-	if ( g_utf8_strlen(str, -1) > num_chars )
+	if ( ( notify_plus_data.truncate ) && ( g_utf8_strlen(str, -1) > num_chars ) )
 	{
 		gchar *tmp;
 

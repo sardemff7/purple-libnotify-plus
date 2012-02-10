@@ -36,6 +36,7 @@ struct
 	GList *just_signed_on_accounts;
 	gboolean modify_notification;
 	gboolean set_transcient;
+	gboolean truncate;
 } notify_plus_data;
 
 #endif /* __PIDGIN_LIBNOTIFY_PLUS_COMMON_H__ */

@@ -214,8 +214,9 @@ notify_plus_adapt_to_server_capabilities()
 	GList *capabilities;
 	GList *capability;
 
-	notify_plus_data.set_transcient = FALSE;
 	notify_plus_data.modify_notification = TRUE;
+	notify_plus_data.set_transcient = FALSE;
+	notify_plus_data.truncate = TRUE;
 
 	capabilities = notify_get_server_caps();
 	for ( capability = capabilities ; capability != NULL ; capability = g_list_next(capability) )
@@ -226,6 +227,8 @@ notify_plus_adapt_to_server_capabilities()
 			notify_plus_data.set_transcient = TRUE;
 		else if ( g_strcmp0(cap_name, "x-canonical-append") == 0 )
 			notify_plus_data.modify_notification = FALSE;
+		else if ( g_strcmp0(cap_name, "x-canonical-truncation") == 0 )
+			notify_plus_data.truncate = FALSE;
 
 		g_free(cap_name);
 	}
