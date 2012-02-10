@@ -26,6 +26,11 @@ AM_CFLAGS="-Wall -Wextra -Wno-unused-parameter"
 AM_LDFLAGS=""
 
 #
+# Check for glib
+#
+PKG_CHECK_MODULES(NOTIFY, glib-2.0)
+
+#
 # Check for libnotify
 #
 PKG_CHECK_MODULES(NOTIFY, libnotify >= 0.5.0)

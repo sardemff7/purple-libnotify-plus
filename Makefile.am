@@ -25,7 +25,8 @@ purple_libnotify__la_CFLAGS = \
 	$(AM_CFLAGS) \
 	$(PURPLE_CFLAGS) \
 	$(GDK_PIXBUF_CFLAGS) \
-	$(NOTIFY_CFLAGS)
+	$(NOTIFY_CFLAGS) \
+	$(GLIB_CFLAGS)
 
 purple_libnotify__la_LDFLAGS = \
 	-module -avoid-version \
@@ -34,4 +35,5 @@ purple_libnotify__la_LDFLAGS = \
 purple_libnotify__la_LIBADD = \
 	$(PURPLE_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
-	$(NOTIFY_LIBS)
+	$(NOTIFY_LIBS) \
+	$(GLIB_LIBS)
