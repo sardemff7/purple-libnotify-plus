@@ -28,7 +28,7 @@ AM_LDFLAGS=""
 #
 # Check for glib
 #
-PKG_CHECK_MODULES(NOTIFY, glib-2.0)
+PKG_CHECK_MODULES(GLIB, glib-2.0)
 
 #
 # Check for libnotify
