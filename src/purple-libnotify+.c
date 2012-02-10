@@ -225,6 +225,8 @@ notify_plus_adapt_to_server_capabilities()
 
 		if ( g_strcmp0(cap_name, "persistence") == 0 )
 			notify_plus_data.set_transcient = TRUE;
+		else if ( g_strcmp0(cap_name, "x-eventd-user-control") == 0 )
+			notify_plus_data.truncate = FALSE;
 		else if ( g_strcmp0(cap_name, "x-canonical-append") == 0 )
 			notify_plus_data.modify_notification = FALSE;
 		else if ( g_strcmp0(cap_name, "x-canonical-truncation") == 0 )
