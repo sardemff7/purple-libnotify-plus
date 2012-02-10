@@ -205,7 +205,7 @@ send_notification(
 		GdkPixbuf *icon = NULL;
 		GdkPixbuf *protocol_icon = NULL;
 		PurplePluginProtocolInfo *info;
-		gchar *protoname = NULL;
+		const gchar *protoname = NULL;
 		gchar *filename = NULL;
 
 		buddy_icon = purple_buddy_get_icon(buddy);
