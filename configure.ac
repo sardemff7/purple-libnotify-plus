@@ -34,6 +34,7 @@ PKG_CHECK_MODULES(NOTIFY, glib-2.0)
 # Check for libnotify
 #
 PKG_CHECK_MODULES(NOTIFY, libnotify >= 0.5.0)
+PKG_CHECK_EXISTS(NOTIFY_06, libnotify >= 0.6.0, [AC_DEFINE([HAVE_NOTIFY_06], [1], [libnotify >= 0.6])], [])
 
 #
 # Check for gdk-pixbuf

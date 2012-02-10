@@ -180,10 +180,11 @@ send_notification(
 	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
 	&& ( list ) )
 	{
-		#if MODIFY_NOTIFY
-		notify_notification_update(list->data, title, es_body, NULL);
-		notify_notification_show(list->data, NULL);
-		#endif /* MODIFY_NOTIFY */
+		if ( notify_plus_data.modify_notification )
+		{
+			notify_notification_update(list->data, title, es_body, NULL);
+			notify_notification_show(list->data, NULL);
+		}
 
 		g_free(es_body);
 		return;
@@ -279,6 +280,14 @@ send_notification(
 			g_object_unref(protocol_icon);
 		}
 	}
+
+
+	if ( notify_plus_data.set_transcient )
+	#if GLIB_CHECK_VERSION(2, 26, 0) && HAVE_NOTIFY_06
+		notify_notification_set_hint(notification, "transcient", g_variant_new_byte(1));
+	#else
+		notify_notification_set_hint_byte(notification, "transcient", 1);
+	#endif
 
 	list = g_list_prepend(list, notification);
 	g_hash_table_insert(notify_plus_data.notifications, contact, list);

@@ -34,6 +34,8 @@ struct
 {
 	GHashTable *notifications;
 	GList *just_signed_on_accounts;
+	gboolean modify_notification;
+	gboolean set_transcient;
 } notify_plus_data;
 
 #endif /* __PIDGIN_LIBNOTIFY_PLUS_COMMON_H__ */

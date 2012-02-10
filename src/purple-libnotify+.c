@@ -71,6 +71,7 @@ notify_plus_buddy_status_changed_cb(
 	gboolean new_avail = purple_status_is_available(new_status);
 	const gchar *old_msg = purple_status_get_attr_string(old_status, "message");
 	const gchar *msg = purple_status_get_attr_string(new_status, "message");
+
 	if ( old_avail && ( ! new_avail ) )
 	{
 		if ( ! purple_prefs_get_bool("/plugins/core/libnotify+/away") )
@@ -207,6 +208,31 @@ event_connection_throttle(PurpleConnection *conn, gpointer data)
 	just_signed_on_account->handle = purple_timeout_add_seconds(5, event_connection_throttle_cb, (gpointer)just_signed_on_account);
 }
 
+static void
+notify_plus_adapt_to_server_capabilities()
+{
+	GList *capabilities;
+	GList *capability;
+
+	notify_plus_data.set_transcient = FALSE;
+	notify_plus_data.modify_notification = TRUE;
+
+	capabilities = notify_get_server_caps();
+	for ( capability = capabilities ; capability != NULL ; capability = g_list_next(capability) )
+	{
+		gchar *cap_name = capability->data;
+
+		if ( g_strcmp0(cap_name, "persistence") == 0 )
+			notify_plus_data.set_transcient = TRUE;
+		else if ( g_strcmp0(cap_name, "x-canonical-append") == 0 )
+			notify_plus_data.modify_notification = FALSE;
+
+		g_free(cap_name);
+	}
+
+	g_list_free(capabilities);
+}
+
 static gboolean
 plugin_load(PurplePlugin *plugin)
 {
@@ -217,6 +243,7 @@ plugin_load(PurplePlugin *plugin)
 		purple_debug_error(PACKAGE_NAME, "libnotify not running!\n");
 		return FALSE;
 	}
+	notify_plus_adapt_to_server_capabilities();
 
 	conv_handle = purple_conversations_get_handle();
 	blist_handle = purple_blist_get_handle();
