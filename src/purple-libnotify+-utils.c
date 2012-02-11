@@ -118,8 +118,12 @@ is_buddy_notify(PurpleBuddy *buddy)
 }
 
 static GdkPixbuf *
-pixbuf_from_buddy_icon(PurpleBuddyIcon *buddy_icon)
+_notify_plus_get_buddy_icon_pixbuf(PurpleBuddy *buddy)
 {
+	PurpleBuddyIcon *buddy_icon = purple_buddy_get_icon(buddy);
+	if ( buddy_icon == NULL )
+		return NULL;
+
 	size_t len;
 	const guchar *data = purple_buddy_icon_get_data(buddy_icon, &len);
 
@@ -129,7 +133,7 @@ pixbuf_from_buddy_icon(PurpleBuddyIcon *buddy_icon)
 
 	GdkPixbuf *icon = gdk_pixbuf_loader_get_pixbuf(loader);
 
-	if ( icon )
+	if ( icon != NULL )
 		g_object_ref(icon);
 
 	g_object_unref(loader);
@@ -221,13 +225,9 @@ _notify_plus_send_notification_internal(
 		g_hash_table_ref(notify_plus_data.notifications);
 		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), buddy);
 
-		PurpleBuddyIcon *buddy_icon = NULL;
 		GdkPixbuf *icon = NULL;
 
-		buddy_icon = purple_buddy_get_icon(buddy);
-		if ( buddy_icon )
-			icon = pixbuf_from_buddy_icon(buddy_icon);
-
+		icon = _notify_plus_get_buddy_icon_pixbuf(buddy);
 
 		if ( ( icon != NULL ) && ( protocol_icon_filename != NULL ) && ( g_file_test(protocol_icon_filename, G_FILE_TEST_IS_REGULAR) ) )
 		{
