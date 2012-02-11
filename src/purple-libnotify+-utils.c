@@ -141,6 +141,58 @@ _notify_plus_get_buddy_icon_pixbuf(PurpleBuddy *buddy)
 	return icon;
 }
 
+static GdkPixbuf *
+_notify_plus_get_notificitaion_pixbuf(PurpleBuddy *buddy, const gchar *protocol_icon_filename)
+{
+	GError *error = NULL;
+
+	GdkPixbuf *icon = _notify_plus_get_buddy_icon_pixbuf(buddy);
+	if ( icon == NULL )
+		return NULL;
+
+	gdouble scale = (gdouble)purple_prefs_get_int("/plugins/core/libnotify+/overlay-scale") / 100.;
+	if ( scale <= 0.0 )
+		return icon;
+
+	if ( ( protocol_icon_filename == NULL ) || ( ! g_file_test(protocol_icon_filename, G_FILE_TEST_IS_REGULAR) ) )
+		return icon;
+
+	GdkPixbuf *protocol_icon = gdk_pixbuf_new_from_file(protocol_icon_filename, &error);
+	if ( protocol_icon == NULL )
+	{
+		g_warning("Couldn’t load protocol icon file: %s", error->message);
+		g_clear_error(&error);
+		return icon;
+	}
+
+	gint icon_width, icon_height;
+	gint overlay_icon_width, overlay_icon_height;
+	gint x, y;
+
+	icon_width = gdk_pixbuf_get_width(icon);
+	icon_height = gdk_pixbuf_get_height(icon);
+
+
+	overlay_icon_width = scale * (gdouble)icon_width;
+	overlay_icon_height = scale * (gdouble)icon_height;
+
+	x = icon_width - overlay_icon_width;
+	y = icon_height - overlay_icon_height;
+
+	scale = (gdouble)overlay_icon_width / (gdouble)gdk_pixbuf_get_width(protocol_icon);
+
+	gdk_pixbuf_composite(protocol_icon, icon,
+						 x, y,
+						 overlay_icon_width, overlay_icon_height,
+						 x, y,
+						 scale, scale,
+						 GDK_INTERP_BILINEAR, 255);
+
+	g_object_unref(protocol_icon);
+
+	return icon;
+}
+
 static void
 notification_closed_cb(NotifyNotification *notification, gpointer user_data)
 {
@@ -225,52 +277,7 @@ _notify_plus_send_notification_internal(
 		g_hash_table_ref(notify_plus_data.notifications);
 		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), buddy);
 
-		GdkPixbuf *icon = NULL;
-
-		icon = _notify_plus_get_buddy_icon_pixbuf(buddy);
-
-		if ( ( icon != NULL ) && ( protocol_icon_filename != NULL ) && ( g_file_test(protocol_icon_filename, G_FILE_TEST_IS_REGULAR) ) )
-		{
-			GdkPixbuf *protocol_icon = NULL;
-
-			protocol_icon = gdk_pixbuf_new_from_file(protocol_icon_filename, &error);
-
-			if ( protocol_icon == NULL )
-			{
-				g_warning("Couldn’t load protocol icon file: %s", error->message);
-				g_clear_error(&error);
-			}
-			else
-			{
-				gint icon_width, icon_height;
-				gint overlay_icon_width, overlay_icon_height;
-				gint x, y;
-				gdouble scale;
-
-				icon_width = gdk_pixbuf_get_width(icon);
-				icon_height = gdk_pixbuf_get_height(icon);
-
-				scale = (gdouble)purple_prefs_get_int("/plugins/core/libnotify+/overlay-scale") / 100.;
-
-				overlay_icon_width = scale * (gdouble)icon_width;
-				overlay_icon_height = scale * (gdouble)icon_height;
-
-				x = icon_width - overlay_icon_width;
-				y = icon_height - overlay_icon_height;
-
-				scale = (gdouble)overlay_icon_width / (gdouble)gdk_pixbuf_get_width(protocol_icon);
-
-				gdk_pixbuf_composite(protocol_icon, icon,
-									 x, y,
-									 overlay_icon_width, overlay_icon_height,
-									 x, y,
-									 scale, scale,
-									 GDK_INTERP_BILINEAR, 255);
-
-				g_object_unref(protocol_icon);
-			}
-		}
-
+		GdkPixbuf *icon = _notify_plus_get_notificitaion_pixbuf(buddy, protocol_icon_filename);
 		if ( icon != NULL )
 		{
 			notify_notification_set_image_from_pixbuf(notification, icon);
