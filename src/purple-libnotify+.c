@@ -215,6 +215,7 @@ notify_plus_adapt_to_server_capabilities()
 	GList *capability;
 
 	notify_plus_data.modify_notification = TRUE;
+	notify_plus_data.use_svg = FALSE;
 	notify_plus_data.set_transcient = FALSE;
 	notify_plus_data.truncate = TRUE;
 
@@ -225,6 +226,8 @@ notify_plus_adapt_to_server_capabilities()
 
 		if ( g_strcmp0(cap_name, "persistence") == 0 )
 			notify_plus_data.set_transcient = TRUE;
+		else if ( g_strcmp0(cap_name, "image/svg+xml") == 0 )
+			notify_plus_data.use_svg = TRUE;
 		else if ( g_strcmp0(cap_name, "x-eventd-user-control") == 0 )
 			notify_plus_data.truncate = FALSE;
 		else if ( g_strcmp0(cap_name, "x-canonical-append") == 0 )

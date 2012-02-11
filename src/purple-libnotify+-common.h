@@ -35,6 +35,7 @@ struct
 	GHashTable *notifications;
 	GList *just_signed_on_accounts;
 	gboolean modify_notification;
+	gboolean use_svg;
 	gboolean set_transcient;
 	gboolean truncate;
 } notify_plus_data;

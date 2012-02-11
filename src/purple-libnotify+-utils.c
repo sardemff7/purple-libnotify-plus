@@ -303,6 +303,7 @@ notify_plus_send_notification(
 	PurplePluginProtocolInfo *info;
 	const gchar *protocol_name = NULL;
 	gchar *protocol_icon_uri = NULL;
+	gchar *protocol_icon_filename = NULL;
 	PurpleContact *contact;
 
 	if ( body != NULL )
@@ -319,15 +320,30 @@ notify_plus_send_notification(
 	if ( protocol_name != NULL )
 	{
 		gchar *tmp;
-		tmp = g_strconcat(protocol_name, ".svg", NULL);
-		protocol_icon_uri = g_build_filename("file://" PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
-		g_free(tmp);
+
+		if ( notify_plus_data.use_svg )
+		{
+			tmp = g_strconcat(protocol_name, ".svg", NULL);
+			protocol_icon_uri = g_build_filename("file://" PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
+			g_free(tmp);
+		}
+		else
+		{
+			tmp = g_strconcat(protocol_name, ".png", NULL);
+			protocol_icon_uri = g_build_filename("file://" PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "48", tmp, NULL);
+			g_free(tmp);
+
+			tmp = g_strconcat(protocol_name, ".svg", NULL);
+			protocol_icon_filename = g_build_filename(PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
+			g_free(tmp);
+		}
 	}
 
 	contact = purple_buddy_get_contact(buddy);
 
-	_notify_plus_send_notification_internal(title, es_body, protocol_icon_uri, protocol_icon_uri+7, buddy, contact);
+	_notify_plus_send_notification_internal(title, es_body, protocol_icon_uri, ( protocol_icon_filename != NULL ) ? protocol_icon_filename : (protocol_icon_uri+7), buddy, contact);
 
+	g_free(protocol_icon_filename);
 	g_free(protocol_icon_uri);
 	g_free(es_body);
 }
