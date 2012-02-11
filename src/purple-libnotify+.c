@@ -298,11 +298,6 @@ plugin_load(PurplePlugin *plugin)
 		PURPLE_CALLBACK(menu_add_notify_plus), NULL
 		);
 
-
-	#if DEBUG
-		send_notification("Pidgin-libtonify+", "Loaded", NULL, 5);
-	#endif
-
 	return TRUE;
 }
 

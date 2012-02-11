@@ -161,6 +161,7 @@ send_notification(
 	)
 {
 	NotifyNotification *notification = NULL;
+	GError *error = NULL;
 
 
 	gchar *es_body;
@@ -256,8 +257,6 @@ send_notification(
 
 		if ( ( filename != NULL ) && ( g_file_test(filename, G_FILE_TEST_IS_REGULAR) ) )
 		{
-			GError *error = NULL;
-
 			protocol_icon = gdk_pixbuf_new_from_file(filename, &error);
 
 			if ( protocol_icon == NULL )
@@ -310,18 +309,9 @@ send_notification(
 	}
 	g_free(es_body);
 
-	#if DEBUG
-		if ( ! notify_notification_show(notification, NULL) )
-		{
-				gchar *err_body;
-				err_body = g_strdup_printf("%s\n%s", title, body);
-				purple_notify_message(
-					notify_plus, PURPLE_NOTIFY_MSG_ERROR,
-					"Notification send error", "Failed to send a notification", err_body, NULL, NULL
-					);
-				g_free(err_body);
-		}
-	#else
-		notify_notification_show(notification, NULL);
-	#endif
+	if ( ! notify_notification_show(notification, &error) )
+	{
+		g_warning("Couldn’t send notification: %s", error->message);
+		g_clear_error(&error);
+	}
 }
