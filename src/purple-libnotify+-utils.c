@@ -137,22 +137,20 @@ pixbuf_from_buddy_icon(PurpleBuddyIcon *buddy_icon)
 	return icon;
 }
 
-static gboolean
-notification_closed_cb(NotifyNotification *notification)
+static void
+notification_closed_cb(NotifyNotification *notification, gpointer user_data)
 {
-	PurpleContact *contact = (PurpleContact *)g_object_get_data(G_OBJECT(notification), "contact");
-	if ( contact )
+	PurpleBuddy *buddy = user_data;
+
+	if ( buddy != NULL )
 	{
-		GList *list = g_hash_table_lookup(notify_plus_data.notifications, contact);
-		list = g_list_remove(list, notification);
-		if ( list == NULL )
-			g_hash_table_remove(notify_plus_data.notifications, contact);
+		PurpleContact *contact = purple_buddy_get_contact(buddy);
+
+		g_hash_table_remove(notify_plus_data.notifications, contact);
+		g_hash_table_unref(notify_plus_data.notifications);
 	}
 
-	g_hash_table_unref(notify_plus_data.notifications);
 	g_object_unref(G_OBJECT(notification));
-
-	return FALSE;
 }
 
 void
@@ -176,32 +174,62 @@ send_notification(
 		es_body = NULL;
 
 	PurpleContact *contact = purple_buddy_get_contact(buddy);
-	GList *list = g_hash_table_lookup(notify_plus_data.notifications, contact);
-	if ( ( ! purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
-	&& ( list ) )
+	notification = g_hash_table_lookup(notify_plus_data.notifications, contact);
+	if ( purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
 	{
-		if ( notify_plus_data.modify_notification )
-		{
-			notify_notification_update(list->data, title, es_body, NULL);
-			notify_notification_show(list->data, NULL);
-		}
+		#if DEBUG
+		gchar *name = get_best_buddy_name(buddy);
+		g_debug("[Stacking] New notification for buddy '%s'.", name);
+		g_free(name);
+		#endif
 
-		g_free(es_body);
-		return;
+		notification = notify_notification_new(title, es_body, NULL);
+		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
 	}
-
-	notification = notify_notification_new(title, es_body, NULL);
-
-	g_free(es_body);
-
-
-	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
-	gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
-	if ( timeout < 1 )
-		timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
-	notify_notification_set_timeout(notification, timeout);
-
+	else if ( notification != NULL )
 	{
+		#if DEBUG
+		gchar *name = get_best_buddy_name(buddy);
+		g_debug("Already displaying a notification for buddy '%s'.", name);
+		g_free(name);
+		#endif
+		if ( ! notify_plus_data.modify_notification )
+		{
+			#if DEBUG
+			g_debug("Can’t modify the notification, ignoring it.");
+			#endif
+			g_free(es_body);
+			return;
+		}
+		notify_notification_update(notification, title, es_body, NULL);
+	}
+	else
+	{
+		#if DEBUG
+		gchar *name = get_best_buddy_name(buddy);
+		g_debug("New notification for buddy '%s'.", name);
+		g_free(name);
+		#endif
+
+		notification = notify_notification_new(title, es_body, NULL);
+
+		notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
+		gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
+		if ( timeout < 1 )
+			timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
+		notify_notification_set_timeout(notification, timeout);
+
+		if ( notify_plus_data.set_transcient )
+		#if GLIB_CHECK_VERSION(2, 26, 0) && HAVE_NOTIFY_06
+			notify_notification_set_hint(notification, "transcient", g_variant_new_byte(1));
+		#else
+			notify_notification_set_hint_byte(notification, "transcient", 1);
+		#endif
+
+		g_hash_table_insert(notify_plus_data.notifications, contact, notification);
+		g_hash_table_ref(notify_plus_data.notifications);
+		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), buddy);
+
 		PurpleBuddyIcon *buddy_icon = NULL;
 		GdkPixbuf *icon = NULL;
 		GdkPixbuf *protocol_icon = NULL;
@@ -280,20 +308,7 @@ send_notification(
 			g_object_unref(protocol_icon);
 		}
 	}
-
-
-	if ( notify_plus_data.set_transcient )
-	#if GLIB_CHECK_VERSION(2, 26, 0) && HAVE_NOTIFY_06
-		notify_notification_set_hint(notification, "transcient", g_variant_new_byte(1));
-	#else
-		notify_notification_set_hint_byte(notification, "transcient", 1);
-	#endif
-
-	list = g_list_prepend(list, notification);
-	g_hash_table_insert(notify_plus_data.notifications, contact, list);
-	g_hash_table_ref(notify_plus_data.notifications);
-	g_object_set_data(G_OBJECT(notification), "contact", contact);
-	g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
+	g_free(es_body);
 
 	#if DEBUG
 		if ( ! notify_notification_show(notification, NULL) )
