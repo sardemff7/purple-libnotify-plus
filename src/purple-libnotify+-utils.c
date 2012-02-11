@@ -150,6 +150,9 @@ _notify_plus_get_notificitaion_pixbuf(PurpleBuddy *buddy, const gchar *protocol_
 	if ( icon == NULL )
 		return NULL;
 
+	if ( ! notify_plus_data.overlay_icon )
+		return icon;
+
 	gdouble scale = (gdouble)purple_prefs_get_int("/plugins/core/libnotify+/overlay-scale") / 100.;
 	if ( scale <= 0.0 )
 		return icon;

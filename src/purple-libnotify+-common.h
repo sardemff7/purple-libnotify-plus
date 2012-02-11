@@ -36,6 +36,7 @@ struct
 	GList *just_signed_on_accounts;
 	gboolean modify_notification;
 	gboolean use_svg;
+	gboolean overlay_icon;
 	gboolean set_transcient;
 	gboolean truncate;
 } notify_plus_data;
