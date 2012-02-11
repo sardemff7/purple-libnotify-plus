@@ -157,6 +157,8 @@ static void
 _notify_plus_send_notification_internal(
 	const gchar *title,
 	const gchar *body,
+	const gchar *protocol_icon_uri,
+	const gchar *protocol_icon_filename,
 	PurpleBuddy *buddy,
 	PurpleContact *contact
 	)
@@ -173,7 +175,7 @@ _notify_plus_send_notification_internal(
 		g_free(name);
 		#endif
 
-		notification = notify_notification_new(title, body, NULL);
+		notification = notify_notification_new(title, body, protocol_icon_uri);
 		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
 	}
 	else if ( notification != NULL )
@@ -190,7 +192,7 @@ _notify_plus_send_notification_internal(
 			#endif
 			return;
 		}
-		notify_notification_update(notification, title, body, NULL);
+		notify_notification_update(notification, title, body, protocol_icon_uri);
 	}
 	else
 	{
@@ -200,7 +202,7 @@ _notify_plus_send_notification_internal(
 		g_free(name);
 		#endif
 
-		notification = notify_notification_new(title, body, NULL);
+		notification = notify_notification_new(title, body, protocol_icon_uri);
 
 		notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 		gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
@@ -221,42 +223,24 @@ _notify_plus_send_notification_internal(
 
 		PurpleBuddyIcon *buddy_icon = NULL;
 		GdkPixbuf *icon = NULL;
-		GdkPixbuf *protocol_icon = NULL;
-		PurplePluginProtocolInfo *info;
-		const gchar *protoname = NULL;
-		gchar *filename = NULL;
 
 		buddy_icon = purple_buddy_get_icon(buddy);
 		if ( buddy_icon )
 			icon = pixbuf_from_buddy_icon(buddy_icon);
 
 
-		info = PURPLE_PLUGIN_PROTOCOL_INFO(purple_find_prpl(purple_account_get_protocol_id(buddy->account)));
-		if ( info->list_icon != NULL )
-			protoname = info->list_icon(buddy->account, NULL);
-
-		if ( protoname != NULL )
+		if ( ( icon != NULL ) && ( protocol_icon_filename != NULL ) && ( g_file_test(protocol_icon_filename, G_FILE_TEST_IS_REGULAR) ) )
 		{
-			gchar *tmp;
-			tmp = g_strconcat(protoname, ".svg", NULL);
-			filename = g_build_filename(PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
-			g_free(tmp);
-		}
+			GdkPixbuf *protocol_icon = NULL;
 
-		if ( ( filename != NULL ) && ( g_file_test(filename, G_FILE_TEST_IS_REGULAR) ) )
-		{
-			protocol_icon = gdk_pixbuf_new_from_file(filename, &error);
+			protocol_icon = gdk_pixbuf_new_from_file(protocol_icon_filename, &error);
 
 			if ( protocol_icon == NULL )
 			{
 				g_warning("Couldn’t load protocol icon file: %s", error->message);
 				g_clear_error(&error);
 			}
-		}
-
-		if ( icon != NULL )
-		{
-			if ( protocol_icon != NULL )
+			else
 			{
 				gint icon_width, icon_height;
 				gint overlay_icon_width, overlay_icon_height;
@@ -285,14 +269,12 @@ _notify_plus_send_notification_internal(
 
 				g_object_unref(protocol_icon);
 			}
+		}
 
+		if ( icon != NULL )
+		{
 			notify_notification_set_image_from_pixbuf(notification, icon);
 			g_object_unref(icon);
-		}
-		else if ( protocol_icon != NULL )
-		{
-			notify_notification_set_image_from_pixbuf(notification, protocol_icon);
-			g_object_unref(protocol_icon);
 		}
 	}
 
@@ -311,6 +293,9 @@ notify_plus_send_notification(
 	)
 {
 	gchar *es_body = NULL;
+	PurplePluginProtocolInfo *info;
+	const gchar *protocol_name = NULL;
+	gchar *protocol_icon_uri = NULL;
 	PurpleContact *contact;
 
 	if ( body != NULL )
@@ -320,9 +305,22 @@ notify_plus_send_notification(
 		g_free(tr_body);
 	}
 
+	info = PURPLE_PLUGIN_PROTOCOL_INFO(purple_find_prpl(purple_account_get_protocol_id(buddy->account)));
+	if ( info->list_icon != NULL )
+		protocol_name = info->list_icon(buddy->account, NULL);
+
+	if ( protocol_name != NULL )
+	{
+		gchar *tmp;
+		tmp = g_strconcat(protocol_name, ".svg", NULL);
+		protocol_icon_uri = g_build_filename("file://" PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
+		g_free(tmp);
+	}
+
 	contact = purple_buddy_get_contact(buddy);
 
-	_notify_plus_send_notification_internal(title, es_body, buddy, contact);
+	_notify_plus_send_notification_internal(title, es_body, protocol_icon_uri, protocol_icon_uri+7, buddy, contact);
 
+	g_free(protocol_icon_uri);
 	g_free(es_body);
 }
