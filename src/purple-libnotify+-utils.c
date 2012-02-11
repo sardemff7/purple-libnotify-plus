@@ -153,28 +153,17 @@ notification_closed_cb(NotifyNotification *notification, gpointer user_data)
 	g_object_unref(G_OBJECT(notification));
 }
 
-void
-send_notification(
+static void
+_notify_plus_send_notification_internal(
 	const gchar *title,
 	const gchar *body,
-	PurpleBuddy *buddy
+	PurpleBuddy *buddy,
+	PurpleContact *contact
 	)
 {
 	NotifyNotification *notification = NULL;
 	GError *error = NULL;
 
-
-	gchar *es_body;
-	if ( body )
-	{
-		gchar *tr_body = truncate_string(body, 60);
-		es_body = g_markup_escape_text(tr_body, -1);
-		g_free(tr_body);
-	}
-	else
-		es_body = NULL;
-
-	PurpleContact *contact = purple_buddy_get_contact(buddy);
 	notification = g_hash_table_lookup(notify_plus_data.notifications, contact);
 	if ( purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
 	{
@@ -184,7 +173,7 @@ send_notification(
 		g_free(name);
 		#endif
 
-		notification = notify_notification_new(title, es_body, NULL);
+		notification = notify_notification_new(title, body, NULL);
 		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
 	}
 	else if ( notification != NULL )
@@ -199,10 +188,9 @@ send_notification(
 			#if DEBUG
 			g_debug("Can’t modify the notification, ignoring it.");
 			#endif
-			g_free(es_body);
 			return;
 		}
-		notify_notification_update(notification, title, es_body, NULL);
+		notify_notification_update(notification, title, body, NULL);
 	}
 	else
 	{
@@ -212,7 +200,7 @@ send_notification(
 		g_free(name);
 		#endif
 
-		notification = notify_notification_new(title, es_body, NULL);
+		notification = notify_notification_new(title, body, NULL);
 
 		notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 		gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
@@ -307,11 +295,34 @@ send_notification(
 			g_object_unref(protocol_icon);
 		}
 	}
-	g_free(es_body);
 
 	if ( ! notify_notification_show(notification, &error) )
 	{
 		g_warning("Couldn’t send notification: %s", error->message);
 		g_clear_error(&error);
 	}
+}
+
+void
+notify_plus_send_notification(
+	const gchar *title,
+	const gchar *body,
+	PurpleBuddy *buddy
+	)
+{
+	gchar *es_body = NULL;
+	PurpleContact *contact;
+
+	if ( body != NULL )
+	{
+		gchar *tr_body = truncate_string(body, 60);
+		es_body = g_markup_escape_text(tr_body, -1);
+		g_free(tr_body);
+	}
+
+	contact = purple_buddy_get_contact(buddy);
+
+	_notify_plus_send_notification_internal(title, es_body, buddy, contact);
+
+	g_free(es_body);
 }

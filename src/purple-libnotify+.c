@@ -38,7 +38,7 @@ notify_plus_buddy_signed_on_cb(
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, _("signed on"), buddy);
+	notify_plus_send_notification(name, _("signed on"), buddy);
 	g_free(name);
 }
 
@@ -51,7 +51,7 @@ notify_plus_buddy_signed_off_cb(
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, _("signed off"), buddy);
+	notify_plus_send_notification(name, _("signed off"), buddy);
 	g_free(name);
 }
 
@@ -103,7 +103,7 @@ notify_plus_buddy_status_changed_cb(
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, action, buddy);
+	notify_plus_send_notification(name, action, buddy);
 	g_free(name);
 	g_free(action);
 }
@@ -119,7 +119,7 @@ notify_plus_buddy_idle_changed_cb(
 		return;
 
 	gchar *name = get_best_buddy_name(buddy);
-	send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy);
+	notify_plus_send_notification(name, ( newidle ) ? ( _("went idle") ) : ( _("came back idle") ), buddy);
 	g_free(name);
 }
 
@@ -141,7 +141,7 @@ notify_plus_new_im_msg_cb(
 
 	gchar *body = purple_markup_strip_html(message);
 
-	send_notification(title, body, buddy);
+	notify_plus_send_notification(title, body, buddy);
 
 	g_free(title);
 	g_free(body);
@@ -163,7 +163,7 @@ notify_plus_new_chat_msg_cb(
 	gchar *name = get_best_buddy_name(buddy);
 	gchar *title = g_strdup_printf(_("%s says"), name);
 
-	send_notification(title, body, buddy);
+	notify_plus_send_notification(title, body, buddy);
 
 	g_free(title);
 	g_free(name);
