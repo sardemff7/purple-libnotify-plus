@@ -44,7 +44,7 @@ PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0 >= 0.26)
 #
 # Check for pidgin
 #
-PKG_CHECK_MODULES(PURPLE, pidgin >= 2.6.0)
+PKG_CHECK_MODULES(PURPLE, purple >= 2.6.0)
 AC_DEFINE_UNQUOTED([PURPLE_DATADIR], ["`pkg-config --variable=datadir purple`"], [libpurple data directory])
 plugindir="`pkg-config --variable=plugindir purple`"
 AC_SUBST(plugindir)
