@@ -1,5 +1,5 @@
 AC_PREREQ([2.65])
-AC_INIT([purple-libnotify+], [1.4.90], [], [purple-libnotify-plus])
+AC_INIT([purple-libnotify+], [1.4.91], [], [purple-libnotify-plus])
 
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_HEADERS([config.h])
