@@ -11,6 +11,7 @@ AM_INIT_AUTOMAKE([1.10 subdir-objects dist-xz no-dist-gzip tar-ustar foreign])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_PROG_CC
+AC_PROG_CC_C99
 AM_PROG_CC_C_O
 AC_DISABLE_STATIC
 LT_INIT
