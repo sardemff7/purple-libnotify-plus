@@ -23,6 +23,8 @@
 #ifndef __EVENTD_PLUGINS_NOTIFY_COMPAT_H__
 #define __EVENTD_PLUGINS_NOTIFY_COMPAT_H__
 
+#if ! NOTIFY_CHECK_VERSION(0,7,0)
 #define notify_notification_new(summary, body, icon) notify_notification_new(summary, body, icon, NULL)
+#endif
 
 #endif /* __EVENTD_PLUGINS_NOTIFY_COMPAT_H__ */

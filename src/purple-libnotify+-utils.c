@@ -21,9 +21,7 @@
 #include "purple-libnotify+-common.h"
 
 #include <libnotify/notify.h>
-#if ! NOTIFY_CHECK_VERSION(0,7,0)
 #include "libnotify-compat.h"
-#endif
 
 #include "purple-libnotify+-utils.h"
 
