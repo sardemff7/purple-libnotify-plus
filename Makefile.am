@@ -1,5 +1,4 @@
 EXTRA_DIST = \
-	COPYING \
 	purple-libnotify+.sym
 
 ACLOCAL_AMFLAGS = -I m4
