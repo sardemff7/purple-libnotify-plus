@@ -1,16 +1,16 @@
-# French translations for pidgin-libnotify+ package
-# Traductions françaises du paquet pidgin-libnotify+.
-# Copyright (C) 2011 THE pidgin-libnotify+'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the pidgin-libnotify+ package.
-# Sardem FF7 <sardemff7.pub@gmail.com>, 2011.
+# French translations for purple-libnotify+ package
+# Traductions françaises du paquet purple-libnotify+.
+# This file is distributed under the same license as the purple-libnotify+ package.
+# Quentin "Sardem FF7" Glidic <sardemff7+pidgin@sardemff7.net>, 2011-2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pidgin-libnotify+ 1.1\n"
+"Project-Id-Version: purple-libnotify+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-29 23:17+0200\n"
+"POT-Creation-Date: 2012-03-11 13:07+0100\n"
 "PO-Revision-Date: 2011-01-26 11:43+0100\n"
-"Last-Translator: Sardem FF7 <sardemff7.pub@gmail.com>\n"
+"Last-Translator: Quentin \"Sardem FF7\" Glidic <sardemff7+pidgin@sardemff7."
+"net>\n"
 "Language-Team: French\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -106,46 +106,46 @@ msgstr "s’est connecté(e)"
 msgid "signed off"
 msgstr "s’est déconnecté(e)"
 
-#: ../src/purple-libnotify+.c:79
+#: ../src/purple-libnotify+.c:80
 #, c-format
 msgid "went away: %s"
 msgstr "est parti(e) : %s"
 
-#: ../src/purple-libnotify+.c:81
+#: ../src/purple-libnotify+.c:82
 msgid "went away"
 msgstr "est parti(e)"
 
-#: ../src/purple-libnotify+.c:88
+#: ../src/purple-libnotify+.c:89
 #, c-format
 msgid "came back: %s"
 msgstr "est revenu(e) : %s"
 
-#: ../src/purple-libnotify+.c:90
+#: ../src/purple-libnotify+.c:91
 msgid "came back"
 msgstr "est revenu(e)"
 
-#: ../src/purple-libnotify+.c:97
+#: ../src/purple-libnotify+.c:98
 #, c-format
 msgid "changed status message to %s"
 msgstr "a changé son message de statut en %s"
 
-#: ../src/purple-libnotify+.c:99
+#: ../src/purple-libnotify+.c:100
 msgid "removed status message"
 msgstr "a supprimé son message de statut"
 
-#: ../src/purple-libnotify+.c:121
+#: ../src/purple-libnotify+.c:122
 msgid "went idle"
 msgstr "est inactif(ve)"
 
-#: ../src/purple-libnotify+.c:121
+#: ../src/purple-libnotify+.c:122
 msgid "came back idle"
 msgstr "est actif(ve)"
 
-#: ../src/purple-libnotify+.c:138 ../src/purple-libnotify+.c:163
+#: ../src/purple-libnotify+.c:139 ../src/purple-libnotify+.c:164
 #, c-format
 msgid "%s says"
 msgstr "%s a dit"
 
-#: ../src/purple-libnotify+.c:378 ../src/purple-libnotify+.c:379
+#: ../src/purple-libnotify+.c:421 ../src/purple-libnotify+.c:422
 msgid "Displays popups via libnotify."
 msgstr "Affiche des popups via libnotify."

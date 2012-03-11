@@ -1,8 +1,8 @@
-pidgin-libnotify+
+purple-libnotify+
 
 About
 =====
-Pidgin-libnotify+ - Provides libnotify interface to Pidgin
+Provide libnotify interface to Pidgin and Finch
 Inspired by Pidgin-libnotify and Guifications
 
 INSTALL

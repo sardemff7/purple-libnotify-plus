@@ -1,11 +1,11 @@
-# German translations for pidgin-libnotify+ package
-# Deutsche Übersetzung für pidgin-libnotify+.
-# This file is distributed under the same license as the pidgin-libnotify+ package.
+# German translations for purple-libnotify+ package
+# Deutsche Übersetzung für purple-libnotify+.
+# This file is distributed under the same license as the purple-libnotify+ package.
 # Quadratrund <quadratrund@web.de>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pidgin-libnotify+ 1.4.91\n"
+"Project-Id-Version: purple-libnotify+\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-10-29 23:17+0200\n"
 "PO-Revision-Date: 2012-03-11 10:13+0100\n"

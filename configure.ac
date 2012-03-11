@@ -43,7 +43,7 @@ PKG_CHECK_EXISTS(NOTIFY_06, libnotify >= 0.6.0, [AC_DEFINE([HAVE_NOTIFY_06], [1]
 PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0 >= 0.26)
 
 #
-# Check for pidgin
+# Check for purple
 #
 PKG_CHECK_MODULES(PURPLE, purple >= 2.6.0)
 AC_DEFINE_UNQUOTED([PURPLE_DATADIR], ["`pkg-config --variable=datadir purple`"], [libpurple data directory])
