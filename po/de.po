@@ -1,0 +1,156 @@
+# German translations for pidgin-libnotify+ package
+# Deutsche Übersetzung für pidgin-libnotify+.
+# This file is distributed under the same license as the pidgin-libnotify+ package.
+# Quadratrund <quadratrund@web.de>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pidgin-libnotify+ 1.4.91\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-29 23:17+0200\n"
+"PO-Revision-Date: 2012-03-11 10:13+0100\n"
+"Last-Translator: Quadratrund <quadratrund@web.de>\n"
+"Language-Team: Deutsch <quadratrund@web.de>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: ../src/purple-libnotify+-frames.c:35
+msgid "Notify me on:"
+msgstr "Benachrichtige mich ..."
+
+#: ../src/purple-libnotify+-frames.c:41
+msgid "New messages"
+msgstr "... bei neuen Nachrichten"
+
+#: ../src/purple-libnotify+-frames.c:47
+msgid "Buddy signing on"
+msgstr "... wenn sich ein Kontakt anmeldet"
+
+#: ../src/purple-libnotify+-frames.c:53
+msgid "Buddy signing off"
+msgstr "... wenn sich ein Kontakt abmeldet"
+
+#: ../src/purple-libnotify+-frames.c:59
+msgid "Buddy going away"
+msgstr "... bei Abwesenheit eines Kontaktes"
+
+#: ../src/purple-libnotify+-frames.c:65
+msgid "Buddy going idle"
+msgstr "... bei Untätigkeit eines Kontaktes"
+
+#: ../src/purple-libnotify+-frames.c:71
+msgid "Buddy coming back"
+msgstr "... wenn ein Kontakt wieder anwesend ist"
+
+#: ../src/purple-libnotify+-frames.c:77
+msgid "Status message change (or removal)"
+msgstr "... bei Änderung der Statusnachricht"
+
+#: ../src/purple-libnotify+-frames.c:83
+msgid "Restrictions:"
+msgstr "Einschränkungen:"
+
+#: ../src/purple-libnotify+-frames.c:89
+msgid "Even for a blocked buddy"
+msgstr "Auch für blockierte Kontakte"
+
+#: ../src/purple-libnotify+-frames.c:95
+msgid "Only from new conversation"
+msgstr "Nur für neue Konversationen"
+
+#: ../src/purple-libnotify+-frames.c:101
+msgid "Only when available"
+msgstr "Nur wenn ich anwesend bin"
+
+#: ../src/purple-libnotify+-frames.c:107
+msgid "Notification settings:"
+msgstr "Benachrichtigungseinstellungen:"
+
+#: ../src/purple-libnotify+-frames.c:113
+msgid "Expire timeout (1-120, 0 for never, -1 for auto)"
+msgstr "Anzeigedauer (1-120, 0 für unendlich, -1 für automatisch)"
+
+#: ../src/purple-libnotify+-frames.c:120
+msgid ""
+"Stack notifications (do not ignore a buddy action if a notification is "
+"already attached to)"
+msgstr ""
+"Alle Benachrichtigungen anzeigen, wenn ein Kontakt mehrere kurz "
+"hintereinander erzeugt"
+
+#: ../src/purple-libnotify+-frames.c:126
+msgid "Scale factor for protocol icon (0-100%)"
+msgstr "Skalierungsfaktor für das Protokollsymbol (0-100%)"
+
+#: ../src/purple-libnotify+-frames.c:176
+msgid "Use defaults"
+msgstr "Zurücksetzen auf Standardeinstellungen"
+
+#: ../src/purple-libnotify+-frames.c:185
+msgid "Activate popup"
+msgstr "Aktiviere Popup-Benachrichtigungen"
+
+#: ../src/purple-libnotify+-frames.c:187
+msgid "Deactivate popup"
+msgstr "Deaktiviere Popup-Benachrichtigungen"
+
+#: ../src/purple-libnotify+.c:41
+msgid "signed on"
+msgstr "hat sich angemeldet."
+
+#: ../src/purple-libnotify+.c:54
+msgid "signed off"
+msgstr "hat sich abgemeldet."
+
+#: ../src/purple-libnotify+.c:79
+#, c-format
+msgid "went away: %s"
+msgstr ""
+"ist nun abwesend:\n"
+"%s"
+
+#: ../src/purple-libnotify+.c:81
+msgid "went away"
+msgstr "ist nun abwesend."
+
+#: ../src/purple-libnotify+.c:88
+#, c-format
+msgid "came back: %s"
+msgstr ""
+"ist nun wieder da:\n"
+"%s"
+
+#: ../src/purple-libnotify+.c:90
+msgid "came back"
+msgstr "ist nun wieder da."
+
+#: ../src/purple-libnotify+.c:97
+#, c-format
+msgid "changed status message to %s"
+msgstr ""
+"hat eine neue Statusnachricht:\n"
+"%s"
+
+#: ../src/purple-libnotify+.c:99
+msgid "removed status message"
+msgstr "hat seine Statusnachricht gelöscht."
+
+#: ../src/purple-libnotify+.c:121
+msgid "went idle"
+msgstr "ist untätig."
+
+#: ../src/purple-libnotify+.c:121
+msgid "came back idle"
+msgstr "ist nun nicht mehr untätig."
+
+#: ../src/purple-libnotify+.c:138 ../src/purple-libnotify+.c:163
+#, c-format
+msgid "%s says"
+msgstr "%s sagt"
+
+#: ../src/purple-libnotify+.c:378 ../src/purple-libnotify+.c:379
+msgid "Displays popups via libnotify."
+msgstr "Zeigt Benachrichtigungen mit Hilfe von libnotify."
