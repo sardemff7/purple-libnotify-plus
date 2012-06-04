@@ -22,6 +22,5 @@
 #define __PURPLE_LIBNOTIFY_PLUS_FRAMES_H__
 
 PurplePluginPrefFrame *notify_plus_pref_frame(PurplePlugin *plugin);
-void menu_add_notify_plus(PurpleBlistNode *node, GList **menu);
 
 #endif /* __PURPLE_LIBNOTIFY_PLUS_FRAMES_H__ */

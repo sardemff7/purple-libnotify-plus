@@ -23,6 +23,8 @@
 #include <libnotify/notify.h>
 #include "libnotify-compat.h"
 
+#include <purple-events.h>
+
 #include "purple-libnotify+-utils.h"
 
 static gchar *
@@ -50,69 +52,6 @@ truncate_string(
 	}
 
 	return tr_str;
-}
-
-gchar *
-get_best_buddy_name(PurpleBuddy *buddy)
-{
-	const char *name;
-	if ( purple_buddy_get_contact_alias(buddy) )
-		name = purple_buddy_get_contact_alias(buddy);
-	else if ( purple_buddy_get_alias(buddy) )
-		name = purple_buddy_get_alias(buddy);
-	else if ( purple_buddy_get_server_alias(buddy) )
-		name = purple_buddy_get_server_alias(buddy);
-	else
-		name = purple_buddy_get_name(buddy);
-
-	gchar *tr_name = truncate_string(name, 25);
-
-	return tr_name;
-}
-
-gboolean
-is_buddy_notify(PurpleBuddy *buddy)
-{
-	#if DEBUG
-		return TRUE;
-	#endif
-
-	GList *list;
-	PurpleAccount *account = purple_buddy_get_account(buddy);
-
-	for ( list = g_list_first(notify_plus_data.just_signed_on_accounts) ; list != NULL ; list = g_list_next(list) )
-	{
-		JustSignedOnAccount *just_signed_on_account = (JustSignedOnAccount *)list->data;
-		if ( account == just_signed_on_account->account )
-			return FALSE;
-	}
-
-	if ( ( purple_prefs_get_bool("/plugins/core/libnotify+/only-available") )
-	&& ( ! purple_status_is_available(purple_account_get_active_status(account)) ) )
-		return FALSE;
-
-	const gchar *name = purple_buddy_get_name(buddy);
-
-	if ( ( ! purple_privacy_check(account, name) )
-		&& ( purple_prefs_get_bool("/plugins/core/libnotify+/blocked") ) )
-		return FALSE;
-
-	PurpleConversation *conv = purple_find_conversation_with_account(PURPLE_CONV_TYPE_IM, name, account);
-	if ( ( conv )
-		&& (
-			( purple_conversation_has_focus(conv) )
-			|| ( purple_prefs_get_bool("/plugins/core/libnotify+/new-conv-only") )
-		) )
-		return FALSE;
-
-	PurpleBlistNode *contact = &(purple_buddy_get_contact(buddy)->node);
-	gint deactivate = purple_blist_node_get_int(contact, PACKAGE_NAME"/deactivate");
-	if ( deactivate == 0 )
-	{
-		PurpleBlistNode *group = &(purple_buddy_get_group(buddy)->node);
-		deactivate = purple_blist_node_get_int(group, PACKAGE_NAME"/deactivate");
-	}
-	return ( deactivate != 1 );
 }
 
 static GdkPixbuf *
@@ -197,13 +136,9 @@ _notify_plus_get_notificitaion_pixbuf(PurpleBuddy *buddy, const gchar *protocol_
 static void
 notification_closed_cb(NotifyNotification *notification, gpointer user_data)
 {
-	PurpleBuddy *buddy = user_data;
-
-	if ( buddy != NULL )
+	if ( user_data != NULL )
 	{
-		PurpleContact *contact = purple_buddy_get_contact(buddy);
-
-		g_hash_table_remove(notify_plus_data.notifications, contact);
+		g_hash_table_remove(notify_plus_data.notifications, user_data);
 		g_hash_table_unref(notify_plus_data.notifications);
 	}
 
@@ -226,22 +161,11 @@ _notify_plus_send_notification_internal(
 	notification = g_hash_table_lookup(notify_plus_data.notifications, contact);
 	if ( purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
 	{
-		#if DEBUG
-		gchar *name = get_best_buddy_name(buddy);
-		g_debug("[Stacking] New notification for buddy '%s'.", name);
-		g_free(name);
-		#endif
-
 		notification = notify_notification_new(title, body, protocol_icon_uri);
 		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
 	}
 	else if ( notification != NULL )
 	{
-		#if DEBUG
-		gchar *name = get_best_buddy_name(buddy);
-		g_debug("Already displaying a notification for buddy '%s'.", name);
-		g_free(name);
-		#endif
 		if ( ! notify_plus_data.modify_notification )
 		{
 			#if DEBUG
@@ -253,12 +177,6 @@ _notify_plus_send_notification_internal(
 	}
 	else
 	{
-		#if DEBUG
-		gchar *name = get_best_buddy_name(buddy);
-		g_debug("New notification for buddy '%s'.", name);
-		g_free(name);
-		#endif
-
 		notification = notify_notification_new(title, body, protocol_icon_uri);
 
 		notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
@@ -276,7 +194,7 @@ _notify_plus_send_notification_internal(
 
 		g_hash_table_insert(notify_plus_data.notifications, contact, notification);
 		g_hash_table_ref(notify_plus_data.notifications);
-		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), buddy);
+		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), contact);
 
 		GdkPixbuf *icon = _notify_plus_get_notificitaion_pixbuf(buddy, protocol_icon_filename);
 		if ( icon != NULL )
@@ -294,18 +212,16 @@ _notify_plus_send_notification_internal(
 }
 
 void
-notify_plus_send_notification(
-	const gchar *title,
-	const gchar *body,
-	PurpleBuddy *buddy
-	)
+notify_plus_send_buddy_notification(PurpleBuddy *buddy, const gchar *action, const gchar *body)
 {
+	gchar *title;
 	gchar *es_body = NULL;
-	PurplePluginProtocolInfo *info;
 	const gchar *protocol_name = NULL;
 	gchar *protocol_icon_uri = NULL;
 	gchar *protocol_icon_filename = NULL;
 	PurpleContact *contact;
+
+	title = g_strdup_printf(action, purple_events_utils_buddy_get_best_name(buddy));
 
 	if ( body != NULL )
 	{
@@ -314,37 +230,25 @@ notify_plus_send_notification(
 		g_free(tr_body);
 	}
 
-	info = PURPLE_PLUGIN_PROTOCOL_INFO(purple_find_prpl(purple_account_get_protocol_id(buddy->account)));
-	if ( info->list_icon != NULL )
-		protocol_name = info->list_icon(buddy->account, NULL);
+	protocol_name = purple_events_utils_buddy_get_protocol(buddy);
 
 	if ( protocol_name != NULL )
 	{
-		gchar *tmp;
-
 		if ( notify_plus_data.use_svg )
-		{
-			tmp = g_strconcat(protocol_name, ".svg", NULL);
-			protocol_icon_uri = g_build_filename("file://" PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
-			g_free(tmp);
-		}
+			protocol_icon_uri = purple_events_utils_protocol_get_icon_uri(protocol_name, PURPLE_EVENTS_UTILS_ICON_FORMAT_SVG);
 		else
 		{
-			tmp = g_strconcat(protocol_name, ".png", NULL);
-			protocol_icon_uri = g_build_filename("file://" PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "48", tmp, NULL);
-			g_free(tmp);
-
-			tmp = g_strconcat(protocol_name, ".svg", NULL);
-			protocol_icon_filename = g_build_filename(PURPLE_DATADIR, "pixmaps", "pidgin", "protocols", "scalable", tmp, NULL);
-			g_free(tmp);
+			protocol_icon_uri = purple_events_utils_protocol_get_icon_uri(protocol_name, PURPLE_EVENTS_UTILS_ICON_FORMAT_PNG);
+			protocol_icon_filename = purple_events_utils_protocol_get_icon_uri(protocol_name, PURPLE_EVENTS_UTILS_ICON_FORMAT_SVG);
 		}
 	}
 
 	contact = purple_buddy_get_contact(buddy);
 
-	_notify_plus_send_notification_internal(title, es_body, protocol_icon_uri, ( protocol_icon_filename != NULL ) ? protocol_icon_filename : (protocol_icon_uri+7), buddy, contact);
+	_notify_plus_send_notification_internal(title, es_body, protocol_icon_uri, ( protocol_icon_filename != NULL ) ? (protocol_icon_filename+7) : (protocol_icon_uri+7), buddy, contact);
 
 	g_free(protocol_icon_filename);
 	g_free(protocol_icon_uri);
 	g_free(es_body);
+	g_free(title);
 }

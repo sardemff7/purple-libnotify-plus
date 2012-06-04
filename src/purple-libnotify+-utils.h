@@ -21,10 +21,6 @@
 #ifndef __PURPLE_LIBNOTIFY_PLUS_UTILS_H__
 #define __PURPLE_LIBNOTIFY_PLUS_UTILS_H__
 
-gchar *get_best_buddy_name(PurpleBuddy *buddy);
-
-gboolean is_buddy_notify(PurpleBuddy *buddy);
-
-void notify_plus_send_notification(const gchar *title, const gchar *body, PurpleBuddy *buddy);
+void notify_plus_send_buddy_notification(PurpleBuddy *buddy, const gchar *action, const gchar *body);
 
 #endif /* __PURPLE_LIBNOTIFY_PLUS_UTILS_H__ */

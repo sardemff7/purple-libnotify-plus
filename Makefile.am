@@ -18,13 +18,13 @@ purple_libnotify__la_SOURCES = \
 	src/purple-libnotify+-frames.h \
 	src/purple-libnotify+-utils.h \
 	src/purple-libnotify+-common.h \
-	src/purple-libnotify+.h \
 	src/purple-libnotify+-frames.c \
 	src/purple-libnotify+-utils.c \
 	src/purple-libnotify+.c
 
 purple_libnotify__la_CFLAGS = \
 	$(AM_CFLAGS) \
+	$(PURPLE_EVENTS_CFLAGS) \
 	$(PURPLE_CFLAGS) \
 	$(GDK_PIXBUF_CFLAGS) \
 	$(NOTIFY_CFLAGS) \
@@ -36,6 +36,7 @@ purple_libnotify__la_LDFLAGS = \
 	-export-symbols-regex 'purple_init_(notify_plus_)?plugin'
 
 purple_libnotify__la_LIBADD = \
+	$(PURPLE_EVENTS_LIBS) \
 	$(PURPLE_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
 	$(NOTIFY_LIBS) \

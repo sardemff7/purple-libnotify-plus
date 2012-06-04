@@ -25,15 +25,9 @@
 #include <glib/gi18n-lib.h>
 #include <purple.h>
 
-typedef struct {
-	guint handle;
-	PurpleAccount *account;
-} JustSignedOnAccount;
-
 struct
 {
 	GHashTable *notifications;
-	GList *just_signed_on_accounts;
 	gboolean modify_notification;
 	gboolean use_svg;
 	gboolean overlay_icon;

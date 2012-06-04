@@ -55,6 +55,10 @@ PKG_CHECK_MODULES(PURPLE, purple >= 2.6.0)
 AC_DEFINE_UNQUOTED([PURPLE_DATADIR], ["`$PKG_CONFIG --variable=datadir purple`"], [libpurple data directory])
 AC_SUBST(plugindir)
 
+#
+# Check for purple-events
+#
+PKG_CHECK_MODULES(PURPLE_EVENTS, purple-events)
 
 
 AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [Enable debug]), [], enable_debug=no)
