@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: purple-libnotify+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-11 13:07+0100\n"
+"POT-Creation-Date: 2012-06-04 23:21+0200\n"
 "PO-Revision-Date: 2011-01-26 11:43+0100\n"
 "Last-Translator: Quentin \"Sardem FF7\" Glidic <sardemff7+pidgin@sardemff7."
 "net>\n"
@@ -18,63 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ../src/purple-libnotify+-frames.c:35
-msgid "Notify me on:"
-msgstr "Me notifier :"
-
-#: ../src/purple-libnotify+-frames.c:41
-msgid "New messages"
-msgstr "L’arrivée de nouveaux messages"
-
-#: ../src/purple-libnotify+-frames.c:47
-msgid "Buddy signing on"
-msgstr "La connexion d’un contact"
-
-#: ../src/purple-libnotify+-frames.c:53
-msgid "Buddy signing off"
-msgstr "La déconnexion d’un contact"
-
-#: ../src/purple-libnotify+-frames.c:59
-msgid "Buddy going away"
-msgstr "L’absence d’un contact"
-
-#: ../src/purple-libnotify+-frames.c:65
-msgid "Buddy going idle"
-msgstr "L’inactivité d’un contact"
-
-#: ../src/purple-libnotify+-frames.c:71
-msgid "Buddy coming back"
-msgstr "Le retour d’un contact"
-
-#: ../src/purple-libnotify+-frames.c:77
-msgid "Status message change (or removal)"
-msgstr "Le changement (ou la suppression) du message de statut"
-
-#: ../src/purple-libnotify+-frames.c:83
-msgid "Restrictions:"
-msgstr "Restrictions :"
-
-#: ../src/purple-libnotify+-frames.c:89
-msgid "Even for a blocked buddy"
-msgstr "Même pour un contact bloqué"
-
-#: ../src/purple-libnotify+-frames.c:95
-msgid "Only from new conversation"
-msgstr "Seulement pour les nouvelles conversations"
-
-#: ../src/purple-libnotify+-frames.c:101
-msgid "Only when available"
-msgstr "Seulement si je suis disponible"
-
-#: ../src/purple-libnotify+-frames.c:107
+#: ../src/purple-libnotify+-frames.c:34
 msgid "Notification settings:"
 msgstr "Réglages de la notification :"
 
-#: ../src/purple-libnotify+-frames.c:113
+#: ../src/purple-libnotify+-frames.c:40
 msgid "Expire timeout (1-120, 0 for never, -1 for auto)"
 msgstr "Délai d’expiration (1-120, 0 pour jamais, -1 pour auto)"
 
-#: ../src/purple-libnotify+-frames.c:120
+#: ../src/purple-libnotify+-frames.c:47
 msgid ""
 "Stack notifications (do not ignore a buddy action if a notification is "
 "already attached to)"
@@ -82,70 +34,55 @@ msgstr ""
 "Empiler les notifications (ne pas ignorer une action d’un contact si une "
 "notification le concerne déjà)"
 
-#: ../src/purple-libnotify+-frames.c:126
+#: ../src/purple-libnotify+-frames.c:53
 msgid "Scale factor for protocol icon (0-100%)"
 msgstr "Facteur de redimensionnement de l’icône de protocole (0-100%)"
 
-#: ../src/purple-libnotify+-frames.c:176
-msgid "Use defaults"
-msgstr "Utiliser les réglages par défaut"
-
-#: ../src/purple-libnotify+-frames.c:185
-msgid "Activate popup"
-msgstr "Activer le popup"
-
-#: ../src/purple-libnotify+-frames.c:187
-msgid "Deactivate popup"
-msgstr "Désactiver le popup"
+#: ../src/purple-libnotify+.c:35
+#, c-format
+msgid "%s signed on"
+msgstr "%s s’est connecté(e)"
 
 #: ../src/purple-libnotify+.c:41
-msgid "signed on"
-msgstr "s’est connecté(e)"
-
-#: ../src/purple-libnotify+.c:54
-msgid "signed off"
-msgstr "s’est déconnecté(e)"
-
-#: ../src/purple-libnotify+.c:80
 #, c-format
-msgid "went away: %s"
-msgstr "est parti(e) : %s"
+msgid "%s signed off"
+msgstr "%s s’est déconnecté(e)"
 
-#: ../src/purple-libnotify+.c:82
-msgid "went away"
-msgstr "est parti(e)"
-
-#: ../src/purple-libnotify+.c:89
+#: ../src/purple-libnotify+.c:47
 #, c-format
-msgid "came back: %s"
-msgstr "est revenu(e) : %s"
+msgid "%s went away"
+msgstr "%s est parti(e)"
 
-#: ../src/purple-libnotify+.c:91
-msgid "came back"
-msgstr "est revenu(e)"
-
-#: ../src/purple-libnotify+.c:98
+#: ../src/purple-libnotify+.c:53
 #, c-format
-msgid "changed status message to %s"
-msgstr "a changé son message de statut en %s"
+msgid "%s came back"
+msgstr "%s est revenu(e)"
 
-#: ../src/purple-libnotify+.c:100
-msgid "removed status message"
-msgstr "a supprimé son message de statut"
-
-#: ../src/purple-libnotify+.c:122
-msgid "went idle"
-msgstr "est inactif(ve)"
-
-#: ../src/purple-libnotify+.c:122
-msgid "came back idle"
-msgstr "est actif(ve)"
-
-#: ../src/purple-libnotify+.c:139 ../src/purple-libnotify+.c:164
+#: ../src/purple-libnotify+.c:59
 #, c-format
-msgid "%s says"
-msgstr "%s a dit"
+msgid "%s changed status message"
+msgstr "%s a changé son message de statut"
 
-#: ../src/purple-libnotify+.c:421 ../src/purple-libnotify+.c:422
+#: ../src/purple-libnotify+.c:59
+#, c-format
+msgid "%s removed status message"
+msgstr "%s a supprimé son message de statut"
+
+#: ../src/purple-libnotify+.c:70
+#, c-format
+msgid "%s went idle"
+msgstr "%s est inactif(ve)"
+
+#: ../src/purple-libnotify+.c:76
+#, c-format
+msgid "%s came back idle"
+msgstr "%s est actif(ve)"
+
+#: ../src/purple-libnotify+.c:86
+#, c-format
+msgid "“%s”"
+msgstr "« %s »"
+
+#: ../src/purple-libnotify+.c:228 ../src/purple-libnotify+.c:229
 msgid "Displays popups via libnotify."
 msgstr "Affiche des popups via libnotify."
