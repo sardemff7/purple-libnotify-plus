@@ -1,12 +1,12 @@
 AC_PREREQ([2.65])
 AC_INIT([purple-libnotify+], [1.4.92], [], [purple-libnotify-plus])
 
+AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_SRCDIR([src/])
-AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([.aux])
 
-AM_INIT_AUTOMAKE([1.10 subdir-objects dist-xz no-dist-gzip tar-ustar foreign])
+AM_INIT_AUTOMAKE([1.11 subdir-objects dist-xz no-dist-gzip tar-ustar foreign])
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
@@ -43,21 +43,28 @@ PKG_CHECK_EXISTS(NOTIFY_06, libnotify >= 0.6.0, [AC_DEFINE([HAVE_NOTIFY_06], [1]
 PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0 >= 0.26)
 
 #
-# Check for purple
+# Check for libpurple
 #
+AC_ARG_WITH(purple-plugindir, AS_HELP_STRING([--with-purple-plugindir=DIR], [Directory for libpurple plugin]), [], with_purple_plugindir=yes)
+case "$with_purple_plugindir" in
+    no|"") AC_MSG_ERROR([*** You must define purple-plugindir]) ;;
+    yes) plugindir="`$PKG_CONFIG --variable=plugindir purple`" ;;
+    *) plugindir="$with_purple_plugindir" ;;
+esac
 PKG_CHECK_MODULES(PURPLE, purple >= 2.6.0)
-AC_DEFINE_UNQUOTED([PURPLE_DATADIR], ["`pkg-config --variable=datadir purple`"], [libpurple data directory])
-plugindir="`pkg-config --variable=plugindir purple`"
+AC_DEFINE_UNQUOTED([PURPLE_DATADIR], ["`$PKG_CONFIG --variable=datadir purple`"], [libpurple data directory])
 AC_SUBST(plugindir)
 
 
-AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [Enable debug]), enable_debug=$enableval, enable_debug=no)
+
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [Enable debug]), [], enable_debug=no)
 if test x$enable_debug = xyes; then
     AC_DEFINE([DEBUG], [1], [Activate debug mode])
-    AM_CFLAGS="${AM_CFLAGS} -O0 -ggdb3"
 fi
 AC_SUBST(AM_CFLAGS)
 AC_SUBST(AM_LDFLAGS)
+
+AC_SUBST(shrext_cmds)
 
 AC_CONFIG_FILES([
 	Makefile

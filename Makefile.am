@@ -1,7 +1,9 @@
-EXTRA_DIST = \
-	purple-libnotify+.sym
+AM_DISTCHECK_CONFIGURE_FLAGS = \
+	--disable-debug \
+	--with-purple-plugindir="$$dc_install_base/$(plugindir)"
 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+AM_MAKEFLAGS = --no-print-directory
 
 SUBDIRS = po
 
@@ -29,11 +31,32 @@ purple_libnotify__la_CFLAGS = \
 	$(GLIB_CFLAGS)
 
 purple_libnotify__la_LDFLAGS = \
+	-no-undefined \
 	-module -avoid-version \
-	-export-symbols $(srcdir)/purple-libnotify+.sym
+	-export-symbols-regex 'purple_init_(notify_plus_)?plugin'
 
 purple_libnotify__la_LIBADD = \
 	$(PURPLE_LIBS) \
 	$(GDK_PIXBUF_LIBS) \
 	$(NOTIFY_LIBS) \
 	$(GLIB_LIBS)
+
+
+#
+# Hooks
+#
+
+install-data-hook: la-files-install-hook
+uninstall-hook: la-files-uninstall-hook
+
+# *.la files cleanup
+la-files-install-hook:
+	cd $(DESTDIR)$(plugindir) && \
+		rm $(plugin_LTLIBRARIES)
+
+# Remove shared object files at uninstall since
+# we remove *.la files at install
+la-files-uninstall-hook:
+	cd $(DESTDIR)$(plugindir) && \
+		rm $(plugin_LTLIBRARIES:.la=$(shrext_cmds))
+	-rmdir $(DESTDIR)$(plugindir)
