@@ -179,7 +179,7 @@ plugin_unload(PurplePlugin *plugin)
 static void
 _purple_notify_plus_destroy(PurplePlugin *plugin)
 {
-	g_free(plugin->extra);
+	purple_events_handler_free(plugin->extra);
 }
 
 
@@ -261,27 +261,26 @@ init_plugin(PurplePlugin *plugin)
 
 	PurpleEventsHandler *handler;
 
-	handler = g_new(PurpleEventsHandler, 1);
-	handler->plugin = plugin;
+	handler = purple_events_handler_new(plugin);
 	plugin->extra = handler;
 
-	handler->signed_on = _purple_notify_plus_signed_on;
-	handler->signed_off = _purple_notify_plus_signed_off;
+	purple_events_handler_add_signed_on_callback(handler, _purple_notify_plus_signed_on);
+	purple_events_handler_add_signed_off_callback(handler, _purple_notify_plus_signed_off);
 
-	handler->away = _purple_notify_plus_away;
-	handler->back = _purple_notify_plus_back;
+	purple_events_handler_add_away_callback(handler, _purple_notify_plus_away);
+	purple_events_handler_add_back_callback(handler, _purple_notify_plus_back);
 
-	handler->status = _purple_notify_plus_status;
-	handler->special = _purple_notify_plus_special;
+	purple_events_handler_add_status_callback(handler, _purple_notify_plus_status);
+	purple_events_handler_add_special_callback(handler, _purple_notify_plus_special);
 
-	handler->idle = _purple_notify_plus_idle;
-	handler->idle_back = _purple_notify_plus_idle_back;
+	purple_events_handler_add_idle_callback(handler, _purple_notify_plus_idle);
+	purple_events_handler_add_idle_back_callback(handler, _purple_notify_plus_idle_back);
 
-	handler->im_message = _purple_notify_plus_message;
-	handler->im_action = _purple_notify_plus_action;
+	purple_events_handler_add_im_message_callback(handler, _purple_notify_plus_message);
+	purple_events_handler_add_im_action_callback(handler, _purple_notify_plus_action);
 
-	handler->chat_message = _purple_notify_plus_message;
-	handler->chat_action = _purple_notify_plus_action;
+	purple_events_handler_add_chat_message_callback(handler, _purple_notify_plus_message);
+	purple_events_handler_add_chat_action_callback(handler, _purple_notify_plus_action);
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)
