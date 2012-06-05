@@ -167,12 +167,7 @@ _notify_plus_send_notification_internal(
 	else if ( notification != NULL )
 	{
 		if ( ! notify_plus_data.modify_notification )
-		{
-			#if DEBUG
-			g_debug("Can’t modify the notification, ignoring it.");
-			#endif
 			return;
-		}
 		notify_notification_update(notification, title, body, protocol_icon_uri);
 	}
 	else

@@ -61,10 +61,6 @@ AC_SUBST(plugindir)
 PKG_CHECK_MODULES(PURPLE_EVENTS, purple-events)
 
 
-AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [Enable debug]), [], enable_debug=no)
-if test x$enable_debug = xyes; then
-    AC_DEFINE([DEBUG], [1], [Activate debug mode])
-fi
 AC_SUBST(AM_CFLAGS)
 AC_SUBST(AM_LDFLAGS)
 
