@@ -154,7 +154,7 @@ plugin_load(PurplePlugin *plugin)
 
 	PurplePlugin *purple_events;
 
-	purple_events = purple_plugins_find_with_id("purple-events");
+	purple_events = purple_plugins_find_with_id("core-sardemff7-purple-events");
 	purple_events_context_connect_handler(purple_events->extra, plugin->extra);
 
 	return TRUE;
@@ -165,7 +165,7 @@ plugin_unload(PurplePlugin *plugin)
 {
 	PurplePlugin *purple_events;
 
-	purple_events = purple_plugins_find_with_id("purple-events");
+	purple_events = purple_plugins_find_with_id("core-sardemff7-purple-events");
 	purple_events_context_disconnect_handler(purple_events->extra, plugin->extra);
 
 	g_hash_table_unref(notify_plus_data.notifications);
@@ -197,7 +197,7 @@ static PurplePluginInfo info = {
     .dependencies   = NULL,
     .priority       = PURPLE_PRIORITY_DEFAULT,
 
-    .id             = PACKAGE_NAME,
+    .id             = "core-sardemff7-" PACKAGE_NAME,
     .name           = "Libnotify+",
     .version        = PACKAGE_VERSION,
     .summary        = NULL,
@@ -227,7 +227,7 @@ init_plugin(PurplePlugin *plugin)
 
 	info.summary = _("Displays popups via libnotify.");
 	info.description = _("Displays popups via libnotify.");
-	info.dependencies = g_list_prepend(info.dependencies, "purple-events");
+	info.dependencies = g_list_prepend(info.dependencies, "core-sardemff7-purple-events");
 
 	if ( purple_prefs_exists("/plugins/gtk/libnotify+") )
 	{
