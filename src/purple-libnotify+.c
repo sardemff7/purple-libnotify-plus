@@ -196,10 +196,7 @@ plugin_load(PurplePlugin *plugin)
 	}
 	notify_plus_adapt_to_server_capabilities();
 
-	PurplePlugin *purple_events;
-
-	purple_events = purple_plugins_find_with_id("core-sardemff7-purple-events");
-	purple_events_context_connect_handler(purple_events->extra, plugin->extra);
+	purple_events_connect_handler(plugin->extra);
 
 	return TRUE;
 }
@@ -207,11 +204,7 @@ plugin_load(PurplePlugin *plugin)
 static gboolean
 plugin_unload(PurplePlugin *plugin)
 {
-	PurplePlugin *purple_events;
-
-	purple_events = purple_plugins_find_with_id("core-sardemff7-purple-events");
-	purple_events_context_disconnect_handler(purple_events->extra, plugin->extra);
-
+	purple_events_disconnect_handler(plugin->extra);
 
 	notify_uninit();
 
@@ -269,7 +262,7 @@ init_plugin(PurplePlugin *plugin)
 
 	info.summary = _("Displays popups via libnotify.");
 	info.description = _("Displays popups via libnotify.");
-	info.dependencies = g_list_prepend(info.dependencies, "core-sardemff7-purple-events");
+	info.dependencies = g_list_prepend(info.dependencies, (gpointer) purple_events_get_plugin_id());
 
 	if ( purple_prefs_exists("/plugins/gtk/libnotify+") )
 	{
