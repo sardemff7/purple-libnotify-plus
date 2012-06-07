@@ -189,7 +189,7 @@ notify_plus_adapt_to_server_capabilities()
 static gboolean
 plugin_load(PurplePlugin *plugin)
 {
-	if ( ( ! notify_is_initted() ) && ( ! notify_init("Pidgin") ) )
+	if ( ( ! notify_is_initted() ) && ( ! notify_init("libpurple") ) )
 	{
 		purple_debug_error(PACKAGE_NAME, "libnotify not running!\n");
 		return FALSE;
