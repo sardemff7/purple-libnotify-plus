@@ -174,29 +174,29 @@ _notify_plus_send_notification_internal(
 	{
 		notification = notify_notification_new(title, body, protocol_icon_uri);
 
-		notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
-		gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
-		if ( timeout < 1 )
-			timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
-		notify_notification_set_timeout(notification, timeout);
-
-		if ( notify_plus_data.set_transcient )
-		#if GLIB_CHECK_VERSION(2, 26, 0) && HAVE_NOTIFY_06
-			notify_notification_set_hint(notification, "transcient", g_variant_new_byte(1));
-		#else
-			notify_notification_set_hint_byte(notification, "transcient", 1);
-		#endif
-
 		g_hash_table_insert(notify_plus_data.notifications, contact, notification);
 		g_hash_table_ref(notify_plus_data.notifications);
 		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), contact);
+	}
 
-		GdkPixbuf *icon = _notify_plus_get_notificitaion_pixbuf(buddy, protocol_icon_filename);
-		if ( icon != NULL )
-		{
-			notify_notification_set_image_from_pixbuf(notification, icon);
-			g_object_unref(icon);
-		}
+	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
+	gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
+	if ( timeout < 1 )
+		timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
+	notify_notification_set_timeout(notification, timeout);
+
+	if ( notify_plus_data.set_transcient )
+	#if GLIB_CHECK_VERSION(2, 26, 0) && HAVE_NOTIFY_06
+		notify_notification_set_hint(notification, "transcient", g_variant_new_byte(1));
+	#else
+		notify_notification_set_hint_byte(notification, "transcient", 1);
+	#endif
+
+	GdkPixbuf *icon = _notify_plus_get_notificitaion_pixbuf(buddy, protocol_icon_filename);
+	if ( icon != NULL )
+	{
+		notify_notification_set_image_from_pixbuf(notification, icon);
+		g_object_unref(icon);
 	}
 
 	if ( ! notify_notification_show(notification, &error) )
