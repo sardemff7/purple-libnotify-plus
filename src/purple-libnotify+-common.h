@@ -25,9 +25,10 @@
 #include <glib/gi18n-lib.h>
 #include <purple.h>
 
+extern PurplePlugin *notify_plus;
+
 struct
 {
-	GHashTable *notifications;
 	gboolean modify_notification;
 	gboolean use_svg;
 	gboolean overlay_icon;

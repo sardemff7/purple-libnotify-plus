@@ -136,47 +136,34 @@ _notify_plus_get_notificitaion_pixbuf(PurpleBuddy *buddy, const gchar *protocol_
 static void
 notification_closed_cb(NotifyNotification *notification, gpointer user_data)
 {
-	if ( user_data != NULL )
-	{
-		g_hash_table_remove(notify_plus_data.notifications, user_data);
-		g_hash_table_unref(notify_plus_data.notifications);
-	}
-
+	purple_events_handler_remove_event(notify_plus->extra, user_data, notification);
 	g_object_unref(G_OBJECT(notification));
 }
 
-static void
+static NotifyNotification *
 _notify_plus_send_notification_internal(
+	NotifyNotification *notification,
 	const gchar *title,
 	const gchar *body,
 	const gchar *protocol_icon_uri,
 	const gchar *protocol_icon_filename,
 	PurpleBuddy *buddy,
-	PurpleContact *contact
+	gpointer attach
 	)
 {
-	NotifyNotification *notification = NULL;
 	GError *error = NULL;
 
-	notification = g_hash_table_lookup(notify_plus_data.notifications, contact);
-	if ( purple_prefs_get_bool("/plugins/core/libnotify+/stack-notifications") )
-	{
-		notification = notify_notification_new(title, body, protocol_icon_uri);
-		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), NULL);
-	}
-	else if ( notification != NULL )
+	if ( notification != NULL )
 	{
 		if ( ! notify_plus_data.modify_notification )
-			return;
+			return notification;
 		notify_notification_update(notification, title, body, protocol_icon_uri);
 	}
 	else
 	{
 		notification = notify_notification_new(title, body, protocol_icon_uri);
 
-		g_hash_table_insert(notify_plus_data.notifications, contact, notification);
-		g_hash_table_ref(notify_plus_data.notifications);
-		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), contact);
+		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), attach);
 	}
 
 	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
@@ -204,17 +191,18 @@ _notify_plus_send_notification_internal(
 		g_warning("Couldn’t send notification: %s", error->message);
 		g_clear_error(&error);
 	}
+
+	return notification;
 }
 
-void
-notify_plus_send_buddy_notification(PurpleBuddy *buddy, const gchar *action, const gchar *body)
+NotifyNotification *
+notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach)
 {
 	gchar *title;
 	gchar *es_body = NULL;
 	const gchar *protocol_name = NULL;
 	gchar *protocol_icon_uri = NULL;
 	gchar *protocol_icon_filename = NULL;
-	PurpleContact *contact;
 
 	title = g_strdup_printf(action, purple_events_utils_buddy_get_best_name(buddy));
 
@@ -238,12 +226,12 @@ notify_plus_send_buddy_notification(PurpleBuddy *buddy, const gchar *action, con
 		}
 	}
 
-	contact = purple_buddy_get_contact(buddy);
-
-	_notify_plus_send_notification_internal(title, es_body, protocol_icon_uri, ( protocol_icon_filename != NULL ) ? (protocol_icon_filename+7) : (protocol_icon_uri+7), buddy, contact);
+	notification = _notify_plus_send_notification_internal(notification, title, es_body, protocol_icon_uri, ( protocol_icon_filename != NULL ) ? (protocol_icon_filename+7) : (protocol_icon_uri+7), buddy, ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
 
 	g_free(protocol_icon_filename);
 	g_free(protocol_icon_uri);
 	g_free(es_body);
 	g_free(title);
+
+	return notification;
 }

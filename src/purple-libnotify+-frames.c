@@ -43,12 +43,6 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 	purple_plugin_pref_set_bounds(pref, -1, 120);
 
 	pref = purple_plugin_pref_new_with_name_and_label(
-		"/plugins/core/libnotify+/stack-notifications",
-		_("Stack notifications (do not ignore a buddy action if a notification is already attached to)")
-		);
-	purple_plugin_pref_frame_add(frame, pref);
-
-	pref = purple_plugin_pref_new_with_name_and_label(
 		"/plugins/core/libnotify+/overlay-scale",
 		_("Scale factor for protocol icon (0-100%)")
 		);

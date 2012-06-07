@@ -21,6 +21,6 @@
 #ifndef __PURPLE_LIBNOTIFY_PLUS_UTILS_H__
 #define __PURPLE_LIBNOTIFY_PLUS_UTILS_H__
 
-void notify_plus_send_buddy_notification(PurpleBuddy *buddy, const gchar *action, const gchar *body);
+NotifyNotification *notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach);
 
 #endif /* __PURPLE_LIBNOTIFY_PLUS_UTILS_H__ */
