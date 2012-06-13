@@ -27,33 +27,6 @@
 
 #include "purple-libnotify+-utils.h"
 
-static gchar *
-truncate_string(
-	const gchar *str,
-	int num_chars
-	)
-{
-	gchar *tr_str;
-
-	tr_str = g_strdup(str);
-
-	if ( ( notify_plus_data.truncate ) && ( g_utf8_strlen(str, -1) > num_chars ) )
-	{
-		gchar *tmp;
-
-		/* keep num_chars characters */
-		tmp = g_utf8_offset_to_pointer(tr_str, num_chars+1);
-		*tmp = 0;
-
-		/* add ellipsis */
-		tmp = tr_str;
-		tr_str = g_strconcat(tmp, "…", NULL);
-		g_free(tmp);
-	}
-
-	return tr_str;
-}
-
 static GdkPixbuf *
 _notify_plus_get_buddy_icon_pixbuf(PurpleBuddy *buddy)
 {
@@ -207,14 +180,9 @@ notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBudd
 	title = g_strdup_printf(action, purple_events_utils_buddy_get_best_name(buddy));
 
 	if ( body != NULL )
-	{
-		gchar *tr_body = truncate_string(body, 60);
-		es_body = g_markup_escape_text(tr_body, -1);
-		g_free(tr_body);
-	}
+		es_body = g_markup_escape_text(body, -1);
 
 	protocol_name = purple_events_utils_buddy_get_protocol(buddy);
-
 	if ( protocol_name != NULL )
 	{
 		if ( notify_plus_data.use_svg )
