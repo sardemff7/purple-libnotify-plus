@@ -33,7 +33,6 @@ struct
 	gboolean use_svg;
 	gboolean overlay_icon;
 	gboolean set_transcient;
-	gboolean truncate;
 	gboolean actions;
 } notify_plus_data;
 
