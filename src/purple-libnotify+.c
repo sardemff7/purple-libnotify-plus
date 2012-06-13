@@ -140,6 +140,25 @@ _purple_notify_plus_chat_action(PurplePlugin *plugin, gpointer notification, Pur
 }
 
 static void
+_purple_notify_plus_email_action_callback(NotifyNotification *notification, char *action, gpointer user_data)
+{
+	const gchar *url = user_data;
+	purple_notify_uri(notify_plus, url);
+}
+
+static void
+_purple_notify_plus_email(PurplePlugin *plugin, const gchar *subject, const gchar *from, const gchar *to, const gchar *url)
+{
+	gchar *title;
+
+	title = g_strdup_printf(_("New e-mail from %s"), from);
+
+	notify_plus_send_notification_with_actions(title, subject, "mail-unread", NULL, NULL, "default", _("Show"), _purple_notify_plus_email_action_callback, url, NULL, NULL);
+
+	g_free(title);
+}
+
+static void
 _notify_plus_end_event(PurplePlugin *plugin, gpointer event)
 {
 	GError *error = NULL;
@@ -318,6 +337,8 @@ init_plugin(PurplePlugin *plugin)
 
 	purple_events_handler_add_chat_message_callback(handler, _purple_notify_plus_chat_message);
 	purple_events_handler_add_chat_action_callback(handler, _purple_notify_plus_chat_action);
+
+	purple_events_handler_add_email_callback(handler, _purple_notify_plus_email);
 
 	purple_events_handler_add_end_event_callback(handler, _notify_plus_end_event);
 }
