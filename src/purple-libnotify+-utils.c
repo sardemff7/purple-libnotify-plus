@@ -127,11 +127,7 @@ _notify_plus_send_notification_internal(
 	GError *error = NULL;
 
 	if ( notification != NULL )
-	{
-		if ( ! notify_plus_data.modify_notification )
-			return notification;
 		notify_notification_update(notification, title, body, protocol_icon_uri);
-	}
 	else
 	{
 		notification = notify_notification_new(title, body, protocol_icon_uri);
@@ -171,6 +167,9 @@ _notify_plus_send_notification_internal(
 NotifyNotification *
 notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach)
 {
+	if ( ( notification != NULL ) && ( ! notify_plus_data.modify_notification ) )
+			return notification;
+
 	gchar *title;
 	gchar *es_body = NULL;
 	const gchar *protocol_name = NULL;
