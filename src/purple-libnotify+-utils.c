@@ -114,12 +114,13 @@ notification_closed_cb(NotifyNotification *notification, gpointer user_data)
 }
 
 static NotifyNotification *
-_notify_plus_send_notification_internal(
+_notify_plus_send_notification_internal_v(
 	NotifyNotification *notification,
 	const gchar *title,
 	const gchar *body,
 	const gchar *icon,
-	GdkPixbuf *image
+	GdkPixbuf *image,
+	va_list actions
 	)
 {
 	GError *error = NULL;
@@ -145,12 +146,43 @@ _notify_plus_send_notification_internal(
 	if ( image != NULL )
 		notify_notification_set_image_from_pixbuf(notification, image);
 
+	const gchar *action;
+	const gchar *label;
+	NotifyActionCallback callback;
+	gpointer user_data;
+	GFreeFunc free_func;
+	while ( ( action = va_arg(actions, const gchar *) ) != NULL )
+	{
+		label = va_arg(actions, const gchar *);
+		callback = va_arg(actions, NotifyActionCallback);
+		user_data = va_arg(actions, gpointer);
+		free_func = va_arg(actions, GFreeFunc);
+		notify_notification_add_action(notification, action, label, callback, user_data, free_func);
+	}
+
 	if ( ! notify_notification_show(notification, &error) )
 	{
 		g_warning("Couldn’t send notification: %s", error->message);
 		g_clear_error(&error);
 	}
 
+	return notification;
+}
+
+static NotifyNotification *
+_notify_plus_send_notification_internal(
+	NotifyNotification *notification,
+	const gchar *title,
+	const gchar *body,
+	const gchar *icon,
+	GdkPixbuf *image,
+	...
+	)
+{
+	va_list actions;
+	va_start(actions, image);
+	notification = _notify_plus_send_notification_internal_v(notification, title, body, icon, image, actions);
+	va_end(actions);
 	return notification;
 }
 
@@ -190,7 +222,7 @@ notify_plus_send_buddy_notification(NotifyNotification *old_notification, Purple
 	g_free(protocol_icon_uri);
 
 	NotifyNotification *notification;
-	notification = _notify_plus_send_notification_internal(old_notification, title, es_body, protocol_icon_uri, icon);
+	notification = _notify_plus_send_notification_internal(old_notification, title, es_body, protocol_icon_uri, icon, NULL);
 	if ( icon != NULL )
 		g_object_unref(icon);
 	g_free(es_body);
