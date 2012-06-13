@@ -34,6 +34,7 @@ struct
 	gboolean overlay_icon;
 	gboolean set_transcient;
 	gboolean truncate;
+	gboolean actions;
 } notify_plus_data;
 
 #endif /* __PURPLE_LIBNOTIFY_PLUS_COMMON_H__ */

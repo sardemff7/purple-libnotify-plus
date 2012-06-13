@@ -161,6 +161,7 @@ notify_plus_adapt_to_server_capabilities()
 	notify_plus_data.overlay_icon = TRUE;
 	notify_plus_data.set_transcient = FALSE;
 	notify_plus_data.truncate = TRUE;
+	notify_plus_data.actions = FALSE;
 
 	capabilities = notify_get_server_caps();
 	for ( capability = capabilities ; capability != NULL ; capability = g_list_next(capability) )
@@ -179,6 +180,8 @@ notify_plus_adapt_to_server_capabilities()
 			notify_plus_data.modify_notification = FALSE;
 		else if ( g_strcmp0(cap_name, "x-canonical-truncation") == 0 )
 			notify_plus_data.truncate = FALSE;
+		else if ( g_strcmp0(cap_name, "actions") == 0 )
+			notify_plus_data.actions = TRUE;
 
 		g_free(cap_name);
 	}
