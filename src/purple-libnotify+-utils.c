@@ -233,3 +233,20 @@ notify_plus_send_buddy_notification(NotifyNotification *old_notification, Purple
 
 	return notification;
 }
+
+void
+notify_plus_send_notification_with_actions(const gchar *title, const gchar *body, const gchar *icon, GdkPixbuf *image, ...)
+{
+	NotifyNotification *notification;
+	va_list actions;
+	va_start(actions, image);
+	notification = _notify_plus_send_notification_internal_v(NULL, title, body, icon, image, actions);
+	va_end(actions);
+	g_object_unref(G_OBJECT(notification));
+}
+
+void
+notify_plus_send_notification(const gchar *title, const gchar *body, const gchar *icon, GdkPixbuf *image)
+{
+	notify_plus_send_notification_with_actions(title, body, icon, image, NULL);
+}
