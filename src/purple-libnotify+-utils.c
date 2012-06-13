@@ -119,8 +119,7 @@ _notify_plus_send_notification_internal(
 	const gchar *title,
 	const gchar *body,
 	const gchar *icon,
-	GdkPixbuf *image,
-	gpointer attach
+	GdkPixbuf *image
 	)
 {
 	GError *error = NULL;
@@ -128,11 +127,7 @@ _notify_plus_send_notification_internal(
 	if ( notification != NULL )
 		notify_notification_update(notification, title, body, icon);
 	else
-	{
 		notification = notify_notification_new(title, body, icon);
-
-		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), attach);
-	}
 
 	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 	gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
@@ -160,10 +155,10 @@ _notify_plus_send_notification_internal(
 }
 
 NotifyNotification *
-notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach)
+notify_plus_send_buddy_notification(NotifyNotification *old_notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach)
 {
-	if ( ( notification != NULL ) && ( ! notify_plus_data.modify_notification ) )
-			return notification;
+	if ( ( old_notification != NULL ) && ( ! notify_plus_data.modify_notification ) )
+			return old_notification;
 
 	gchar *title;
 	gchar *es_body = NULL;
@@ -194,11 +189,15 @@ notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBudd
 	g_free(protocol_icon_filename);
 	g_free(protocol_icon_uri);
 
-	notification = _notify_plus_send_notification_internal(notification, title, es_body, protocol_icon_uri, icon, ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
+	NotifyNotification *notification;
+	notification = _notify_plus_send_notification_internal(old_notification, title, es_body, protocol_icon_uri, icon);
 	if ( icon != NULL )
 		g_object_unref(icon);
 	g_free(es_body);
 	g_free(title);
+
+	if ( old_notification == NULL )
+		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
 
 	return notification;
 }
