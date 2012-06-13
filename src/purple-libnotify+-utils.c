@@ -52,7 +52,7 @@ _notify_plus_get_buddy_icon_pixbuf(PurpleBuddy *buddy)
 }
 
 static GdkPixbuf *
-_notify_plus_get_notificitaion_pixbuf(PurpleBuddy *buddy, const gchar *protocol_icon_filename)
+_notify_plus_get_buddy_pixbuf(PurpleBuddy *buddy, const gchar *protocol_icon_filename)
 {
 	GError *error = NULL;
 
@@ -118,19 +118,18 @@ _notify_plus_send_notification_internal(
 	NotifyNotification *notification,
 	const gchar *title,
 	const gchar *body,
-	const gchar *protocol_icon_uri,
-	const gchar *protocol_icon_filename,
-	PurpleBuddy *buddy,
+	const gchar *icon,
+	GdkPixbuf *image,
 	gpointer attach
 	)
 {
 	GError *error = NULL;
 
 	if ( notification != NULL )
-		notify_notification_update(notification, title, body, protocol_icon_uri);
+		notify_notification_update(notification, title, body, icon);
 	else
 	{
-		notification = notify_notification_new(title, body, protocol_icon_uri);
+		notification = notify_notification_new(title, body, icon);
 
 		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), attach);
 	}
@@ -148,12 +147,8 @@ _notify_plus_send_notification_internal(
 		notify_notification_set_hint_byte(notification, "transcient", 1);
 	#endif
 
-	GdkPixbuf *icon = _notify_plus_get_notificitaion_pixbuf(buddy, protocol_icon_filename);
-	if ( icon != NULL )
-	{
-		notify_notification_set_image_from_pixbuf(notification, icon);
-		g_object_unref(icon);
-	}
+	if ( image != NULL )
+		notify_notification_set_image_from_pixbuf(notification, image);
 
 	if ( ! notify_notification_show(notification, &error) )
 	{
@@ -193,10 +188,15 @@ notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBudd
 		}
 	}
 
-	notification = _notify_plus_send_notification_internal(notification, title, es_body, protocol_icon_uri, ( protocol_icon_filename != NULL ) ? (protocol_icon_filename+7) : (protocol_icon_uri+7), buddy, ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
-
+	GdkPixbuf *icon = NULL;
+	if ( protocol_name != NULL )
+		icon = _notify_plus_get_buddy_pixbuf(buddy, ( protocol_icon_filename != NULL ) ? (protocol_icon_filename+7) : (protocol_icon_uri+7));
 	g_free(protocol_icon_filename);
 	g_free(protocol_icon_uri);
+
+	notification = _notify_plus_send_notification_internal(notification, title, es_body, protocol_icon_uri, icon, ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
+	if ( icon != NULL )
+		g_object_unref(icon);
 	g_free(es_body);
 	g_free(title);
 
