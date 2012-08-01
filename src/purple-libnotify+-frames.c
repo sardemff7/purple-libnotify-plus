@@ -49,6 +49,12 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 	purple_plugin_pref_frame_add(frame, pref);
 	purple_plugin_pref_set_bounds(pref, 0, 100);
 
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/no-transcient",
+		_("Do not use transcient notifications (if supported)")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
 
 	return frame;
 }

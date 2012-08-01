@@ -307,6 +307,7 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_none("/plugins/core/libnotify+");
 	purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", timeout);
 	purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
+	purple_prefs_add_bool("/plugins/core/libnotify+/no-transcient", FALSE);
 
 	PurpleEventsHandler *handler;
 
