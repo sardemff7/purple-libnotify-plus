@@ -281,21 +281,15 @@ init_plugin(PurplePlugin *plugin)
 	info.description = _("Displays popups via libnotify.");
 	info.dependencies = g_list_prepend(info.dependencies, (gpointer) purple_events_get_plugin_id());
 
+	gint timeout = -1;
+
 	if ( purple_prefs_exists("/plugins/gtk/libnotify+") )
 	{
-		purple_prefs_add_none("/plugins/core/libnotify+");
-		purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", purple_prefs_get_int("/plugins/gtk/libnotify+/expire-timeout"));
-		purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
+		timeout = purple_prefs_get_int("/plugins/gtk/libnotify+/expire-timeout");
 		purple_prefs_remove("/plugins/gtk/libnotify+");
 	}
 
-	if ( ! purple_prefs_exists("/plugins/core/libnotify+") )
-	{
-		purple_prefs_add_none("/plugins/core/libnotify+");
-		purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", -1);
-		purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
-	}
-	else if ( ! purple_prefs_exists("/plugins/core/libnotify+/new-msg") )
+	if ( purple_prefs_exists("/plugins/core/libnotify+/new-msg") )
 	{
 		purple_prefs_remove("/plugins/core/libnotify+/new-msg");
 		purple_prefs_remove("/plugins/core/libnotify+/signed-on");
@@ -309,6 +303,10 @@ init_plugin(PurplePlugin *plugin)
 		purple_prefs_remove("/plugins/core/libnotify+/only-available");
 		purple_prefs_remove("/plugins/core/libnotify+/stack-notifications");
 	}
+
+	purple_prefs_add_none("/plugins/core/libnotify+");
+	purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", timeout);
+	purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
 
 	PurpleEventsHandler *handler;
 
