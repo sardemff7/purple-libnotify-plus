@@ -21,7 +21,6 @@
 #include "purple-libnotify+-common.h"
 
 #include <libnotify/notify.h>
-#include "libnotify-compat.h"
 
 #include <purple-events.h>
 
@@ -137,11 +136,7 @@ _notify_plus_send_notification_internal_v(
 	notify_notification_set_timeout(notification, timeout);
 
 	if ( notify_plus_data.set_transcient && ( ! purple_prefs_get_bool("/plugins/core/libnotify+/no-transcient") ) )
-	#if GLIB_CHECK_VERSION(2, 26, 0) && HAVE_NOTIFY_06
 		notify_notification_set_hint(notification, "transcient", g_variant_new_byte(1));
-	#else
-		notify_notification_set_hint_byte(notification, "transcient", 1);
-	#endif
 
 	if ( image != NULL )
 		notify_notification_set_image_from_pixbuf(notification, image);

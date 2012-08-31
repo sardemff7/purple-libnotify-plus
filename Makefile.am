@@ -14,7 +14,6 @@ AM_CFLAGS += \
 plugin_LTLIBRARIES = purple-libnotify+.la
 
 purple_libnotify__la_SOURCES = \
-	src/libnotify-compat.h \
 	src/purple-libnotify+-frames.h \
 	src/purple-libnotify+-utils.h \
 	src/purple-libnotify+-common.h \
