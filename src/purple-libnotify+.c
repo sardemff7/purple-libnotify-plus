@@ -95,6 +95,23 @@ _purple_notify_plus_im_message(PurplePlugin *plugin, gpointer notification, Purp
 }
 
 static gpointer
+_purple_notify_plus_im_highlight(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
+{
+	gchar *body;
+	gchar *tmp;
+
+	tmp = purple_markup_strip_html(message);
+	body = g_strdup_printf(_("“%s”"), tmp);
+	g_free(tmp);
+
+	notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, NULL);
+
+	g_free(body);
+
+	return notification;
+}
+
+static gpointer
 _purple_notify_plus_im_action(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
 {
 	gchar *body;
@@ -119,6 +136,25 @@ _purple_notify_plus_chat_message(PurplePlugin *plugin, gpointer notification, Pu
 	g_free(tmp);
 
 	notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, conv);
+
+	g_free(body);
+
+	return notification;
+}
+
+static gpointer
+_purple_notify_plus_chat_highlight(PurplePlugin *plugin, gpointer notification, PurpleConversation *conv, PurpleBuddy *buddy, const gchar *message)
+{
+	gchar *body;
+	gchar *tmp;
+
+	tmp = purple_markup_strip_html(message);
+	body = g_strdup_printf(_("“%s”"), tmp);
+	g_free(tmp);
+
+	body = purple_markup_strip_html(message);
+
+	notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, conv);
 
 	g_free(body);
 
@@ -327,9 +363,11 @@ init_plugin(PurplePlugin *plugin)
 	purple_events_handler_add_idle_back_callback(handler, _purple_notify_plus_idle_back);
 
 	purple_events_handler_add_im_message_callback(handler, _purple_notify_plus_im_message);
+	purple_events_handler_add_im_highlight_callback(handler, _purple_notify_plus_im_highlight);
 	purple_events_handler_add_im_action_callback(handler, _purple_notify_plus_im_action);
 
 	purple_events_handler_add_chat_message_callback(handler, _purple_notify_plus_chat_message);
+	purple_events_handler_add_chat_highlight_callback(handler, _purple_notify_plus_chat_highlight);
 	purple_events_handler_add_chat_action_callback(handler, _purple_notify_plus_chat_action);
 
 	purple_events_handler_add_email_callback(handler, _purple_notify_plus_email);
