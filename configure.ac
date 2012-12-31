@@ -23,6 +23,8 @@ IT_PROG_INTLTOOL([0.35.0])
 
 AC_PROG_INSTALL
 
+purple_events_min_version=0.3
+
 AM_CFLAGS="-Wall -Wextra -Wno-unused-parameter"
 AM_LDFLAGS=""
 
@@ -57,7 +59,7 @@ AC_SUBST(plugindir)
 #
 # Check for purple-events
 #
-PKG_CHECK_MODULES(PURPLE_EVENTS, purple-events)
+PKG_CHECK_MODULES(PURPLE_EVENTS, purple-events >= $purple_events_min_version)
 
 
 AC_SUBST(AM_CFLAGS)

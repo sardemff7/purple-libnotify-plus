@@ -182,21 +182,37 @@ _notify_plus_send_notification_internal(
 }
 
 NotifyNotification *
+notify_plus_send_name_notification(NotifyNotification *old_notification, const gchar *name, const gchar *action, const gchar *body, gchar *icon, GdkPixbuf *image, gpointer attach)
+{
+	gchar *title;
+	gchar *es_body = NULL;
+
+	title = g_strdup_printf(action, name);
+	if ( body != NULL )
+		es_body = g_markup_escape_text(body, -1);
+
+	NotifyNotification *notification;
+	notification = _notify_plus_send_notification_internal(old_notification, title, es_body, icon, image, NULL);
+
+	if ( old_notification == NULL )
+		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), attach);
+
+	return notification;
+}
+
+NotifyNotification *
 notify_plus_send_buddy_notification(NotifyNotification *old_notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach)
 {
 	if ( ( old_notification != NULL ) && ( ! notify_plus_data.modify_notification ) )
 			return old_notification;
 
-	gchar *title;
-	gchar *es_body = NULL;
+	const gchar *buddy_name;
+
+	buddy_name = purple_events_utils_buddy_get_best_name(buddy);
+
 	const gchar *protocol_name = NULL;
 	gchar *protocol_icon_uri = NULL;
 	gchar *protocol_icon_filename = NULL;
-
-	title = g_strdup_printf(action, purple_events_utils_buddy_get_best_name(buddy));
-
-	if ( body != NULL )
-		es_body = g_markup_escape_text(body, -1);
 
 	protocol_name = purple_events_utils_buddy_get_protocol(buddy);
 	if ( protocol_name != NULL )
@@ -217,14 +233,9 @@ notify_plus_send_buddy_notification(NotifyNotification *old_notification, Purple
 	g_free(protocol_icon_uri);
 
 	NotifyNotification *notification;
-	notification = _notify_plus_send_notification_internal(old_notification, title, es_body, protocol_icon_uri, icon, NULL);
+	notification = notify_plus_send_name_notification(old_notification, buddy_name, action, body, protocol_icon_uri, icon, ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
 	if ( icon != NULL )
 		g_object_unref(icon);
-	g_free(es_body);
-	g_free(title);
-
-	if ( old_notification == NULL )
-		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
 
 	return notification;
 }

@@ -20,6 +20,8 @@
 
 #include "purple-libnotify+-common.h"
 
+#include <string.h>
+
 #include <libnotify/notify.h>
 
 #include <purple-events.h>
@@ -78,98 +80,58 @@ _purple_notify_plus_idle_back(PurplePlugin *plugin, gpointer notification, Purpl
 }
 
 static gpointer
-_purple_notify_plus_im_message(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
+_purple_notify_plus_im_message(PurplePlugin *plugin, gpointer notification, PurpleEventsMessageType type, PurpleBuddy *buddy, const gchar *sender, const gchar *message)
 {
-	gchar *body;
+	gchar *body = NULL;
 	gchar *tmp;
 
 	tmp = purple_markup_strip_html(message);
-	body = g_strdup_printf(_("“%s”"), tmp);
+
+	switch ( type )
+	{
+	case PURPLE_EVENTS_MESSAGE_TYPE_NORMAL:
+		body = g_strdup_printf(_("“%s”"), tmp);
+		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, NULL);
+	break;
+	case PURPLE_EVENTS_MESSAGE_TYPE_HIGHLIGHT:
+		body = g_strdup_printf(_("“%s”"), tmp);
+		notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, NULL);
+	break;
+	case PURPLE_EVENTS_MESSAGE_TYPE_ACTION:
+		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", tmp + strlen("/me "), NULL);
+	break;
+	}
+
 	g_free(tmp);
-
-	notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, NULL);
-
 	g_free(body);
 
 	return notification;
 }
 
 static gpointer
-_purple_notify_plus_im_highlight(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
+_purple_notify_plus_chat_message(PurplePlugin *plugin, gpointer notification, PurpleEventsMessageType type, PurpleConversation *conv, PurpleBuddy *buddy, const gchar *sender, const gchar *message)
 {
-	gchar *body;
+	gchar *body = NULL;
 	gchar *tmp;
 
 	tmp = purple_markup_strip_html(message);
-	body = g_strdup_printf(_("“%s”"), tmp);
+
+	switch ( type )
+	{
+	case PURPLE_EVENTS_MESSAGE_TYPE_NORMAL:
+		body = g_strdup_printf(_("“%s”"), tmp);
+		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, conv);
+	break;
+	case PURPLE_EVENTS_MESSAGE_TYPE_HIGHLIGHT:
+		body = g_strdup_printf(_("“%s”"), tmp);
+		notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, conv);
+	break;
+	case PURPLE_EVENTS_MESSAGE_TYPE_ACTION:
+		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", tmp + strlen("/me "), conv);
+	break;
+	}
+
 	g_free(tmp);
-
-	notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, NULL);
-
-	g_free(body);
-
-	return notification;
-}
-
-static gpointer
-_purple_notify_plus_im_action(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
-{
-	gchar *body;
-
-	body = purple_markup_strip_html(message);
-
-	notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, NULL);
-
-	g_free(body);
-
-	return notification;
-}
-
-static gpointer
-_purple_notify_plus_chat_message(PurplePlugin *plugin, gpointer notification, PurpleConversation *conv, PurpleBuddy *buddy, const gchar *message)
-{
-	gchar *body;
-	gchar *tmp;
-
-	tmp = purple_markup_strip_html(message);
-	body = g_strdup_printf(_("“%s”"), tmp);
-	g_free(tmp);
-
-	notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, conv);
-
-	g_free(body);
-
-	return notification;
-}
-
-static gpointer
-_purple_notify_plus_chat_highlight(PurplePlugin *plugin, gpointer notification, PurpleConversation *conv, PurpleBuddy *buddy, const gchar *message)
-{
-	gchar *body;
-	gchar *tmp;
-
-	tmp = purple_markup_strip_html(message);
-	body = g_strdup_printf(_("“%s”"), tmp);
-	g_free(tmp);
-
-	body = purple_markup_strip_html(message);
-
-	notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, conv);
-
-	g_free(body);
-
-	return notification;
-}
-
-static gpointer
-_purple_notify_plus_chat_action(PurplePlugin *plugin, gpointer notification, PurpleConversation *conv, PurpleBuddy *buddy, const gchar *message)
-{
-	gchar *body;
-
-	body = purple_markup_strip_html(message);
-
-	notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, conv);
-
 	g_free(body);
 
 	return notification;
@@ -363,12 +325,8 @@ init_plugin(PurplePlugin *plugin)
 	purple_events_handler_add_idle_back_callback(handler, _purple_notify_plus_idle_back);
 
 	purple_events_handler_add_im_message_callback(handler, _purple_notify_plus_im_message);
-	purple_events_handler_add_im_highlight_callback(handler, _purple_notify_plus_im_highlight);
-	purple_events_handler_add_im_action_callback(handler, _purple_notify_plus_im_action);
 
 	purple_events_handler_add_chat_message_callback(handler, _purple_notify_plus_chat_message);
-	purple_events_handler_add_chat_highlight_callback(handler, _purple_notify_plus_chat_highlight);
-	purple_events_handler_add_chat_action_callback(handler, _purple_notify_plus_chat_action);
 
 	purple_events_handler_add_email_callback(handler, _purple_notify_plus_email);
 

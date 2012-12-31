@@ -21,6 +21,7 @@
 #ifndef __PURPLE_LIBNOTIFY_PLUS_UTILS_H__
 #define __PURPLE_LIBNOTIFY_PLUS_UTILS_H__
 
+NotifyNotification *notify_plus_send_name_notification(NotifyNotification *old_notification, const gchar *name, const gchar *action, const gchar *body, gchar *icon, GdkPixbuf *image, gpointer attach);
 NotifyNotification *notify_plus_send_buddy_notification(NotifyNotification *notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach);
 void notify_plus_send_notification_with_actions(const gchar *title, const gchar *body, const gchar *icon, GdkPixbuf *image, ...);
 void notify_plus_send_notification(const gchar *title, const gchar *body, const gchar *icon, GdkPixbuf *image);
