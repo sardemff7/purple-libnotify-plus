@@ -106,15 +106,7 @@ _notify_plus_get_buddy_pixbuf(PurpleBuddy *buddy, const gchar *protocol_icon_fil
 }
 
 static void
-notification_closed_cb(NotifyNotification *notification, gpointer user_data)
-{
-	purple_events_handler_remove_event(notify_plus->extra, user_data, notification);
-	g_object_unref(G_OBJECT(notification));
-}
-
-static NotifyNotification *
 _notify_plus_send_notification_internal_v(
-	NotifyNotification *notification,
 	const gchar *title,
 	const gchar *body,
 	const gchar *icon,
@@ -123,11 +115,9 @@ _notify_plus_send_notification_internal_v(
 	)
 {
 	GError *error = NULL;
+	NotifyNotification *notification;
 
-	if ( notification != NULL )
-		notify_notification_update(notification, title, body, icon);
-	else
-		notification = notify_notification_new(title, body, icon);
+	notification = notify_notification_new(title, body, icon);
 
 	notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 	gint timeout = purple_prefs_get_int("/plugins/core/libnotify+/expire-timeout");
@@ -160,13 +150,10 @@ _notify_plus_send_notification_internal_v(
 		g_warning("Couldn’t send notification: %s", error->message);
 		g_clear_error(&error);
 	}
-
-	return notification;
 }
 
-static NotifyNotification *
+static void
 _notify_plus_send_notification_internal(
-	NotifyNotification *notification,
 	const gchar *title,
 	const gchar *body,
 	const gchar *icon,
@@ -176,13 +163,12 @@ _notify_plus_send_notification_internal(
 {
 	va_list actions;
 	va_start(actions, image);
-	notification = _notify_plus_send_notification_internal_v(notification, title, body, icon, image, actions);
+	_notify_plus_send_notification_internal_v(title, body, icon, image, actions);
 	va_end(actions);
-	return notification;
 }
 
-NotifyNotification *
-notify_plus_send_name_notification(NotifyNotification *old_notification, const gchar *name, const gchar *action, const gchar *body, gchar *icon, GdkPixbuf *image, gpointer attach)
+void
+notify_plus_send_name_notification(const gchar *name, const gchar *action, const gchar *body, gchar *icon, GdkPixbuf *image)
 {
 	gchar *title;
 	gchar *es_body = NULL;
@@ -191,21 +177,12 @@ notify_plus_send_name_notification(NotifyNotification *old_notification, const g
 	if ( body != NULL )
 		es_body = g_markup_escape_text(body, -1);
 
-	NotifyNotification *notification;
-	notification = _notify_plus_send_notification_internal(old_notification, title, es_body, icon, image, NULL);
-
-	if ( old_notification == NULL )
-		g_signal_connect(notification, "closed", G_CALLBACK(notification_closed_cb), attach);
-
-	return notification;
+	_notify_plus_send_notification_internal(title, es_body, icon, image, NULL);
 }
 
-NotifyNotification *
-notify_plus_send_buddy_notification(NotifyNotification *old_notification, PurpleBuddy *buddy, const gchar *action, const gchar *body, gpointer attach)
+void
+notify_plus_send_buddy_notification(PurpleBuddy *buddy, const gchar *action, const gchar *body)
 {
-	if ( ( old_notification != NULL ) && ( ! notify_plus_data.modify_notification ) )
-			return old_notification;
-
 	const gchar *buddy_name;
 
 	buddy_name = purple_events_utils_buddy_get_best_name(buddy);
@@ -232,23 +209,18 @@ notify_plus_send_buddy_notification(NotifyNotification *old_notification, Purple
 	g_free(protocol_icon_filename);
 	g_free(protocol_icon_uri);
 
-	NotifyNotification *notification;
-	notification = notify_plus_send_name_notification(old_notification, buddy_name, action, body, protocol_icon_uri, icon, ( attach != NULL ) ? attach : purple_buddy_get_contact(buddy));
+	notify_plus_send_name_notification(buddy_name, action, body, protocol_icon_uri, icon);
 	if ( icon != NULL )
 		g_object_unref(icon);
-
-	return notification;
 }
 
 void
 notify_plus_send_notification_with_actions(const gchar *title, const gchar *body, const gchar *icon, GdkPixbuf *image, ...)
 {
-	NotifyNotification *notification;
 	va_list actions;
 	va_start(actions, image);
-	notification = _notify_plus_send_notification_internal_v(NULL, title, body, icon, image, actions);
+	_notify_plus_send_notification_internal_v(title, body, icon, image, actions);
 	va_end(actions);
-	g_object_unref(G_OBJECT(notification));
 }
 
 void

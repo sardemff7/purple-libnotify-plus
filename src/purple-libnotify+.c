@@ -31,55 +31,54 @@
 
 PurplePlugin *notify_plus = NULL;
 
-static gpointer
+static void
 _purple_notify_plus_signed_on(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
 {
-	return notify_plus_send_buddy_notification(notification, buddy,_("%s signed on"), NULL, NULL);
+	notify_plus_send_buddy_notification(buddy,_("%s signed on"), NULL);
 }
 
-static gpointer
+static void
 _purple_notify_plus_signed_off(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
 {
-	return notify_plus_send_buddy_notification(notification, buddy,_("%s signed off"), NULL, NULL);
+	notify_plus_send_buddy_notification(buddy,_("%s signed off"), NULL);
 }
 
-static gpointer
+static void
 _purple_notify_plus_away(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
 {
-	return notify_plus_send_buddy_notification(notification, buddy, _("%s went away"), message, NULL);
+	notify_plus_send_buddy_notification(buddy, _("%s went away"), message);
 }
 
-static gpointer
+static void
 _purple_notify_plus_back(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
 {
-	return notify_plus_send_buddy_notification(notification, buddy, _("%s came back"), message, NULL);
+	notify_plus_send_buddy_notification(buddy, _("%s came back"), message);
 }
 
-static gpointer
+static void
 _purple_notify_plus_status(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
 {
-	return notify_plus_send_buddy_notification(notification, buddy, ( message != NULL ) ? _("%s changed status message") : _("%s removed status message"), message, NULL);
+	notify_plus_send_buddy_notification(buddy, ( message != NULL ) ? _("%s changed status message") : _("%s removed status message"), message);
 }
 
-static gpointer
+static void
 _purple_notify_plus_special(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, PurpleEventsEventSpecialType type, ...)
 {
-	return NULL;
 }
 
-static gpointer
+static void
 _purple_notify_plus_idle(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
 {
-	return notify_plus_send_buddy_notification(notification, buddy, _("%s went idle"), NULL, NULL);
+	notify_plus_send_buddy_notification(buddy, _("%s went idle"), NULL);
 }
 
-static gpointer
+static void
 _purple_notify_plus_idle_back(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
 {
-	return notify_plus_send_buddy_notification(notification, buddy, _("%s came back idle"), NULL, NULL);
+	notify_plus_send_buddy_notification(buddy, _("%s came back idle"), NULL);
 }
 
-static gpointer
+static void
 _purple_notify_plus_im_message(PurplePlugin *plugin, gpointer notification, PurpleEventsMessageType type, PurpleBuddy *buddy, const gchar *sender, const gchar *message)
 {
 	gchar *body = NULL;
@@ -91,24 +90,22 @@ _purple_notify_plus_im_message(PurplePlugin *plugin, gpointer notification, Purp
 	{
 	case PURPLE_EVENTS_MESSAGE_TYPE_NORMAL:
 		body = g_strdup_printf(_("“%s”"), tmp);
-		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, NULL);
+		notify_plus_send_buddy_notification(buddy, "%s", body);
 	break;
 	case PURPLE_EVENTS_MESSAGE_TYPE_HIGHLIGHT:
 		body = g_strdup_printf(_("“%s”"), tmp);
-		notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, NULL);
+		notify_plus_send_buddy_notification(buddy, "%s highlighted you", body);
 	break;
 	case PURPLE_EVENTS_MESSAGE_TYPE_ACTION:
-		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", tmp + strlen("/me "), NULL);
+		notify_plus_send_buddy_notification(buddy, "%s", tmp + strlen("/me "));
 	break;
 	}
 
 	g_free(tmp);
 	g_free(body);
-
-	return notification;
 }
 
-static gpointer
+static void
 _purple_notify_plus_chat_message(PurplePlugin *plugin, gpointer notification, PurpleEventsMessageType type, PurpleConversation *conv, PurpleBuddy *buddy, const gchar *sender, const gchar *message)
 {
 	gchar *body = NULL;
@@ -120,21 +117,19 @@ _purple_notify_plus_chat_message(PurplePlugin *plugin, gpointer notification, Pu
 	{
 	case PURPLE_EVENTS_MESSAGE_TYPE_NORMAL:
 		body = g_strdup_printf(_("“%s”"), tmp);
-		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", body, conv);
+		notify_plus_send_buddy_notification(buddy, "%s", body);
 	break;
 	case PURPLE_EVENTS_MESSAGE_TYPE_HIGHLIGHT:
 		body = g_strdup_printf(_("“%s”"), tmp);
-		notification = notify_plus_send_buddy_notification(notification, buddy, "%s highlighted you", body, conv);
+		notify_plus_send_buddy_notification(buddy, "%s highlighted you", body);
 	break;
 	case PURPLE_EVENTS_MESSAGE_TYPE_ACTION:
-		notification = notify_plus_send_buddy_notification(notification, buddy, "%s", tmp + strlen("/me "), conv);
+		notify_plus_send_buddy_notification(buddy, "%s", tmp + strlen("/me "));
 	break;
 	}
 
 	g_free(tmp);
 	g_free(body);
-
-	return notification;
 }
 
 static void
