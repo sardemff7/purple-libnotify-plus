@@ -32,103 +32,124 @@
 PurplePlugin *notify_plus = NULL;
 
 static void
-_purple_notify_plus_signed_on(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
+_purple_notify_plus_signed_on(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
 	notify_plus_send_buddy_notification(buddy,_("%s signed on"), NULL);
 }
 
 static void
-_purple_notify_plus_signed_off(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
+_purple_notify_plus_signed_off(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
 	notify_plus_send_buddy_notification(buddy,_("%s signed off"), NULL);
 }
 
 static void
-_purple_notify_plus_away(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
+_purple_notify_plus_away(PurpleBuddy *buddy, const gchar *message, PurplePlugin *plugin)
 {
 	notify_plus_send_buddy_notification(buddy, _("%s went away"), message);
 }
 
 static void
-_purple_notify_plus_back(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
+_purple_notify_plus_back(PurpleBuddy *buddy, const gchar *message, PurplePlugin *plugin)
 {
 	notify_plus_send_buddy_notification(buddy, _("%s came back"), message);
 }
 
 static void
-_purple_notify_plus_status(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, const gchar *message)
+_purple_notify_plus_status(PurpleBuddy *buddy, const gchar *message, PurplePlugin *plugin)
 {
 	notify_plus_send_buddy_notification(buddy, ( message != NULL ) ? _("%s changed status message") : _("%s removed status message"), message);
 }
 
 static void
-_purple_notify_plus_special(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy, PurpleEventsEventSpecialType type, ...)
-{
-}
-
-static void
-_purple_notify_plus_idle(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
+_purple_notify_plus_idle(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
 	notify_plus_send_buddy_notification(buddy, _("%s went idle"), NULL);
 }
 
 static void
-_purple_notify_plus_idle_back(PurplePlugin *plugin, gpointer notification, PurpleBuddy *buddy)
+_purple_notify_plus_idle_back(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
 	notify_plus_send_buddy_notification(buddy, _("%s came back idle"), NULL);
 }
 
 static void
-_purple_notify_plus_im_message(PurplePlugin *plugin, gpointer notification, PurpleEventsMessageType type, PurpleBuddy *buddy, const gchar *sender, const gchar *message)
+_purple_notify_plus_im_message(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
 {
+    PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	gchar *body = NULL;
 	gchar *tmp;
 
 	tmp = purple_markup_strip_html(message);
-
-	switch ( type )
-	{
-	case PURPLE_EVENTS_MESSAGE_TYPE_NORMAL:
-		body = g_strdup_printf(_("“%s”"), tmp);
-		notify_plus_send_buddy_notification(buddy, "%s", body);
-	break;
-	case PURPLE_EVENTS_MESSAGE_TYPE_HIGHLIGHT:
-		body = g_strdup_printf(_("“%s”"), tmp);
-		notify_plus_send_buddy_notification(buddy, "%s highlighted you", body);
-	break;
-	case PURPLE_EVENTS_MESSAGE_TYPE_ACTION:
-		notify_plus_send_buddy_notification(buddy, "%s", tmp + strlen("/me "));
-	break;
-	}
-
+	body = g_strdup_printf(_("“%s”"), tmp);
 	g_free(tmp);
+
+	notify_plus_send_buddy_notification(buddy, "%s", body);
+
+	if ( buddy != NULL )
+		notify_plus_send_buddy_notification(buddy, "%s", body);
+	else
+		notify_plus_send_name_notification(sender, "%s", body, NULL, NULL);
+
 	g_free(body);
 }
 
 static void
-_purple_notify_plus_chat_message(PurplePlugin *plugin, gpointer notification, PurpleEventsMessageType type, PurpleConversation *conv, PurpleBuddy *buddy, const gchar *sender, const gchar *message)
+_purple_notify_plus_im_highlight(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
 {
+    PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	gchar *body = NULL;
 	gchar *tmp;
 
 	tmp = purple_markup_strip_html(message);
-
-	switch ( type )
-	{
-	case PURPLE_EVENTS_MESSAGE_TYPE_NORMAL:
-		body = g_strdup_printf(_("“%s”"), tmp);
-		notify_plus_send_buddy_notification(buddy, "%s", body);
-	break;
-	case PURPLE_EVENTS_MESSAGE_TYPE_HIGHLIGHT:
-		body = g_strdup_printf(_("“%s”"), tmp);
-		notify_plus_send_buddy_notification(buddy, "%s highlighted you", body);
-	break;
-	case PURPLE_EVENTS_MESSAGE_TYPE_ACTION:
-		notify_plus_send_buddy_notification(buddy, "%s", tmp + strlen("/me "));
-	break;
-	}
-
+	body = g_strdup_printf(_("“%s”"), tmp);
 	g_free(tmp);
+
+	if ( buddy != NULL )
+		notify_plus_send_buddy_notification(buddy, "%s highlighted you", body);
+	else
+		notify_plus_send_name_notification(sender, "%s highlighted you", body, NULL, NULL);
+
+	g_free(body);
+}
+
+static void
+_purple_notify_plus_chat_message(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
+{
+    PurpleBuddy *buddy = purple_find_buddy(account, sender);
+	gchar *body = NULL;
+	gchar *tmp;
+
+	tmp = purple_markup_strip_html(message);
+	body = g_strdup_printf(_("“%s”"), tmp);
+	g_free(tmp);
+
+	notify_plus_send_buddy_notification(buddy, "%s", body);
+
+	if ( buddy != NULL )
+		notify_plus_send_buddy_notification(buddy, "%s", body);
+	else
+		notify_plus_send_name_notification(sender, "%s", body, NULL, NULL);
+
+	g_free(body);
+}
+
+static void
+_purple_notify_plus_chat_highlight(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
+{
+    PurpleBuddy *buddy = purple_find_buddy(account, sender);
+	gchar *body = NULL;
+	gchar *tmp;
+
+	tmp = purple_markup_strip_html(message);
+	body = g_strdup_printf(_("“%s”"), tmp);
+	g_free(tmp);
+
+	if ( buddy != NULL )
+		notify_plus_send_buddy_notification(buddy, "%s highlighted you", body);
+	else
+		notify_plus_send_name_notification(sender, "%s highlighted you", body, NULL, NULL);
+
 	g_free(body);
 }
 
@@ -149,17 +170,6 @@ _purple_notify_plus_email(PurplePlugin *plugin, const gchar *subject, const gcha
 	notify_plus_send_notification_with_actions(title, subject, "mail-unread", NULL, NULL, "default", _("Show"), _purple_notify_plus_email_action_callback, url, NULL, NULL);
 
 	g_free(title);
-}
-
-static void
-_notify_plus_end_event(PurplePlugin *plugin, gpointer event)
-{
-	GError *error = NULL;
-	if ( ! notify_notification_close(event, &error) )
-	{
-		g_warning("Couldn’t close notification: %s", error->message);
-		g_clear_error(&error);
-	}
 }
 
 static void
@@ -206,7 +216,61 @@ plugin_load(PurplePlugin *plugin)
 	}
 	notify_plus_adapt_to_server_capabilities();
 
-	purple_events_connect_handler(plugin->extra);
+	gpointer handle;
+
+	handle = purple_plugins_find_with_id(purple_events_get_plugin_id());
+	g_return_val_if_fail(handle != NULL, FALSE);
+
+	purple_signal_connect(
+		handle, "user-presence.online", plugin,
+		(PurpleCallback)_purple_notify_plus_signed_on, plugin
+	);
+	purple_signal_connect(
+		handle, "user-presence.offline", plugin,
+		(PurpleCallback)_purple_notify_plus_signed_off, plugin
+	);
+	purple_signal_connect(
+		handle, "user-presence.away", plugin,
+		(PurpleCallback)_purple_notify_plus_away, plugin
+	);
+	purple_signal_connect(
+		handle, "user-presence.back", plugin,
+		(PurpleCallback)_purple_notify_plus_back, plugin
+	);
+	purple_signal_connect(
+		handle, "user-presence.idle", plugin,
+		(PurpleCallback)_purple_notify_plus_idle, plugin
+	);
+	purple_signal_connect(
+		handle, "user-presence.idle-back", plugin,
+		(PurpleCallback)_purple_notify_plus_idle_back, plugin
+	);
+	purple_signal_connect(
+		handle, "user-presence.message", plugin,
+		(PurpleCallback)_purple_notify_plus_status, plugin
+	);
+
+	purple_signal_connect(
+		handle, "user-im.received", plugin,
+		(PurpleCallback)_purple_notify_plus_im_message, plugin
+	);
+	purple_signal_connect(
+		handle, "user-im.highlight", plugin,
+		(PurpleCallback)_purple_notify_plus_im_highlight, plugin
+	);
+	purple_signal_connect(
+		handle, "user-chat.received", plugin,
+		(PurpleCallback)_purple_notify_plus_chat_message, plugin
+	);
+	purple_signal_connect(
+		handle, "user-chat.highlight", plugin,
+		(PurpleCallback)_purple_notify_plus_chat_highlight, plugin
+	);
+
+	purple_signal_connect(
+		handle, "user-email.arrived", plugin,
+		(PurpleCallback)_purple_notify_plus_email, plugin
+	);
 
 	return TRUE;
 }
@@ -214,17 +278,65 @@ plugin_load(PurplePlugin *plugin)
 static gboolean
 plugin_unload(PurplePlugin *plugin)
 {
-	purple_events_disconnect_handler(plugin->extra);
+	gpointer handle;
+
+	handle = purple_plugins_find_with_id(purple_events_get_plugin_id());
+	g_return_val_if_fail(handle != NULL, FALSE);
+
+	purple_signal_disconnect(
+		handle, "user-presence.online", plugin,
+		(PurpleCallback)_purple_notify_plus_signed_on
+	);
+	purple_signal_disconnect(
+		handle, "user-presence.offline", plugin,
+		(PurpleCallback)_purple_notify_plus_signed_off
+	);
+	purple_signal_disconnect(
+		handle, "user-presence.away", plugin,
+		(PurpleCallback)_purple_notify_plus_away
+	);
+	purple_signal_disconnect(
+		handle, "user-presence.back", plugin,
+		(PurpleCallback)_purple_notify_plus_back
+	);
+	purple_signal_disconnect(
+		handle, "user-presence.idle", plugin,
+		(PurpleCallback)_purple_notify_plus_idle
+	);
+	purple_signal_disconnect(
+		handle, "user-presence.idle-back", plugin,
+		(PurpleCallback)_purple_notify_plus_idle_back
+	);
+	purple_signal_disconnect(
+		handle, "user-presence.message", plugin,
+		(PurpleCallback)_purple_notify_plus_status
+	);
+
+	purple_signal_disconnect(
+		handle, "user-im.received", plugin,
+		(PurpleCallback)_purple_notify_plus_message
+	);
+	purple_signal_disconnect(
+		handle, "user-im.highlight", plugin,
+		(PurpleCallback)_purple_notify_plus_highlight
+	);
+	purple_signal_disconnect(
+		handle, "user-chat.received", plugin,
+		(PurpleCallback)_purple_notify_plus_message
+	);
+	purple_signal_disconnect(
+		handle, "user-chat.highlight", plugin,
+		(PurpleCallback)_purple_notify_plus_highlight
+	);
+
+	purple_signal_disconnect(
+		handle, "user-email.arrived", plugin,
+		(PurpleCallback)_purple_notify_plus_email
+	);
 
 	notify_uninit();
 
 	return TRUE;
-}
-
-static void
-_purple_notify_plus_destroy(PurplePlugin *plugin)
-{
-	purple_events_handler_free(plugin->extra);
 }
 
 
@@ -252,7 +364,7 @@ static PurplePluginInfo info = {
 
     .load           = plugin_load,
     .unload         = plugin_unload,
-    .destroy        = _purple_notify_plus_destroy,
+    .destroy        = NULL,
 
     .ui_info        = NULL,
     .extra_info     = NULL,
@@ -301,31 +413,6 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", timeout);
 	purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
 	purple_prefs_add_bool("/plugins/core/libnotify+/no-transcient", FALSE);
-
-	PurpleEventsHandler *handler;
-
-	handler = purple_events_handler_new(plugin);
-	plugin->extra = handler;
-
-	purple_events_handler_add_signed_on_callback(handler, _purple_notify_plus_signed_on);
-	purple_events_handler_add_signed_off_callback(handler, _purple_notify_plus_signed_off);
-
-	purple_events_handler_add_away_callback(handler, _purple_notify_plus_away);
-	purple_events_handler_add_back_callback(handler, _purple_notify_plus_back);
-
-	purple_events_handler_add_status_callback(handler, _purple_notify_plus_status);
-	purple_events_handler_add_special_callback(handler, _purple_notify_plus_special);
-
-	purple_events_handler_add_idle_callback(handler, _purple_notify_plus_idle);
-	purple_events_handler_add_idle_back_callback(handler, _purple_notify_plus_idle_back);
-
-	purple_events_handler_add_im_message_callback(handler, _purple_notify_plus_im_message);
-
-	purple_events_handler_add_chat_message_callback(handler, _purple_notify_plus_chat_message);
-
-	purple_events_handler_add_email_callback(handler, _purple_notify_plus_email);
-
-	purple_events_handler_add_end_event_callback(handler, _notify_plus_end_event);
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)
