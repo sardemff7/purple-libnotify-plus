@@ -314,19 +314,19 @@ plugin_unload(PurplePlugin *plugin)
 
 	purple_signal_disconnect(
 		handle, "user-im.received", plugin,
-		(PurpleCallback)_purple_notify_plus_message
+		(PurpleCallback)_purple_notify_plus_im_message
 	);
 	purple_signal_disconnect(
 		handle, "user-im.highlight", plugin,
-		(PurpleCallback)_purple_notify_plus_highlight
+		(PurpleCallback)_purple_notify_plus_im_highlight
 	);
 	purple_signal_disconnect(
 		handle, "user-chat.received", plugin,
-		(PurpleCallback)_purple_notify_plus_message
+		(PurpleCallback)_purple_notify_plus_chat_message
 	);
 	purple_signal_disconnect(
 		handle, "user-chat.highlight", plugin,
-		(PurpleCallback)_purple_notify_plus_highlight
+		(PurpleCallback)_purple_notify_plus_chat_highlight
 	);
 
 	purple_signal_disconnect(
