@@ -1,0 +1,93 @@
+# simplified chinese translations for purple-libnotify+ package
+# purple-libnotify+ 的简体中文翻译.
+# This file is distributed under the same license as the purple-libnotify+ package.
+# Quentin "Sardem FF7" Glidic <sardemff7+pidgin@sardemff7.net>, 2011-2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: purple-libnotify+\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-31 18:38+0100\n"
+"PO-Revision-Date: 2011-01-26 11:43+0100\n"
+"Last-Translator: tofuliang <tofuliang@gmail."
+"com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../src/purple-libnotify+-frames.c:34
+msgid "Notification settings:"
+msgstr "通知设置 :"
+
+#: ../src/purple-libnotify+-frames.c:40
+msgid "Expire timeout (1-120, 0 for never, -1 for auto)"
+msgstr "通知显示时长(1-120, 0 为一直显示, -1 为自动)"
+
+#: ../src/purple-libnotify+-frames.c:47
+msgid "Scale factor for protocol icon (0-100%)"
+msgstr "协议图标缩放系数 (0-100%)"
+
+#: ../src/purple-libnotify+-frames.c:54
+msgid "Do not use transcient notifications (if supported)"
+msgstr "如果可以，延长通知的显示时间"
+
+#: ../src/purple-libnotify+.c:37
+#, c-format
+msgid "%s signed on"
+msgstr "%s 上线了"
+
+#: ../src/purple-libnotify+.c:43
+#, c-format
+msgid "%s signed off"
+msgstr "%s 下线了"
+
+#: ../src/purple-libnotify+.c:49
+#, c-format
+msgid "%s went away"
+msgstr "%s 离开了"
+
+#: ../src/purple-libnotify+.c:55
+#, c-format
+msgid "%s came back"
+msgstr "%s 回来了"
+
+#: ../src/purple-libnotify+.c:61
+#, c-format
+msgid "%s changed status message"
+msgstr "%s 改变了状态消息"
+
+#: ../src/purple-libnotify+.c:61
+#, c-format
+msgid "%s removed status message"
+msgstr "%s 移除了状态消息"
+
+#: ../src/purple-libnotify+.c:73
+#, c-format
+msgid "%s went idle"
+msgstr "%s 设置空闲状态"
+
+#: ../src/purple-libnotify+.c:79
+#, c-format
+msgid "%s came back idle"
+msgstr "%s 取消空闲状态"
+
+#: ../src/purple-libnotify+.c:93 ../src/purple-libnotify+.c:97
+#: ../src/purple-libnotify+.c:122 ../src/purple-libnotify+.c:126
+#, c-format
+msgid "“%s”"
+msgstr " %s "
+
+#: ../src/purple-libnotify+.c:152
+#, c-format
+msgid "New e-mail from %s"
+msgstr "收到来自 %s 的新邮件"
+
+#: ../src/purple-libnotify+.c:154
+msgid "Show"
+msgstr "显示"
+
+#: ../src/purple-libnotify+.c:278 ../src/purple-libnotify+.c:279
+msgid "Displays popups via libnotify."
+msgstr "通过libnotify显示悬浮通知."
