@@ -222,53 +222,53 @@ plugin_load(PurplePlugin *plugin)
 	g_return_val_if_fail(handle != NULL, FALSE);
 
 	purple_signal_connect(
-		handle, "user-presence.online", plugin,
+		handle, "user_presence-online", plugin,
 		(PurpleCallback)_purple_notify_plus_signed_on, plugin
 	);
 	purple_signal_connect(
-		handle, "user-presence.offline", plugin,
+		handle, "user_presence-offline", plugin,
 		(PurpleCallback)_purple_notify_plus_signed_off, plugin
 	);
 	purple_signal_connect(
-		handle, "user-presence.away", plugin,
+		handle, "user_presence-away", plugin,
 		(PurpleCallback)_purple_notify_plus_away, plugin
 	);
 	purple_signal_connect(
-		handle, "user-presence.back", plugin,
+		handle, "user_presence-back", plugin,
 		(PurpleCallback)_purple_notify_plus_back, plugin
 	);
 	purple_signal_connect(
-		handle, "user-presence.idle", plugin,
+		handle, "user_presence-idle", plugin,
 		(PurpleCallback)_purple_notify_plus_idle, plugin
 	);
 	purple_signal_connect(
-		handle, "user-presence.idle-back", plugin,
+		handle, "user_presence-idle-back", plugin,
 		(PurpleCallback)_purple_notify_plus_idle_back, plugin
 	);
 	purple_signal_connect(
-		handle, "user-presence.message", plugin,
+		handle, "user_presence-message", plugin,
 		(PurpleCallback)_purple_notify_plus_status, plugin
 	);
 
 	purple_signal_connect(
-		handle, "user-im.received", plugin,
+		handle, "user_im-received", plugin,
 		(PurpleCallback)_purple_notify_plus_im_message, plugin
 	);
 	purple_signal_connect(
-		handle, "user-im.highlight", plugin,
+		handle, "user_im-highlight", plugin,
 		(PurpleCallback)_purple_notify_plus_im_highlight, plugin
 	);
 	purple_signal_connect(
-		handle, "user-chat.received", plugin,
+		handle, "user_chat-received", plugin,
 		(PurpleCallback)_purple_notify_plus_chat_message, plugin
 	);
 	purple_signal_connect(
-		handle, "user-chat.highlight", plugin,
+		handle, "user_chat-highlight", plugin,
 		(PurpleCallback)_purple_notify_plus_chat_highlight, plugin
 	);
 
 	purple_signal_connect(
-		handle, "user-email.arrived", plugin,
+		handle, "user_email-arrived", plugin,
 		(PurpleCallback)_purple_notify_plus_email, plugin
 	);
 
@@ -284,53 +284,53 @@ plugin_unload(PurplePlugin *plugin)
 	g_return_val_if_fail(handle != NULL, FALSE);
 
 	purple_signal_disconnect(
-		handle, "user-presence.online", plugin,
+		handle, "user_presence-online", plugin,
 		(PurpleCallback)_purple_notify_plus_signed_on
 	);
 	purple_signal_disconnect(
-		handle, "user-presence.offline", plugin,
+		handle, "user_presence-offline", plugin,
 		(PurpleCallback)_purple_notify_plus_signed_off
 	);
 	purple_signal_disconnect(
-		handle, "user-presence.away", plugin,
+		handle, "user_presence-away", plugin,
 		(PurpleCallback)_purple_notify_plus_away
 	);
 	purple_signal_disconnect(
-		handle, "user-presence.back", plugin,
+		handle, "user_presence-back", plugin,
 		(PurpleCallback)_purple_notify_plus_back
 	);
 	purple_signal_disconnect(
-		handle, "user-presence.idle", plugin,
+		handle, "user_presence-idle", plugin,
 		(PurpleCallback)_purple_notify_plus_idle
 	);
 	purple_signal_disconnect(
-		handle, "user-presence.idle-back", plugin,
+		handle, "user_presence-idle-back", plugin,
 		(PurpleCallback)_purple_notify_plus_idle_back
 	);
 	purple_signal_disconnect(
-		handle, "user-presence.message", plugin,
+		handle, "user_presence-message", plugin,
 		(PurpleCallback)_purple_notify_plus_status
 	);
 
 	purple_signal_disconnect(
-		handle, "user-im.received", plugin,
+		handle, "user_im-received", plugin,
 		(PurpleCallback)_purple_notify_plus_im_message
 	);
 	purple_signal_disconnect(
-		handle, "user-im.highlight", plugin,
+		handle, "user_im-highlight", plugin,
 		(PurpleCallback)_purple_notify_plus_im_highlight
 	);
 	purple_signal_disconnect(
-		handle, "user-chat.received", plugin,
+		handle, "user_chat-received", plugin,
 		(PurpleCallback)_purple_notify_plus_chat_message
 	);
 	purple_signal_disconnect(
-		handle, "user-chat.highlight", plugin,
+		handle, "user_chat-highlight", plugin,
 		(PurpleCallback)_purple_notify_plus_chat_highlight
 	);
 
 	purple_signal_disconnect(
-		handle, "user-email.arrived", plugin,
+		handle, "user_email-arrived", plugin,
 		(PurpleCallback)_purple_notify_plus_email
 	);
 
