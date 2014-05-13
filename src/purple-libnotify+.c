@@ -124,7 +124,6 @@ _purple_notify_plus_chat_message(PurpleAccount *account, const gchar *sender, co
 	body = g_strdup_printf(_("“%s”"), tmp);
 	g_free(tmp);
 
-	notify_plus_send_buddy_notification(buddy, "%s", body);
 
 	if ( buddy != NULL )
 		notify_plus_send_buddy_notification(buddy, "%s", body);
