@@ -1,5 +1,5 @@
 AC_PREREQ([2.65])
-AC_INIT([purple-libnotify+], [1.99.2], [], [purple-libnotify-plus])
+AC_INIT([purple-libnotify+], [2.99.1], [], [purple-libnotify-plus])
 
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_SRCDIR([src/])
@@ -23,7 +23,7 @@ IT_PROG_INTLTOOL([0.35.0])
 
 AC_PROG_INSTALL
 
-purple_events_min_version=0.3
+purple_events_min_version=0.99.1
 
 AM_CFLAGS="-Wall -Wextra -Wno-unused-parameter"
 AM_LDFLAGS=""
