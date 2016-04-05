@@ -1,7 +1,7 @@
 purple-libnotify+
 =================
 
-purple-libnotify+ provides events dispatching for [purple-events](https://github.com/sardemff7/purple-events#purple-events) through [libnotify](http://developer.gnome.org/libnotify/).  
+purple-libnotify+ provides events dispatching for [purple-events](//github.com/sardemff7/purple-events#purple-events) through [libnotify](//developer.gnome.org/libnotify/).  
 It was inspired by Pidgin-libnotify and Guifications.
 
 
@@ -22,10 +22,10 @@ Visit the [releases repository](http://download.tuxfamily.org/purpleevents/purpl
 Licence
 -------
 
-purple-libnotify+ is licenced under the terms of the [GNU General Public License version 3](https://www.gnu.org/licenses/gpl.html)
+purple-libnotify+ is licenced under the terms of the [GNU General Public License version 3](//www.gnu.org/licenses/gpl.html)
 
 
 Author / Contact
 ----------------
 
-Quentin “Sardem FF7” Glidic (sardemff7+pidgin@sardemff7.net) — [My other Free Software projects](http://projects.sardemff7.net/)
+Quentin “Sardem FF7” Glidic (sardemff7+pidgin@sardemff7.net) — [My other Free Software projects](//www.sardemff7.net/)
