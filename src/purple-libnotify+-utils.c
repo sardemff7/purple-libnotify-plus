@@ -124,6 +124,7 @@ _notify_plus_send_notification_internal_v(
 	if ( timeout < 1 )
 		timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
 	notify_notification_set_timeout(notification, timeout);
+	notify_notification_set_hint(notification, "x-canonical-append", g_variant_new_string("allowed"));
 
 	if ( notify_plus_data.set_transient && ( ! purple_prefs_get_bool("/plugins/core/libnotify+/no-transient") ) )
 		notify_notification_set_hint(notification, "transient", g_variant_new_byte(1));
