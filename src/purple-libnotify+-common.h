@@ -32,7 +32,7 @@ struct
 	gboolean modify_notification;
 	gboolean use_svg;
 	gboolean overlay_icon;
-	gboolean set_transcient;
+	gboolean set_transient;
 	gboolean actions;
 } notify_plus_data;
 

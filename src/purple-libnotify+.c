@@ -177,7 +177,7 @@ notify_plus_adapt_to_server_capabilities()
 	notify_plus_data.modify_notification = TRUE;
 	notify_plus_data.use_svg = FALSE;
 	notify_plus_data.overlay_icon = TRUE;
-	notify_plus_data.set_transcient = FALSE;
+	notify_plus_data.set_transient = FALSE;
 	notify_plus_data.actions = FALSE;
 
 	capabilities = notify_get_server_caps();
@@ -186,7 +186,7 @@ notify_plus_adapt_to_server_capabilities()
 		gchar *cap_name = capability->data;
 
 		if ( g_strcmp0(cap_name, "persistence") == 0 )
-			notify_plus_data.set_transcient = TRUE;
+			notify_plus_data.set_transient = TRUE;
 		else if ( g_strcmp0(cap_name, "image/svg+xml") == 0 )
 			notify_plus_data.use_svg = TRUE;
 		else if ( g_strcmp0(cap_name, "x-eventd-overlay-icon") == 0 )
@@ -408,7 +408,7 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_none("/plugins/core/libnotify+");
 	purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", timeout);
 	purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
-	purple_prefs_add_bool("/plugins/core/libnotify+/no-transcient", FALSE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/no-transient", FALSE);
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)
