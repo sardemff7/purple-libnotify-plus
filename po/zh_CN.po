@@ -30,7 +30,7 @@ msgid "Scale factor for protocol icon (0-100%)"
 msgstr "协议图标缩放系数 (0-100%)"
 
 #: ../src/purple-libnotify+-frames.c:54
-msgid "Do not use transcient notifications (if supported)"
+msgid "Do not use transient notifications (if supported)"
 msgstr "如果可以，延长通知的显示时间"
 
 #: ../src/purple-libnotify+.c:37

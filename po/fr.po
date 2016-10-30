@@ -31,7 +31,7 @@ msgid "Scale factor for protocol icon (0-100%)"
 msgstr "Facteur de redimensionnement de l’icône de protocole (0-100%)"
 
 #: ../src/purple-libnotify+-frames.c:54
-msgid "Do not use transcient notifications (if supported)"
+msgid "Do not use transient notifications (if supported)"
 msgstr "Ne pas utiliser les notifications éphémères (si supportées)"
 
 #: ../src/purple-libnotify+.c:37

@@ -125,8 +125,8 @@ _notify_plus_send_notification_internal_v(
 		timeout = ( timeout == 0 ) ? NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT;
 	notify_notification_set_timeout(notification, timeout);
 
-	if ( notify_plus_data.set_transcient && ( ! purple_prefs_get_bool("/plugins/core/libnotify+/no-transcient") ) )
-		notify_notification_set_hint(notification, "transcient", g_variant_new_byte(1));
+	if ( notify_plus_data.set_transient && ( ! purple_prefs_get_bool("/plugins/core/libnotify+/no-transient") ) )
+		notify_notification_set_hint(notification, "transient", g_variant_new_byte(1));
 
 	if ( image != NULL )
 		notify_notification_set_image_from_pixbuf(notification, image);
