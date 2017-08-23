@@ -169,6 +169,12 @@ _purple_notify_plus_email(PurplePlugin *plugin, const gchar *subject, const gcha
 }
 
 static void
+_purple_notify_auth_request(PurpleAccount *account, const char *remote_user, const char *message, PurplePlugin *plugin)
+{
+	notify_plus_send_name_notification(remote_user, _("Authorization request from %s"), message, NULL, NULL);
+}
+
+static void
 notify_plus_adapt_to_server_capabilities()
 {
 	GList *capabilities;
@@ -268,6 +274,11 @@ plugin_load(PurplePlugin *plugin)
 		(PurpleCallback)_purple_notify_plus_email, plugin
 	);
 
+	purple_signal_connect(
+		handle, "authorization-requested", plugin,
+		(PurpleCallback)_purple_notify_auth_request, plugin
+	);
+
 	return TRUE;
 }
 
@@ -328,6 +339,11 @@ plugin_unload(PurplePlugin *plugin)
 	purple_signal_disconnect(
 		handle, "user_email-arrived", plugin,
 		(PurpleCallback)_purple_notify_plus_email
+	);
+
+	purple_signal_disconnect(
+		handle, "authorization-requested", plugin,
+		(PurpleCallback)_purple_notify_auth_request
 	);
 
 	notify_uninit();
