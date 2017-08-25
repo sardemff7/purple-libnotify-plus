@@ -169,9 +169,9 @@ _purple_notify_plus_email(PurplePlugin *plugin, const gchar *subject, const gcha
 }
 
 static void
-_purple_notify_auth_request(PurpleAccount *account, const char *remote_user, const char *message, PurplePlugin *plugin)
+_purple_notify_auth_request(PurpleAccount *account, const char *sender, const char *message, PurplePlugin *plugin)
 {
-	notify_plus_send_name_notification(remote_user, _("Authorization request from %s"), message, NULL, NULL);
+	notify_plus_send_name_notification(sender, _("%s requested authorization"), message, NULL, NULL);
 }
 
 static void
@@ -275,7 +275,7 @@ plugin_load(PurplePlugin *plugin)
 	);
 
 	purple_signal_connect(
-		handle, "authorization-requested", plugin,
+		handle, "user_authorization-requested", plugin,
 		(PurpleCallback)_purple_notify_auth_request, plugin
 	);
 
@@ -342,7 +342,7 @@ plugin_unload(PurplePlugin *plugin)
 	);
 
 	purple_signal_disconnect(
-		handle, "authorization-requested", plugin,
+		handle, "user_authorization-requested", plugin,
 		(PurpleCallback)_purple_notify_auth_request
 	);
 
