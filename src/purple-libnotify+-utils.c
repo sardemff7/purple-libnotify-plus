@@ -207,10 +207,12 @@ notify_plus_send_buddy_notification(PurpleBuddy *buddy, const gchar *action, con
 	GdkPixbuf *icon = NULL;
 	if ( protocol_name != NULL )
 		icon = _notify_plus_get_buddy_pixbuf(buddy, ( protocol_icon_filename != NULL ) ? (protocol_icon_filename+7) : (protocol_icon_uri+7));
+
+	notify_plus_send_name_notification(buddy_name, action, body, protocol_icon_uri, icon);
+
 	g_free(protocol_icon_filename);
 	g_free(protocol_icon_uri);
 
-	notify_plus_send_name_notification(buddy_name, action, body, protocol_icon_uri, icon);
 	if ( icon != NULL )
 		g_object_unref(icon);
 }
