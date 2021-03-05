@@ -55,6 +55,83 @@ notify_plus_pref_frame(PurplePlugin *plugin)
 		);
 	purple_plugin_pref_frame_add(frame, pref);
 
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/presence-online",
+		_("Notify when presence changed to online")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/presence-offline",
+		_("Notify when presence changed to offline")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/presence-away",
+		_("Notify on away")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/presence-back",
+		_("Notify when contact returned")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/presence-idle",
+		_("Notify on idle")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/presence-idle-back",
+		_("Notify on back from idle")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/presence-message",
+		_("Notify when status message changed")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/im-received",
+		_("Notify on new IM message")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/im-highlight",
+		_("Notify when mentioned in IM message")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/chat-received",
+		_("Notify on new chat message")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/chat-highlight",
+		_("Notify when mentioned in chat")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/email-arrived",
+		_("Notify on email arrived")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
+
+	pref = purple_plugin_pref_new_with_name_and_label(
+		"/plugins/core/libnotify+/authorization-requested",
+		_("Notify on authorization request")
+		);
+	purple_plugin_pref_frame_add(frame, pref);
 
 	return frame;
 }

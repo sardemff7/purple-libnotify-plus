@@ -34,48 +34,72 @@ PurplePlugin *notify_plus = NULL;
 static void
 _purple_notify_plus_signed_on(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/presence-online")) {
+		return;
+	}
 	notify_plus_send_buddy_notification(buddy,_("%s signed on"), NULL);
 }
 
 static void
 _purple_notify_plus_signed_off(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/presence-offline")) {
+		return;
+	}
 	notify_plus_send_buddy_notification(buddy,_("%s signed off"), NULL);
 }
 
 static void
 _purple_notify_plus_away(PurpleBuddy *buddy, const gchar *message, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/presence-away")) {
+		return;
+	}
 	notify_plus_send_buddy_notification(buddy, _("%s went away"), message);
 }
 
 static void
 _purple_notify_plus_back(PurpleBuddy *buddy, const gchar *message, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/presence-back")) {
+		return;
+	}
 	notify_plus_send_buddy_notification(buddy, _("%s came back"), message);
 }
 
 static void
 _purple_notify_plus_status(PurpleBuddy *buddy, const gchar *message, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/presence-message")) {
+		return;
+	}
 	notify_plus_send_buddy_notification(buddy, ( message != NULL ) ? _("%s changed status message") : _("%s removed status message"), message);
 }
 
 static void
 _purple_notify_plus_idle(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/presence-idle")) {
+		return;
+	}
 	notify_plus_send_buddy_notification(buddy, _("%s went idle"), NULL);
 }
 
 static void
 _purple_notify_plus_idle_back(PurpleBuddy *buddy, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/presence-idle-back")) {
+		return;
+	}
 	notify_plus_send_buddy_notification(buddy, _("%s came back idle"), NULL);
 }
 
 static void
 _purple_notify_plus_im_message(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/im-received")) {
+		return;
+	}
     PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	gchar *body = NULL;
 	gchar *tmp;
@@ -95,6 +119,9 @@ _purple_notify_plus_im_message(PurpleAccount *account, const gchar *sender, cons
 static void
 _purple_notify_plus_im_highlight(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/im-highlight")) {
+		return;
+	}
     PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	gchar *body = NULL;
 	gchar *tmp;
@@ -114,6 +141,9 @@ _purple_notify_plus_im_highlight(PurpleAccount *account, const gchar *sender, co
 static void
 _purple_notify_plus_chat_message(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/chat-received")) {
+		return;
+	}
     PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	gchar *body = NULL;
 	gchar *tmp;
@@ -133,6 +163,9 @@ _purple_notify_plus_chat_message(PurpleAccount *account, const gchar *sender, co
 static void
 _purple_notify_plus_chat_highlight(PurpleAccount *account, const gchar *sender, const gchar *message, PurpleConversation *conv, PurpleMessageFlags flags, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/chat-highlight")) {
+		return;
+	}
     PurpleBuddy *buddy = purple_find_buddy(account, sender);
 	gchar *body = NULL;
 	gchar *tmp;
@@ -159,6 +192,9 @@ _purple_notify_plus_email_action_callback(NotifyNotification *notification, char
 static void
 _purple_notify_plus_email(PurplePlugin *plugin, const gchar *subject, const gchar *from, const gchar *to, const gchar *url)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/email-arrived")) {
+		return;
+	}
 	gchar *title;
 
 	title = g_strdup_printf(_("New e-mail from %s"), from);
@@ -171,6 +207,9 @@ _purple_notify_plus_email(PurplePlugin *plugin, const gchar *subject, const gcha
 static void
 _purple_notify_auth_request(PurpleAccount *account, const char *sender, const char *message, PurplePlugin *plugin)
 {
+	if (!purple_prefs_get_bool("/plugins/core/libnotify+/authorization-request")) {
+		return;
+	}
 	notify_plus_send_name_notification(sender, _("%s requested authorization"), message, NULL, NULL);
 }
 
@@ -425,6 +464,20 @@ init_plugin(PurplePlugin *plugin)
 	purple_prefs_add_int("/plugins/core/libnotify+/expire-timeout", timeout);
 	purple_prefs_add_int("/plugins/core/libnotify+/overlay-scale", 50);
 	purple_prefs_add_bool("/plugins/core/libnotify+/no-transient", FALSE);
+
+	purple_prefs_add_bool("/plugins/core/libnotify+/presence-online", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/presence-offline", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/presence-away", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/presence-back", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/presence-idle", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/presence-idle-back", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/presence-message", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/im-received", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/im-highlight", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/chat-received", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/chat-highlight", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/email-arrived", TRUE);
+	purple_prefs_add_bool("/plugins/core/libnotify+/authorization-requested", TRUE);
 }
 
 PURPLE_INIT_PLUGIN(notify_plus, init_plugin, info)
