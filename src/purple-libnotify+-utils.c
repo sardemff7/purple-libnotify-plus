@@ -151,6 +151,8 @@ _notify_plus_send_notification_internal_v(
 		g_warning("Couldn’t send notification: %s", error->message);
 		g_clear_error(&error);
 	}
+
+	g_object_unref(notification);
 }
 
 static void
