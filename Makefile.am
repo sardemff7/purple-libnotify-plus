@@ -9,6 +9,7 @@ SUBDIRS = po
 
 AM_CFLAGS += \
 	-DLOCALEDIR=\"$(localedir)\" \
+	-fcommon \
 	--include config.h
 
 plugin_LTLIBRARIES = purple-libnotify+.la
