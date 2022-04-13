@@ -34,7 +34,6 @@ header_conf.set_quoted('MODULES_VERSION', meson.project_version())
 header_conf.set_quoted('GETTEXT_PACKAGE', meson.project_name())
 header_conf.set_quoted('PURPLE_EVENTS_PLUGIN_ID', 'core-@0@-@1@'.format(package_developer, meson.project_name()))
 header_conf.set_quoted('PURPLE_DATADIR', purple.get_variable('datadir'))
-header_conf.set('PURPLE_EVENTS_EXPORT', '__attribute__((visibility("default")))')
 
 config_h = configure_file(output: 'config.h', configuration: header_conf)
 
