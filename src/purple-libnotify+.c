@@ -18,6 +18,7 @@
  * along with purple-libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "purple-libnotify+-common.h"
 
 #include <string.h>
@@ -371,8 +372,8 @@ static PurplePluginInfo info = {
     .version        = PACKAGE_VERSION,
     .summary        = NULL,
     .description    = NULL,
-    .author         = "Quentin \"Sardem FF7\" Glidic <sardemff7+pidgin@sardemff7.net>",
-    .homepage       = "http://sardemff7.github.com/" PACKAGE_TARNAME "/",
+    .author         = "Morgane \"Sardem FF7\" Glidic <sardemff7+pidgin@sardemff7.net>",
+    .homepage       = "https://sardemff7.github.com/" PACKAGE_NAME "/",
 
     .load           = plugin_load,
     .unload         = plugin_unload,

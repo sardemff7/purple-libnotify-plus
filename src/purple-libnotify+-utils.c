@@ -18,6 +18,7 @@
  * along with purple-libnotify+.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "purple-libnotify+-common.h"
 
 #include <libnotify/notify.h>
